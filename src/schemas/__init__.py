@@ -2,7 +2,7 @@
 author: thomaszdxsn
 """
 from abc import ABC
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 
 
 class DataClassAbstract(ABC):
@@ -13,5 +13,5 @@ class DataClassAbstract(ABC):
 
 @dataclass
 class Params(DataClassAbstract):
-    args: tuple
-    kwargs: dict
+    args: tuple = tuple()
+    kwargs: dict = field(default_factory=lambda: dict())

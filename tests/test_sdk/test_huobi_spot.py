@@ -96,3 +96,4 @@ async def test_ws_sub_trades_channel(ws_sdk):
             continue
         assert 'trade' in result['ch']
 
+
