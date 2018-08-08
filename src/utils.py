@@ -101,14 +101,14 @@ class SessionWrapper(SessionWrapperAbstract):
                 data=result
             )
         except requests.RequestException as exc:
-            msg = f'client error in request {resp.status_code}: {exc} '
+            msg = f'client error in request: {exc} '
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
                 error=HttpErrorEnum.ClientError.value,
                 data=''
             )
         except Exception as exc:
-            msg = f"other error in request {resp.status_code}: {exc}"
+            msg = f"other error in request: {exc}"
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
                 error=HttpErrorEnum.OtherError.value,
