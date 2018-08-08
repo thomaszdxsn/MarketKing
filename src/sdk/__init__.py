@@ -96,6 +96,10 @@ class RestSdkAbstract(ABC):
 
 
 class WebsocketSdkAbstract(ABC):
+    """
+    运行流程:
+    register_xxx |> setup_ws_client |> subscribe |> connect
+    """
     ws_url: str
 
     def __init__(self, loop: AbstractEventLoop):
@@ -108,6 +112,7 @@ class WebsocketSdkAbstract(ABC):
         )
         self.ws_client = None
         self.register_hub = list()
+        atexit.register(close_session, self._session)
 
     def register_channel(self, channel_info):
         self.register_hub.append(channel_info)
@@ -132,12 +137,11 @@ class WebsocketSdkAbstract(ABC):
                 self.ws_url,
                 proxy='http://127.0.0.1:1087'
             )
-            atexit.register(close_session, self._session)
         return self.ws_client
 
-    @abstractmethod
     async def subscribe(self, *args, **kwargs):
-        pass
+        for channel_info in self.register_hub:
+            await self.ws_client.send_json(channel_info)
 
     async def connect(self, handler: Callable):
         await self.setup_ws_client()

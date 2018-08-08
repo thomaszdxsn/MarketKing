@@ -74,7 +74,6 @@ class OkexFutureRest(RestSdkAbstract):
             kwargs=request_data
         )
 
-
     def _trades_request(self, symbol: str, contract_type: str) -> Params:
         request_data = {
             'params': {
@@ -93,14 +92,14 @@ class OkexFutureRest(RestSdkAbstract):
 class OkexFutureWebsocket(WebsocketSdkAbstract):
     ws_url = 'wss://real.okex.com:10440/websocket/okexapi'
 
-    async def subscribe(self, *args, **kwargs):
-        for channel_info in self.register_hub:
-            await self.ws_client.send_json(channel_info)
-
-    def register_kline(self, symbol: str, contract_type: str):
+    def register_kline(self,
+                       symbol: str,
+                       contract_type: str,
+                       type_: str='1min'):
         channel_info = {
             'event': 'addChannel',
-            'channel': f'ok_sub_futureusd_{symbol}_ticker_{contract_type}'
+            'channel': f'ok_sub_futureusd_{symbol}_kline_'
+                       f'{contract_type}_{type_}'
         }
         self.register_channel(channel_info)
 

@@ -91,10 +91,6 @@ class OkexSpotRest(RestSdkAbstract):
 class OkexSpotWebsocket(WebsocketSdkAbstract):
     ws_url = 'wss://real.okex.com:10441/websocket'
 
-    async def subscribe(self, *args, **kwargs):
-        for channel_info in self.register_hub:
-            await self.ws_client.send_json(channel_info)
-
     def register_ticker(self, symbol: str):
         channel_info = {
             'event': 'addChannel',
