@@ -139,10 +139,6 @@ class WebsocketSdkAbstract(ABC):
     async def subscribe(self, *args, **kwargs):
         pass
 
-    @abstractmethod
-    async def unsubscribe(self, *args, **kwargs):
-        pass
-
     async def connect(self, handler: Callable):
         await self.setup_ws_client()
         async for msg in self.ws_client:

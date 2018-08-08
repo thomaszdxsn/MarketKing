@@ -1,11 +1,13 @@
 """
 author: thomaszdxsn
 """
+import atexit
 from urllib.parse import urljoin
 from typing import Union
 
 from . import WebsocketSdkAbstract, RestSdkAbstract
 from ..schemas import Params
+from ..utils import close_session
 
 
 class BinanceSpotRest(RestSdkAbstract):
@@ -22,7 +24,7 @@ class BinanceSpotRest(RestSdkAbstract):
         url = urljoin(self.base_url, self._depth_url)
         request_data = {
             'params': {
-                'symbol': symbol,
+                'symbol': symbol.upper(),
                 'limit': limit
             }
         }
@@ -36,7 +38,7 @@ class BinanceSpotRest(RestSdkAbstract):
         url = urljoin(self.base_url, self._24h_ticker_url)
         request_data = {
             'params': {
-                'symbol': symbol
+                'symbol': symbol.upper()
             }
         }
         return Params(
@@ -53,7 +55,7 @@ class BinanceSpotRest(RestSdkAbstract):
         url = urljoin(self.base_url, self._kline_url)
         request_data = {
             'params': {
-                'symbol': symbol,
+                'symbol': symbol.upper(),
                 'interval': interval,
                 'limit': limit
             }
@@ -71,7 +73,7 @@ class BinanceSpotRest(RestSdkAbstract):
         url = urljoin(self.base_url, self._trades_url)
         request_data = {
             'params': {
-                'symbol': symbol,
+                'symbol': symbol.upper(),
                 'limit': limit
             }
         }
@@ -79,3 +81,45 @@ class BinanceSpotRest(RestSdkAbstract):
             args=(url,),
             kwargs=request_data
         )
+
+
+class BinanceSpotWebsocket(WebsocketSdkAbstract):
+    """
+    doc: https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md
+    """
+    ws_url = 'wss://stream.binance.com:9443'
+
+    def register_trades(self, symbol: str):
+        channel_info = f"{symbol.lower()}@trade"
+        self.register_channel(channel_info)
+
+    def register_kline(self, symbol: str, interval: str='1m'):
+        channel_info = f"{symbol.lower()}@kline_{interval}"
+        self.register_channel(channel_info)
+
+    def register_depth(self, symbol: str, levels: int=20):
+        channel_info = f"{symbol.lower()}@depth{levels}"
+        self.register_channel(channel_info)
+
+    def register_ticker(self, symbol: str):
+        channel_info = f"{symbol.lower()}@ticker"
+        self.register_channel(channel_info)
+
+    def _populate_ws_url(self):
+        streams = "/".join(self.register_hub)
+        url = f"{self.ws_url}/stream?streams={streams}"
+        return url
+
+    async def setup_ws_client(self):
+        if self.ws_url is None:
+            raise ValueError('class attribute `ws_url` should not be None')
+        if self.ws_client is None:
+            self.ws_client = await self._session.ws_connect(
+                self._populate_ws_url(),
+                proxy='http://127.0.0.1:1087'
+            )
+            atexit.register(close_session, self._session)
+        return self.ws_client
+
+    async def subscribe(self, *args, **kwargs):
+        pass

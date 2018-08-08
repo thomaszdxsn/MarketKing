@@ -96,13 +96,7 @@ class OkexFutureWebsocket(WebsocketSdkAbstract):
     async def subscribe(self, *args, **kwargs):
         for channel_info in self.register_hub:
             await self.ws_client.send_json(channel_info)
-    
-    async def unsubscribe(self, *args, **kwargs):
-        for channel_info in self.register_hub:
-            unscribe_info = channel_info.copy()
-            unscribe_info['event'] = 'removeChannel'
-            await self.ws_client.send_json(channel_info)
-    
+
     def register_kline(self, symbol: str, contract_type: str):
         channel_info = {
             'event': 'addChannel',
