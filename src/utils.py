@@ -4,7 +4,7 @@ author: thomaszdxsn
 import asyncio
 import logging
 from abc import ABC, abstractmethod
-from typing import Union
+from typing import Union, Any
 
 import aiohttp
 import requests

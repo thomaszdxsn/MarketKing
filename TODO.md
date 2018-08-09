@@ -36,7 +36,10 @@
     - [x] REST
     - [x] Websocket
 
-- [] hibtc
+- [x] hitbtc
+    - [x] REST
+    - [x] Websocket
+
 - [] bitflyer
 - [] gateio
 - [] lbank
