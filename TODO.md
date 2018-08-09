@@ -31,14 +31,18 @@
     - [X] Websocket
 
 - [] bitmex
-- [] bittrex
-- [] poloniex
+
+- [x] poloniex
+    - [x] REST
+    - [x] Websocket
+
 - [] hibtc
 - [] bitflyer
 - [] gateio
 - [] lbank
 - [] bit-z
 - [] kucoin
+- [] bittrex
 - [] cointiger
 
 ## others
