@@ -40,7 +40,10 @@
     - [x] REST
     - [x] Websocket
 
-- [] bitflyer
+- [x] bitflyer
+    - [x] REST
+    - [x] Websocket
+
 - [] gateio
 - [] lbank
 - [] bit-z
