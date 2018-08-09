@@ -26,7 +26,10 @@
     - [x] REST
     - [x] Websocket
 
-- [] zb
+- [x] zb
+    - [x] REST
+    - [X] Websocket
+
 - [] bitmex
 - [] bittrex
 - [] poloniex
