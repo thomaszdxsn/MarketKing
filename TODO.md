@@ -44,7 +44,10 @@
     - [x] REST
     - [x] Websocket
 
-- [] gateio
+- [x] gateio
+    - [x] REST
+    - [x] Websocket
+
 - [] lbank
 - [] bit-z
 - [] kucoin

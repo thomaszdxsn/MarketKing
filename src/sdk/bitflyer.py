@@ -8,7 +8,8 @@ from . import WebsocketSdkAbstract, RestSdkAbstract
 from ..schemas import Params
 
 __all__ = (
-    'BitflyerRest'
+    'BitflyerRest',
+    'BitflyerWebsocket'
 )
 
 
