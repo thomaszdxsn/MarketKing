@@ -7,6 +7,11 @@ from typing import Union
 from . import WebsocketSdkAbstract, RestSdkAbstract
 from ..schemas import Params
 
+__all__ = (
+    'BitfinexRest',
+    'BitfinexWebsocket'
+)
+
 
 class BitfinexRest(RestSdkAbstract):
     """API version: 2.0

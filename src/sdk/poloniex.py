@@ -2,12 +2,18 @@
 Author: thomaszdxsn
 """
 from urllib.parse import urljoin
+from typing import Union
 
 from . import WebsocketSdkAbstract, RestSdkAbstract
 from ..schemas import Params
 
+__all__ = (
+    'PoloniexRest',
+    'PoloniexWebsocket'
+)
 
-class PoloniexSpotRest(RestSdkAbstract):
+
+class PoloniexRest(RestSdkAbstract):
     """
     doc: https://poloniex.com/support/api/
     """
@@ -78,7 +84,7 @@ class PoloniexSpotRest(RestSdkAbstract):
         )
 
 
-class PoloniexSpotWebsocket(WebsocketSdkAbstract):
+class PoloniexWebsocket(WebsocketSdkAbstract):
     ws_url = 'wss://api2.poloniex.com'
 
     def register_ticker(self):

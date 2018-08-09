@@ -5,17 +5,17 @@ import json
 
 import pytest
 
-from src.sdk.fcoin_spot import FcoinSpotRest, FcoinSpotWebsocket
+from src.sdk.fcoin import FcoinRest, FcoinWebsocket
 
 
 @pytest.fixture
 def sdk(loop):
-    yield FcoinSpotRest(loop)
+    yield FcoinRest(loop)
 
 
 @pytest.fixture
 def ws_sdk(loop):
-    yield FcoinSpotWebsocket(loop)
+    yield FcoinWebsocket(loop)
 
 
 def test_get_kline_from_rest(sdk):

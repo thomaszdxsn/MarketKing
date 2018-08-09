@@ -3,17 +3,17 @@ author: thomaszdxsn
 """
 import pytest
 
-from src.sdk.binance_spot import BinanceSpotRest, BinanceSpotWebsocket
+from src.sdk.binance import BinanceRest, BinanceWebsocket
 
 
 @pytest.fixture
 def sdk(loop):
-    yield BinanceSpotRest(loop)
+    yield BinanceRest(loop)
 
 
 @pytest.fixture
 def ws_sdk(loop):
-    yield BinanceSpotWebsocket(loop)
+    yield BinanceWebsocket(loop)
 
 
 def test_get_kline_from_rest(sdk):

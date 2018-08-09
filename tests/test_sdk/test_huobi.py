@@ -6,17 +6,17 @@ import gzip
 
 import pytest
 
-from src.sdk.huobi_spot import HuobiSpotRest, HuobiSpotWebsocket
+from src.sdk.huobi import HuobiRest, HuobiWebsocket
 
 
 @pytest.fixture
 def sdk(loop):
-    yield HuobiSpotRest(loop)
+    yield HuobiRest(loop)
 
 
 @pytest.fixture
 def ws_sdk(loop):
-    yield HuobiSpotWebsocket(loop)
+    yield HuobiWebsocket(loop)
 
 
 def test_get_ticker_from_rest(sdk):

@@ -7,8 +7,13 @@ from typing import Union
 from . import RestSdkAbstract, WebsocketSdkAbstract
 from ..schemas import Params
 
+__all__ = (
+    'FcoinRest',
+    'FcoinWebsocket'
+)
 
-class FcoinSpotRest(RestSdkAbstract):
+
+class FcoinRest(RestSdkAbstract):
     """
     doc: https://developer.fcoin.com/zh.html
     """
@@ -80,7 +85,7 @@ class FcoinSpotRest(RestSdkAbstract):
         )
 
 
-class FcoinSpotWebsocket(WebsocketSdkAbstract):
+class FcoinWebsocket(WebsocketSdkAbstract):
     ws_url = 'wss://api.fcoin.com/v2/ws'
 
     def register_ticker(self, symbol: str):

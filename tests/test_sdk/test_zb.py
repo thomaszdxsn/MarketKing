@@ -5,17 +5,17 @@ import json
 
 import pytest
 
-from src.sdk.zb_spot import ZBSpotRest, ZBSpotWebsocket
+from src.sdk.zb import ZBRest, ZBWebsocket
 
 
 @pytest.fixture
 def sdk(loop):
-    yield ZBSpotRest(loop)
+    yield ZBRest(loop)
 
 
 @pytest.fixture
 def ws_sdk(loop):
-    yield ZBSpotWebsocket(loop)
+    yield ZBWebsocket(loop)
 
 
 

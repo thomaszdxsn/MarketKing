@@ -6,17 +6,17 @@ import json
 import arrow
 import pytest
 
-from src.sdk.poloniex_spot import PoloniexSpotRest, PoloniexSpotWebsocket
+from src.sdk.poloniex import PoloniexRest, PoloniexWebsocket
 
 
 @pytest.fixture
 def sdk(loop):
-    yield PoloniexSpotRest(loop)
+    yield PoloniexRest(loop)
 
 
 @pytest.fixture
 def ws_sdk(loop):
-    yield PoloniexSpotWebsocket(loop)
+    yield PoloniexWebsocket(loop)
 
 
 def test_get_kline_from_sdk(sdk):

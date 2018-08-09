@@ -5,17 +5,17 @@ import json
 
 import pytest
 
-from src.sdk.hitbtc_spot import HitBTCSpotRest, HitBTCSpotWebsocket
+from src.sdk.hitbtc import HitBTCRest, HitBTCWebsocket
 
 
 @pytest.fixture
 def sdk(loop):
-    yield HitBTCSpotRest(loop)
+    yield HitBTCRest(loop)
 
 
 @pytest.fixture
 def ws_sdk(loop):
-    yield HitBTCSpotWebsocket(loop)
+    yield HitBTCWebsocket(loop)
 
 
 def test_get_ticker_from_rest(sdk):

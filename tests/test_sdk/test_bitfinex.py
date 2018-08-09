@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from src.sdk.bitfinex_spot import BitfinexRest, BitfinexWebsocket
+from src.sdk.bitfinex import BitfinexRest, BitfinexWebsocket
 
 
 @pytest.fixture

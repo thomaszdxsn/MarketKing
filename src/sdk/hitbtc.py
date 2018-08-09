@@ -7,8 +7,13 @@ from typing import Union
 from . import RestSdkAbstract, WebsocketSdkAbstract
 from ..schemas import Params
 
+__all__ = (
+    'HitBTCRest',
+    'HitBTCWebsocket'
+)
 
-class HitBTCSpotRest(RestSdkAbstract):
+
+class HitBTCRest(RestSdkAbstract):
     """
     doc: https://api.hitbtc.com/?python#development-guide
     """
@@ -46,7 +51,7 @@ class HitBTCSpotRest(RestSdkAbstract):
             }
         }
         if from_ is not None:
-            request_data['params']['form'] = form_
+            request_data['params']['form'] = from_
         if till is not None:
             request_data['params']['till'] = till
         if limit is not None:
@@ -95,7 +100,7 @@ class HitBTCSpotRest(RestSdkAbstract):
         ) 
     
 
-class HitBTCSpotWebsocket(WebsocketSdkAbstract):
+class HitBTCWebsocket(WebsocketSdkAbstract):
     ws_url = 'wss://api.hitbtc.com/api/2/ws'
 
     def register_ticker(self, symbol: str):

@@ -50,7 +50,7 @@
 
 ## others
 
-- [] 完成session, ClientSession的参数配置化
 - [x] 调试ClientSession的翻墙问题, SSL问题
+- [x] 修改各个sdk文件名和类名，加入`__all__`变量
 - [] 加入DEBUG, INFO日志
-- [] 处理ws接口的错误
+- [] 完成session, ClientSession的参数配置化

@@ -10,8 +10,13 @@ from typing import Callable
 from . import RestSdkAbstract, WebsocketSdkAbstract
 from ..schemas import Params
 
+__all__ = (
+    'HuobiRest',
+    'HuobiWebsocket'
+)
 
-class HuobiSpotRest(RestSdkAbstract):
+
+class HuobiRest(RestSdkAbstract):
     base_url = 'https://api.huobi.pro/'
     _kline_url = '/market/history/kline'
     _trades_url = '/market/trade'
@@ -73,7 +78,7 @@ class HuobiSpotRest(RestSdkAbstract):
         )
 
 
-class HuobiSpotWebsocket(WebsocketSdkAbstract):
+class HuobiWebsocket(WebsocketSdkAbstract):
     ws_url = 'wss://api.huobi.pro/ws'
 
     def _gen_random_id(self) -> str:

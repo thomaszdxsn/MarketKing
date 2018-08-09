@@ -9,8 +9,13 @@ from . import WebsocketSdkAbstract, RestSdkAbstract
 from ..schemas import Params
 from ..utils import close_session
 
+__all__ = (
+    'BinanceRest',
+    'BinanceWebsocket'
+)
 
-class BinanceSpotRest(RestSdkAbstract):
+
+class BinanceRest(RestSdkAbstract):
     """
     doc: https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md
     """
@@ -83,7 +88,7 @@ class BinanceSpotRest(RestSdkAbstract):
         )
 
 
-class BinanceSpotWebsocket(WebsocketSdkAbstract):
+class BinanceWebsocket(WebsocketSdkAbstract):
     """
     doc: https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md
     """

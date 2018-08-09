@@ -7,8 +7,13 @@ from typing import Union
 from . import RestSdkAbstract, WebsocketSdkAbstract
 from ..schemas import Params
 
+__all__ = (
+    'ZBRest',
+    'ZBWebsocket'
+)
 
-class ZBSpotRest(RestSdkAbstract):
+
+class ZBRest(RestSdkAbstract):
     """
     doc: https://www.zb.com/i/developer
     """
@@ -85,7 +90,7 @@ class ZBSpotRest(RestSdkAbstract):
         )
         
 
-class ZBSpotWebsocket(WebsocketSdkAbstract):
+class ZBWebsocket(WebsocketSdkAbstract):
     ws_url = 'wss://api.zb.cn:9999/websocket'
 
     def register_ticker(self, symbol: str):
