@@ -59,6 +59,7 @@ def test_get_kline_by_rest(sdk):
     assert isinstance(msg.data, list)
 
 
+@pytest.mark.ws
 async def test_get_data_from_websocket(ws_sdk):
     symbol = 'btc'
     contract_type = 'this_week'

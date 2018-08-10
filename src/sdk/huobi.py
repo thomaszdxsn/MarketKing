@@ -120,7 +120,6 @@ class HuobiWebsocket(WebsocketSdkAbstract):
 
     async def connect(self, handler: Callable):
          async for msg in self.ws_client:
-             # TODO: handle error
              raw_data = gzip.decompress(msg.data)
              data = json.loads(raw_data, encoding='ascii')
              ping = data.get('ping')

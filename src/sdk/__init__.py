@@ -7,9 +7,9 @@ from abc import abstractmethod, ABC
 from asyncio import AbstractEventLoop
 from typing import Union, Callable
 
-
 from requests import Session
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientTimeout
+from dynaconf import settings
 
 from ..schemas import Params
 from ..schemas.sdk import ResponseMsg
@@ -18,6 +18,13 @@ from ..utils import (NoSSlVerifyTCPConnector, close_session,
 
 
 class RestSdkAbstract(ABC):
+    _request_read_timeout: float = settings.as_float('REQUEST_READ_TIMEOUT')
+    _request_conn_timeout: float = settings.as_float('REQUEST_CONN_TIMEOUT')
+    _async_timeout: ClientTimeout = ClientTimeout(
+        total=_request_conn_timeout + _request_read_timeout,
+        sock_connect=_request_conn_timeout,
+        sock_read=_request_read_timeout
+    )
 
     def __init__(self, loop: Union[AbstractEventLoop, None]=None):
         self.logger = logging.getLogger(f"sdk.{self.__class__.__name__}")
@@ -29,7 +36,8 @@ class RestSdkAbstract(ABC):
             self._async_session = ClientSession(
                 loop=loop,
                 trust_env=True,
-                connector=NoSSlVerifyTCPConnector()
+                connector=NoSSlVerifyTCPConnector(),
+                timeout=self._async_timeout
             )
             self._async_session_wrapper = AsyncSessionWrapper(
                 self._async_session
@@ -37,6 +45,8 @@ class RestSdkAbstract(ABC):
             atexit.register(close_session, self._async_session)
 
     def _http_get(self, *args, **kwargs) -> ResponseMsg:
+        timeout_tuple = (self._request_read_timeout, self._request_conn_timeout)
+        kwargs.setdefault('timeout', timeout_tuple)
         return self._session_wrapper.get(*args, **kwargs)
     
     async def _async_http_get(self, *args, **kwargs) -> ResponseMsg:
@@ -47,7 +57,7 @@ class RestSdkAbstract(ABC):
         return self._http_get(*params.args,
                               **params.kwargs)
 
-    async def get_kline_async(self, *args, **kwargs):
+    async def get_kline_async(self, *args, **kwargs) -> ResponseMsg:
         params = self._kline_request(*args, **kwargs)
         return await self._async_http_get(*params.args,
                                           **params.kwargs)
@@ -100,6 +110,16 @@ class WebsocketSdkAbstract(ABC):
     运行流程:
     register_xxx |> setup_ws_client |> subscribe |> connect
     """
+    _request_read_timeout: float = settings.as_float('REQUEST_READ_TIMEOUT')
+    _request_conn_timeout: float = settings.as_float('REQUEST_CONN_TIMEOUT')
+    _async_timeout: ClientTimeout = ClientTimeout(
+        total=_request_conn_timeout + _request_read_timeout,
+        sock_connect=_request_conn_timeout,
+        sock_read=_request_read_timeout
+    )
+    _ws_timeout: float = settings.as_float('WS_TIMEOUT')
+    _ws_recv_timeout: float = settings.as_float('WS_RECV_TIMEOUT')
+    _ws_proxy: str = settings['WS_PROXY']
     ws_url: str
 
     def __init__(self, loop: AbstractEventLoop):
@@ -108,7 +128,8 @@ class WebsocketSdkAbstract(ABC):
         self._session = ClientSession(
             loop=loop,
             trust_env=True,
-            connector=NoSSlVerifyTCPConnector()
+            connector=NoSSlVerifyTCPConnector(),
+            timeout=self._async_timeout
         )
         self.ws_client = None
         self.register_hub = list()
@@ -135,7 +156,9 @@ class WebsocketSdkAbstract(ABC):
         if self.ws_client is None:
             self.ws_client = await self._session.ws_connect(
                 self.ws_url,
-                proxy='http://127.0.0.1:1087'
+                proxy=self._ws_proxy,
+                timeout=self._ws_timeout,
+                receive_timeout=self._ws_recv_timeout
             )
         return self.ws_client
 

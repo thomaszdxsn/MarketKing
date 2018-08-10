@@ -1,0 +1,22 @@
+default:
+  REQUEST_READ_TIMEOUT: 10
+  REQUEST_CONN_TIMEOUT: 10
+  WS_TIMEOUT: 10
+  WS_RECV_TIMEOUT: 10
+  WS_PROXY: null
+
+  PAIRS:
+    fcoin:
+      ws:
+        - 'BTC_USDT'
+        
+
+development:
+  WS_PROXY: 'http://127.0.0.1:1087'
+
+  PAIRS:
+    fcoin:
+      ws:
+        - 'BTC_USDT'
+
+  

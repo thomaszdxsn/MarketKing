@@ -67,14 +67,14 @@ class AsyncSessionWrapper(SessionWrapperAbstract):
                     data=result
                 )
         except aiohttp.client_exceptions.ClientError as exc:
-            msg = f'client error in request: {exc}'
+            msg = f'client error in request: {exc}, {args}, {kwargs}'
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
                 error=HttpErrorEnum.ClientError.value,
                 data=''
             )
         except Exception as exc:
-            msg = f"other error in request: {exc}"
+            msg = f"other error in request: {exc} {args}, {kwargs}"
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
                 error=HttpErrorEnum.OtherError.value,
@@ -101,14 +101,14 @@ class SessionWrapper(SessionWrapperAbstract):
                 data=result
             )
         except requests.RequestException as exc:
-            msg = f'client error in request: {exc} '
+            msg = f'client error in request: {exc} {args}, {kwargs}'
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
                 error=HttpErrorEnum.ClientError.value,
                 data=''
             )
         except Exception as exc:
-            msg = f"other error in request: {exc}"
+            msg = f"other error in request: {exc} {args}, {kwargs}"
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
                 error=HttpErrorEnum.OtherError.value,

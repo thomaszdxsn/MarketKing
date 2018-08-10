@@ -22,29 +22,29 @@ def ws_sdk(loop):
 def test_get_depth_from_rest(sdk):
     msg = sdk.get_depth('btc_usdt')
     assert msg.error == 0
-    assert 'asks' in data
-    assert 'bids' in data
+    assert 'asks' in msg.data
+    assert 'bids' in msg.data
 
 
 @pytest.mark.rest
 def test_get_trades_from_rest(sdk):
     msg = sdk.get_trades('btc_usdt')
     assert msg.error == 0
-    assert isinstance(data['data'], list)
+    assert isinstance(msg.data['data'], list)
 
 
 @pytest.mark.rest
 def test_get_kline_from_rest(sdk):
     msg = sdk.get_kline('btc_usdt')
     assert msg.error == 0
-    assert len(data['data']) >= 60
+    assert len(msg.data['data']) >= 60
 
 
 @pytest.mark.rest
 def test_get_ticker_from_rest(sdk):
     msg = sdk.get_ticker('btc_usdt')
     assert msg.error == 0
-    assert 'high24hr' in data
+    assert 'high24hr' in msg.data
 
 
 @pytest.mark.ws

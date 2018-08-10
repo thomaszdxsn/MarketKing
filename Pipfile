@@ -7,6 +7,8 @@ name = "pypi"
 requests = "*"
 aiohttp = "*"
 pytest = "*"
+dynaconf = {extras = ["yaml"]}
+arrow = "*"
 
 [dev-packages]
 
