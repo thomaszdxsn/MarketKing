@@ -62,7 +62,9 @@
     - [x] REST
     - [] Websocket(非标准ws接口，暂不开发)
 
-- [] cointiger
+- [x] cointiger
+    - [x] REST
+    - [x] Websocket
 
 - [] upbit
 - [] coinbase-pro

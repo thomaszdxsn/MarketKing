@@ -19,6 +19,7 @@ def ws_sdk(loop):
     yield PoloniexWebsocket(loop)
 
 
+@pytest.mark.rest
 def test_get_kline_from_sdk(sdk):
     utcnow = arrow.utcnow()
     start = utcnow.shift(hours=-1).timestamp
@@ -28,12 +29,14 @@ def test_get_kline_from_sdk(sdk):
     assert isinstance(msg.data, list)
 
 
+@pytest.mark.rest
 def test_get_ticker_from_sdk(sdk):
     msg = sdk.get_ticker()
     assert msg.error == 0
     assert isinstance(msg.data, dict)
 
 
+@pytest.mark.rest
 def test_get_depth_from_sdk(sdk):
     msg = sdk.get_depth('usdt_btc')
     assert msg.error == 0
@@ -41,6 +44,7 @@ def test_get_depth_from_sdk(sdk):
     assert 'bids' in msg.data
 
 
+@pytest.mark.rest
 def test_get_trades_from_sdk(sdk):
     utcnow = arrow.utcnow()
     start = utcnow.shift(hours=-1).timestamp
@@ -50,6 +54,7 @@ def test_get_trades_from_sdk(sdk):
     assert isinstance(msg.data, list)
 
 
+@pytest.mark.ws
 async def test_ws_sub_ticker_channels(ws_sdk):
     ws_sdk.register_ticker()
     await ws_sdk.setup_ws_client()
@@ -60,6 +65,7 @@ async def test_ws_sub_ticker_channels(ws_sdk):
         break
 
 
+@pytest.mark.ws
 async def test_ws_sub_depth_channel(ws_sdk):
     ws_sdk.register_depth('121')
     await ws_sdk.setup_ws_client()

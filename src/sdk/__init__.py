@@ -7,7 +7,7 @@ from abc import ABC
 from asyncio import AbstractEventLoop
 from typing import Union, Callable
 
-from aiohttp import ClientSession, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout, ClientWebSocketResponse
 from dynaconf import settings
 from requests import Session
 
@@ -140,6 +140,7 @@ class WebsocketSdkAbstract(ABC):
     )
     _ws_timeout: float = settings.as_float('WS_TIMEOUT')
     _ws_recv_timeout: float = settings.as_float('WS_RECV_TIMEOUT')
+    _ws_heartbeat: float = settings.as_float('WS_HEARTBEAT')
     _http_proxy: Union[str, None] = settings['HTTP_PROXY']
     ws_url: str
 
@@ -171,7 +172,7 @@ class WebsocketSdkAbstract(ABC):
     def register_ticker(self, *args, **kwargs):
         raise NotImplemented
 
-    async def setup_ws_client(self):
+    async def setup_ws_client(self) -> ClientWebSocketResponse:
         if self.ws_url is None:
             raise ValueError('class attribute `ws_url` should not be None')
         if self.ws_client is None:
@@ -179,8 +180,10 @@ class WebsocketSdkAbstract(ABC):
                 self.ws_url,
                 proxy=self._http_proxy,
                 timeout=self._ws_timeout,
-                receive_timeout=self._ws_recv_timeout
+                receive_timeout=self._ws_recv_timeout,
+                heartbeat=self._ws_heartbeat
             )
+            atexit.register(close_session, self.ws_client)
         return self.ws_client
 
     async def subscribe(self, *args, **kwargs):

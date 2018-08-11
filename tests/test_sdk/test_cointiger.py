@@ -90,7 +90,7 @@ async def test_ws_sub_trades_channel(ws_sdk):
 
 
 @pytest.mark.ws
-async def test_ws_sub_trades_channel(ws_sdk):
+async def test_ws_sub_kline_channel(ws_sdk):
     ws_sdk.register_kline(symbol)
     await ws_sdk.setup_ws_client()
     await ws_sdk.subscribe()

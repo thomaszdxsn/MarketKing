@@ -54,11 +54,11 @@ def test_get_trades_from_rest(sdk):
 # 2018.08.11 尝试国内通过代理进行ws连接的时候会失败
 # 失败原因是 ws handshake error, status code 是 400 而不是 101
 # TODO: 在境外服务器试一下
-@pytest.mark.skip
-@pytest.mark.ws
-async def test_ws_sub_ticker_channel(ws_sdk):
-    ws_sdk.register_ticker(symbol)
-    await ws_sdk.setup_ws_client()
-    await ws_sdk.subscribe()
-    async for msg in ws_sdk.ws_client:
-        print(msg)
+# @pytest.mark.skip
+# @pytest.mark.ws
+# async def test_ws_sub_ticker_channel(ws_sdk):
+#     ws_sdk.register_ticker(symbol)
+#     await ws_sdk.setup_ws_client()
+#     await ws_sdk.subscribe()
+#     async for msg in ws_sdk.ws_client:
+#         print(msg)

@@ -18,6 +18,7 @@ def ws_sdk(loop):
     yield HitBTCWebsocket(loop)
 
 
+@pytest.mark.rest
 def test_get_ticker_from_rest(sdk):
     msg = sdk.get_ticker('ethbtc')
     assert msg.error == 0
@@ -26,6 +27,7 @@ def test_get_ticker_from_rest(sdk):
     assert 'bid' in msg.data
 
 
+@pytest.mark.rest
 def test_get_depth_from_rest(sdk):
     msg = sdk.get_depth('ethbtc')
     assert msg.error == 0
@@ -33,12 +35,14 @@ def test_get_depth_from_rest(sdk):
     assert isinstance(msg.data['bid'], list)
 
 
+@pytest.mark.rest
 def test_get_kline_from_rest(sdk):
     msg = sdk.get_kline('ethbtc')
     assert msg.error == 0
     assert isinstance(msg.data, list)
 
 
+@pytest.mark.rest
 def test_get_trades_from_rest(sdk):
     msg = sdk.get_trades('ethbtc')
     assert msg.error == 0

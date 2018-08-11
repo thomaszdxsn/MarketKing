@@ -4,6 +4,7 @@ Author: thomaszdxsn
 import json
 import gzip
 from urllib.parse import urljoin
+from typing import Callable
 
 from . import RestSdkAbstract, WebsocketSdkAbstract
 from ..schemas import Params

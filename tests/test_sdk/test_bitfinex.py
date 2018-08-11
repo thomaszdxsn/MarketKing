@@ -18,30 +18,35 @@ def ws_sdk(loop):
     yield BitfinexWebsocket(loop)
 
 
+@pytest.mark.rest
 def test_get_ticker_from_rest(sdk):
     msg = sdk.get_ticker('btcusd')
     assert msg.error == 0
     assert type(msg.data) == list
 
 
+@pytest.mark.rest
 def test_get_kline_from_rest(sdk):
     msg = sdk.get_kline('btcusd')
     assert msg.error == 0
     assert type(msg.data) == list
 
 
+@pytest.mark.rest
 def test_get_trades_from_rest(sdk):
     msg = sdk.get_trades('btcusd')
     assert msg.error == 0
     assert type(msg.data) == list
 
 
+@pytest.mark.rest
 def test_get_depth_from_rest(sdk):
     msg = sdk.get_depth('btcusd')
     assert msg.error == 0
     assert type(msg.data) == list
 
 
+@pytest.mark.ws
 async def test_ws_sub_ticker_channel(ws_sdk):
     ws_sdk.register_ticker('btcusd')
     await ws_sdk.setup_ws_client()
@@ -55,6 +60,7 @@ async def test_ws_sub_ticker_channel(ws_sdk):
             break
 
 
+@pytest.mark.ws
 async def test_ws_sub_depth_channel(ws_sdk):
     ws_sdk.register_depth('btcusd')
     await ws_sdk.setup_ws_client()
@@ -68,6 +74,7 @@ async def test_ws_sub_depth_channel(ws_sdk):
             break
 
 
+@pytest.mark.ws
 async def test_ws_sub_trades_channel(ws_sdk):
     ws_sdk.register_trades('btcusd')
     await ws_sdk.setup_ws_client()
@@ -81,6 +88,7 @@ async def test_ws_sub_trades_channel(ws_sdk):
             break
 
 
+@pytest.mark.ws
 async def test_ws_sub_kline_channel(ws_sdk):
     ws_sdk.register_kline('btcusd')
     await ws_sdk.setup_ws_client()

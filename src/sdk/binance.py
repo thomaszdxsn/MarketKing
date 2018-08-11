@@ -5,6 +5,8 @@ import atexit
 from urllib.parse import urljoin
 from typing import Union
 
+from aiohttp.client_ws import ClientWebSocketResponse
+
 from . import WebsocketSdkAbstract, RestSdkAbstract
 from ..schemas import Params
 from ..utils import close_session
@@ -93,6 +95,7 @@ class BinanceWebsocket(WebsocketSdkAbstract):
     doc: https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md
     """
     ws_url = 'wss://stream.binance.com:9443'
+    _origin_ws_url = 'wss://stream.binance.com:9443'
 
     def register_trades(self, symbol: str):
         channel_info = f"{symbol.lower()}@trade"
@@ -112,19 +115,12 @@ class BinanceWebsocket(WebsocketSdkAbstract):
 
     def _populate_ws_url(self):
         streams = "/".join(self.register_hub)
-        url = f"{self.ws_url}/stream?streams={streams}"
+        url = f"{self._origin_ws_url}/stream?streams={streams}"
         return url
 
-    async def setup_ws_client(self):
-        if self.ws_url is None:
-            raise ValueError('class attribute `ws_url` should not be None')
-        if self.ws_client is None:
-            self.ws_client = await self._session.ws_connect(
-                self._populate_ws_url(),
-                proxy='http://127.0.0.1:1087'
-            )
-            atexit.register(close_session, self._session)
-        return self.ws_client
+    async def setup_ws_client(self) -> ClientWebSocketResponse:
+        self.ws_url = self._populate_ws_url()
+        return await super().setup_ws_client()
 
     async def subscribe(self, *args, **kwargs):
         pass
