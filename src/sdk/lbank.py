@@ -25,6 +25,10 @@ class LBankRest(RestSdkAbstract):
     _trades_url = '/v1/trades.do'
     _kline_url = '/v1/kline.do'
 
+    _headers = {
+        'ContentType': 'application/x-www-form-urlencoded'
+    }
+
     def _ticker_request(self, symbol: str) -> Params:
         url = urljoin(self.base_url, self._ticker_url)
         request_data = {

@@ -3,7 +3,7 @@ author: thomaszdxsn
 """
 import atexit
 import logging
-from abc import abstractmethod, ABC
+from abc import ABC
 from asyncio import AbstractEventLoop
 from typing import Union, Callable
 
@@ -13,6 +13,7 @@ from requests import Session
 
 from ..schemas import Params
 from ..schemas.sdk import ResponseMsg
+from ..schemas.logs import LogMsgFmt
 from ..utils import (NoSSlVerifyTCPConnector, close_session,
                      SessionWrapper, AsyncSessionWrapper)
 
@@ -26,6 +27,7 @@ class RestSdkAbstract(ABC):
         sock_read=_request_read_timeout
     )
     _http_proxy: Union[str, None] = settings['HTTP_PROXY']
+    _headers: Union[dict, None] = None
 
     def __init__(self, loop: Union[AbstractEventLoop, None]=None):
         self.logger = logging.getLogger(f"sdk.{self.__class__.__name__}")
@@ -50,12 +52,25 @@ class RestSdkAbstract(ABC):
             atexit.register(close_session, self._async_session)
 
     def _http_get(self, *args, **kwargs) -> ResponseMsg:
+        # logging
+        url = args[0]
+        log_msg = LogMsgFmt.HTTP_ACTION.value.format(method='GET', url=url)
+        self.logger.info(log_msg)
+
         timeout_tuple = (self._request_read_timeout, self._request_conn_timeout)
         kwargs.setdefault('timeout', timeout_tuple)
         kwargs.setdefault('proxies', self._requests_proxies)
+        if self._headers:
+            kwargs.setdefault('headers', self._headers)
         return self._session_wrapper.get(*args, **kwargs)
     
     async def _async_http_get(self, *args, **kwargs) -> ResponseMsg:
+        url = args[0]
+        log_msg = LogMsgFmt.HTTP_ACTION.value.format(method='GET', url=url)
+        self.logger.info(log_msg)
+
+        if self._headers:
+            kwargs.setdefault('headers', self._headers)
         return await self._async_session_wrapper.get(*args, **kwargs)
 
     def get_kline(self, *args, **kwargs) -> ResponseMsg:
@@ -163,8 +178,8 @@ class WebsocketSdkAbstract(ABC):
             self.ws_client = await self._session.ws_connect(
                 self.ws_url,
                 proxy=self._http_proxy,
-                # timeout=self._ws_timeout,
-                # receive_timeout=self._ws_recv_timeout
+                timeout=self._ws_timeout,
+                receive_timeout=self._ws_recv_timeout
             )
         return self.ws_client
 
@@ -177,8 +192,6 @@ class WebsocketSdkAbstract(ABC):
         async for msg in self.ws_client:
             handler(msg)
 
-    async def keep_connect(self):
-        pass
 
 
 

@@ -4,14 +4,15 @@ author: thomaszdxsn
 import asyncio
 import logging
 from abc import ABC, abstractmethod
-from typing import Union, Any
+from typing import Union
 
 import aiohttp
 import requests
 from requests import Session
-from aiohttp import ClientSession, ClientWebSocketResponse
+from aiohttp import ClientSession
 
 from .schemas.sdk import ResponseMsg, HttpErrorEnum
+from .schemas.logs import LogMsgFmt
 
 
 def close_session(session: ClientSession):
@@ -67,21 +68,34 @@ class AsyncSessionWrapper(SessionWrapperAbstract):
                 resp_handler = getattr(resp, resp_method)
                 result = await (resp_handler() if callable(
                                 resp_handler) else resp_handler)
+
+                # log
+                url = args[0]
+                msg = LogMsgFmt.HTTP_RESPONSE.value.format(
+                    method=http_method.upper(),
+                    url=url,
+                    response=result,
+                )
+                self.logger.debug(msg)
                 return ResponseMsg(
                     data=result
                 )
         except aiohttp.client_exceptions.ClientError as exc:
-            msg = f'client error in request: {exc}, {args}, {kwargs}'
+            error_no = HttpErrorEnum.ClientError.value
+            exc_msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
+            msg = f'SDKClientError|{error_no}|{exc_msg}|{args}|{kwargs}'
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
-                error=HttpErrorEnum.ClientError.value,
+                error=error_no,
                 data=''
             )
         except Exception as exc:
-            msg = f"other error in request: {exc} {args}, {kwargs}"
+            error_no = HttpErrorEnum.OtherError.value
+            exc_msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
+            msg = f'SDKClientError|{error_no}|{exc_msg}|{args}|{kwargs}'
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
-                error=HttpErrorEnum.OtherError.value,
+                error=error_no,
                 data=''
             )
 
@@ -101,20 +115,32 @@ class SessionWrapper(SessionWrapperAbstract):
             resp = method(*args, **kwargs)
             resp_handler = getattr(resp, resp_method)
             result = resp_handler() if callable(resp_handler) else resp_handler
+
+            url = args[0]
+            msg = LogMsgFmt.HTTP_RESPONSE.value.format(
+                method=http_method.upper(),
+                url=url,
+                response=result,
+            )
+            self.logger.debug(msg)
             return ResponseMsg(
                 data=result
             )
         except requests.RequestException as exc:
-            msg = f'client error in request: {exc} {args}, {kwargs}'
+            error_no = HttpErrorEnum.ClientError.value
+            exc_msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
+            msg = f'SDKClientError|{error_no}|{exc_msg}|{args}|{kwargs}'
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
-                error=HttpErrorEnum.ClientError.value,
+                error=error_no,
                 data=''
             )
         except Exception as exc:
-            msg = f"other error in request: {exc} {args}, {kwargs}"
+            error_no = HttpErrorEnum.OtherError.value
+            exc_msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
+            msg = f'SDKClientError|{error_no}|{exc_msg}|{args}|{kwargs}'
             self.logger.error(msg, exc_info=True)
             return ResponseMsg(
-                error=HttpErrorEnum.OtherError.value,
+                error=error_no,
                 data=''
             )

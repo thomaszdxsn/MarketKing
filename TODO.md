@@ -62,4 +62,5 @@
 - [x] 调试ClientSession的翻墙问题, SSL问题
 - [x] 修改各个sdk文件名和类名，加入`__all__`变量
 - [x] 完成session, ClientSession, WsClient的参数配置化
-- [] 加入DEBUG, INFO日志
+- [x] 加入DEBUG, INFO日志
+- [] Websocket类的错误处理
