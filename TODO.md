@@ -31,6 +31,8 @@
     - [X] Websocket
 
 - [] bitmex
+    - [] REST
+    - [x] Websocket
 
 - [x] poloniex
     - [x] REST
