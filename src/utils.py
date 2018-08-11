@@ -20,10 +20,6 @@ def close_session(session: ClientSession):
     asyncio.run(session.close())
 
 
-def _no_handshake_ws_connect():
-    pass
-
-
 class NoSSlVerifyTCPConnector(aiohttp.TCPConnector):
 
     def __init__(self, *args, verify_ssl=False, **kwargs):

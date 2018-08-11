@@ -52,7 +52,9 @@
     - [x] REST
     - [] Websocket
 
-- [] bit-z
+- [x] bit-z
+    - [x] REST
+
 - [] kucoin
 - [] bittrex
 - [] cointiger

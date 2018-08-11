@@ -16,7 +16,7 @@ default:
 
 development:
   HTTP_PROXY: http://127.0.0.1:1087
-  LOGGING_LEVEL: INFO
+  LOGGING_LEVEL: DEBUG
 
   PAIRS:
     fcoin:
