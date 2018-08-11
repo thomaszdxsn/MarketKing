@@ -68,8 +68,12 @@
     - [x] REST
     - [x] Websocket
 
-- [] upbit
+- [x] upbit
+    - [x] REST
+
 - [] coinbase-pro
+
+
 - [] kraken
 - [] digifinex
 - [] bibox
