@@ -50,7 +50,7 @@
 
 - [] lbank
     - [x] REST
-    - [] Websocket
+    - [] Websocket(WS接口有一些问题)
 
 - [x] bit-z
     - [x] REST
@@ -59,7 +59,22 @@
     - [x] REST
 
 - [] bittrex
+    - [x] REST
+    - [] Websocket(非标准ws接口，暂不开发)
+
 - [] cointiger
+
+- [] upbit
+- [] coinbase-pro
+- [] kraken
+- [] digifinex
+- [] bibox
+- [] quoinex
+- [] bcex
+- [] coinw
+- [] bitstamp
+- [] topbtc
+- [] bithump
 
 ## others
 
