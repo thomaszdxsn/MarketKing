@@ -1,22 +1,26 @@
 default:
+  # HTTP related settings
   REQUEST_READ_TIMEOUT: 10
   REQUEST_CONN_TIMEOUT: 10
   WS_TIMEOUT: 10
-  WS_RECV_TIMEOUT: 10
-  WS_PROXY: null
+  WS_RECV_TIMEOUT: 15
+  HTTP_PROXY: null
+
+  LOGGING_LEVEL: WARNING
 
   PAIRS:
     fcoin:
       ws:
-        - 'BTC_USDT'
+        - BTC_USDT
         
 
 development:
-  WS_PROXY: 'http://127.0.0.1:1087'
+  HTTP_PROXY: http://127.0.0.1:1087
+  LOGGING_LEVEL: INFO
 
   PAIRS:
     fcoin:
       ws:
-        - 'BTC_USDT'
+        - BTC_USDT
 
   

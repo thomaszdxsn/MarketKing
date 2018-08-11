@@ -63,10 +63,8 @@ def test_get_kline_by_rest(sdk):
 async def test_get_data_from_websocket(ws_sdk):
     symbol = 'btc'
     contract_type = 'this_week'
-    ws_sdk.register_kline(symbol, contract_type)
-    ws_sdk.register_depth(symbol, contract_type)
-    ws_sdk.register_trades(symbol, contract_type)
-    ws_sdk.register_ticker(symbol, contract_type)
+    ws_sdk.register_depth(symbol, contract_type, 10)
+    ws_sdk.register_depth(symbol, contract_type, 20)
     await ws_sdk.setup_ws_client()
     await ws_sdk.subscribe()
     async for msg in ws_sdk.ws_client:

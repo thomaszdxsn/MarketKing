@@ -1,6 +1,12 @@
 """
 author: thomaszdxsn
 """
-import pytest
+import logging
 
-from src.sdk.okex_future import OkexFutureRest
+from dynaconf import settings
+
+
+LOGGING_LEVEL = settings.get('LOGGING_LEVEL', 'WARNING')
+logging.basicConfig(
+    level=getattr(logging, LOGGING_LEVEL)
+)

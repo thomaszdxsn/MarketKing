@@ -1,6 +1,7 @@
 """
 Author: thomaszdxsn
 """
+import json
 import pytest
 
 from src.sdk.okex_spot import OkexSpotRest, OkexSpotWebsocket
@@ -40,12 +41,12 @@ def test_get_kline_from_rest(sdk):
     msg = sdk.get_kline('btc_usdt', type_='1min')
     assert msg.error == 0
 
+
+@pytest.mark.ws
 async def test_get_data_from_websocket(ws_sdk):
     symbol = 'btc_usdt'
-    ws_sdk.register_kline(symbol)
-    ws_sdk.register_depth(symbol)
-    ws_sdk.register_trades(symbol)
-    ws_sdk.register_ticker(symbol)
+    ws_sdk.register_depth(symbol, 20)
+    ws_sdk.register_depth(symbol, 10)
     await ws_sdk.setup_ws_client()
     await ws_sdk.subscribe()
     async for msg in ws_sdk.ws_client:

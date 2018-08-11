@@ -49,6 +49,9 @@
     - [x] Websocket
 
 - [] lbank
+    - [x] REST
+    - [] Websocket
+
 - [] bit-z
 - [] kucoin
 - [] bittrex

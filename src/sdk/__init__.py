@@ -7,9 +7,9 @@ from abc import abstractmethod, ABC
 from asyncio import AbstractEventLoop
 from typing import Union, Callable
 
-from requests import Session
 from aiohttp import ClientSession, ClientTimeout
 from dynaconf import settings
+from requests import Session
 
 from ..schemas import Params
 from ..schemas.sdk import ResponseMsg
@@ -25,12 +25,17 @@ class RestSdkAbstract(ABC):
         sock_connect=_request_conn_timeout,
         sock_read=_request_read_timeout
     )
+    _http_proxy: Union[str, None] = settings['HTTP_PROXY']
 
     def __init__(self, loop: Union[AbstractEventLoop, None]=None):
         self.logger = logging.getLogger(f"sdk.{self.__class__.__name__}")
         self._session = Session()
         self._session_wrapper = SessionWrapper(self._session)
         self._loop = loop
+        self._requests_proxies = {
+            'http': self._http_proxy,
+            'https': self._http_proxy
+        }
         if loop:
             self._loop = loop
             self._async_session = ClientSession(
@@ -47,6 +52,7 @@ class RestSdkAbstract(ABC):
     def _http_get(self, *args, **kwargs) -> ResponseMsg:
         timeout_tuple = (self._request_read_timeout, self._request_conn_timeout)
         kwargs.setdefault('timeout', timeout_tuple)
+        kwargs.setdefault('proxies', self._requests_proxies)
         return self._session_wrapper.get(*args, **kwargs)
     
     async def _async_http_get(self, *args, **kwargs) -> ResponseMsg:
@@ -119,7 +125,7 @@ class WebsocketSdkAbstract(ABC):
     )
     _ws_timeout: float = settings.as_float('WS_TIMEOUT')
     _ws_recv_timeout: float = settings.as_float('WS_RECV_TIMEOUT')
-    _ws_proxy: str = settings['WS_PROXY']
+    _http_proxy: Union[str, None] = settings['HTTP_PROXY']
     ws_url: str
 
     def __init__(self, loop: AbstractEventLoop):
@@ -156,9 +162,9 @@ class WebsocketSdkAbstract(ABC):
         if self.ws_client is None:
             self.ws_client = await self._session.ws_connect(
                 self.ws_url,
-                proxy=self._ws_proxy,
-                timeout=self._ws_timeout,
-                receive_timeout=self._ws_recv_timeout
+                proxy=self._http_proxy,
+                # timeout=self._ws_timeout,
+                # receive_timeout=self._ws_recv_timeout
             )
         return self.ws_client
 
