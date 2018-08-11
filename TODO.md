@@ -55,7 +55,9 @@
 - [x] bit-z
     - [x] REST
 
-- [] kucoin
+- [x] kucoin
+    - [x] REST
+
 - [] bittrex
 - [] cointiger
 

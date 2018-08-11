@@ -4,8 +4,12 @@ Author: thomaszdxsn
 from urllib.parse import urljoin
 from typing import Union
 
-from . import WebsocketSdkAbstract, RestSdkAbstract
+from . import RestSdkAbstract
 from ..schemas import Params
+
+__all__ = (
+    'BitZRest',
+)
 
 
 class BitZRest(RestSdkAbstract):
