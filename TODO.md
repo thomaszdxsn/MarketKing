@@ -81,8 +81,8 @@
 - [] digifinex
     - [] REST(需要签名，暂不开发)
 
-- [] bibox
-    - []
+- [x] bibox
+    - [x] REST
 
 - [] quoinex
 - [] bcex
