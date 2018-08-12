@@ -10,6 +10,11 @@ from aiohttp import ClientTimeout
 from . import RestSdkAbstract, WebsocketSdkAbstract
 from ..schemas import Params
 
+__all__ = (
+    'CoinbaseProRest',
+    'CoinbaseProWebsocket'
+)
+
 
 class CoinbaseProRest(RestSdkAbstract):
     """
@@ -61,6 +66,7 @@ class CoinbaseProRest(RestSdkAbstract):
             }
         }
         if start is not None:
+            # for IOS8601 format
             request_data['params']['start'] = start.replace(
                 microsecond=0
             ).isoformat()
@@ -75,9 +81,6 @@ class CoinbaseProRest(RestSdkAbstract):
 
 
 class CoinbaseProWebsocket(WebsocketSdkAbstract):
-    _request_read_timeout: float = 60
-    _request_conn_timeout: float = 20.0
-
     ws_url = 'wss://ws-feed.pro.coinbase.com'
 
     async def subscribe(self, *args, **kwargs):

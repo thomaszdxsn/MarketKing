@@ -75,5 +75,5 @@ async def test_ws_sub_depth_channel(ws_sdk):
     await ws_sdk.subscribe()
     async for msg in ws_sdk.ws_client:
         data = json.loads(msg.data)
-        print(data)
+        # TODO: 会发生ServerTimeoutError
         break
