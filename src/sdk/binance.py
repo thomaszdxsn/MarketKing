@@ -123,4 +123,4 @@ class BinanceWebsocket(WebsocketSdkAbstract):
         return await super().setup_ws_client()
 
     async def subscribe(self, *args, **kwargs):
-        pass
+        await self.setup_ws_client()

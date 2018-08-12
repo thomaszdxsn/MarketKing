@@ -44,3 +44,6 @@ def test_get_kline_from_rest(sdk):
     k_item = msg.data['result'][0]
     assert 'open' in k_item
     assert 'close' in k_item
+
+
+

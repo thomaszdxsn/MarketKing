@@ -5,24 +5,23 @@ default:
   WS_TIMEOUT: 10              # WS连接超时
   WS_RECV_TIMEOUT: 30         # WS在指定时间(s)内没有接受到数据，则超时错误
   WS_HEARTBEAT: 10
+  WS_RECONNECT_INTERVAL: 5    # WS连接中断时候重连的间隔时间
   HTTP_PROXY: null
 
   LOGGING_LEVEL: WARNING
 
-  PAIRS:
-    fcoin:
-      ws:
-        - BTC_USDT
-        
+  EXCHANGES:
+    okex_spot:
+      all: ['btc_usdt', 'eos_usdt', 'eth_usdt', 'etc_usdt', 'bch_usdt', 'ltc_usdt',
+            'ltc_btc', 'etc_btc', 'eos_btc', 'eth_btc', 'bch_btc', 'okb_usdt',
+            'okb_btc']
+
 
 development:
   WS_RECV_TIMEOUT: 15 
   HTTP_PROXY: http://127.0.0.1:1087
   LOGGING_LEVEL: DEBUG
 
-  PAIRS:
-    fcoin:
-      ws:
-        - BTC_USDT
+
 
   

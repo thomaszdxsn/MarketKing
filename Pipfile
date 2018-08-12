@@ -9,6 +9,7 @@ aiohttp = "*"
 pytest = "*"
 dynaconf = {extras = ["yaml"]}
 arrow = "*"
+apscheduler = "*"
 
 [dev-packages]
 

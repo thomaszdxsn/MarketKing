@@ -1,6 +1,7 @@
 """
 author: thomaszdxsn
 """
+import asyncio
 import atexit
 import logging
 from abc import ABC
@@ -25,31 +26,30 @@ class RestSdkAbstract(ABC):
     _headers: Union[dict, None] = None
 
     def __init__(self, loop: Union[AbstractEventLoop, None]=None):
+        if loop is None:
+            loop = asyncio.get_event_loop()
         self.logger = logging.getLogger(f"sdk.{self.__class__.__name__}")
         self._session = Session()
         self._session_wrapper = SessionWrapper(self._session)
         self._loop = loop
-        self._requests_proxies = {
-            'http': self._http_proxy,
-            'https': self._http_proxy
-        }
-        if loop:
-            self._loop = loop
-            self._async_timeout: ClientTimeout = ClientTimeout(
-                total=self._request_conn_timeout + self._request_read_timeout,
-                sock_connect=self._request_conn_timeout,
-                sock_read=self._request_read_timeout
-            )
-            self._async_session = ClientSession(
-                loop=loop,
-                trust_env=True,
-                connector=NoSSlVerifyTCPConnector(),
-                timeout=self._async_timeout
-            )
-            self._async_session_wrapper = AsyncSessionWrapper(
-                self._async_session
-            )
-            atexit.register(close_session, self._async_session)
+        self._timeout_tuple = (self._request_read_timeout,
+                               self._request_conn_timeout)
+        # aiohttp related
+        self._async_timeout: ClientTimeout = ClientTimeout(
+            total=self._request_conn_timeout + self._request_read_timeout,
+            sock_connect=self._request_conn_timeout,
+            sock_read=self._request_read_timeout
+        )
+        self._async_session = ClientSession(
+            loop=loop,
+            trust_env=True,
+            connector=NoSSlVerifyTCPConnector(),
+            timeout=self._async_timeout
+        )
+        self._async_session_wrapper = AsyncSessionWrapper(
+            self._async_session
+        )
+        atexit.register(close_session, self._async_session)
 
     def _http_get(self, *args, **kwargs) -> ResponseMsg:
         # logging
@@ -57,9 +57,7 @@ class RestSdkAbstract(ABC):
         log_msg = LogMsgFmt.HTTP_ACTION.value.format(method='GET', url=url)
         self.logger.info(log_msg)
 
-        timeout_tuple = (self._request_read_timeout, self._request_conn_timeout)
-        kwargs.setdefault('timeout', timeout_tuple)
-        kwargs.setdefault('proxies', self._requests_proxies)
+        kwargs.setdefault('timeout', self._timeout_tuple)
         if self._headers:
             kwargs.setdefault('headers', self._headers)
         return self._session_wrapper.get(*args, **kwargs)
@@ -136,16 +134,20 @@ class WebsocketSdkAbstract(ABC):
     _ws_timeout: float = settings.as_float('WS_TIMEOUT')
     _ws_recv_timeout: float = settings.as_float('WS_RECV_TIMEOUT')
     _ws_heartbeat: float = settings.as_float('WS_HEARTBEAT')
+    _ws_reconnect_interval: float = settings.as_float('WS_RECONNECT_INTERVAL')
     _http_proxy: Union[str, None] = settings['HTTP_PROXY']
     ws_url: str
 
-    def __init__(self, loop: AbstractEventLoop):
+    def __init__(self, loop: Union[AbstractEventLoop, None]=None):
+        if loop is None:
+            loop = asyncio.get_event_loop()
         self.logger = logging.getLogger(f"sdk.{self.__class__.__name__}")
         self._loop = loop
         self._async_timeout: ClientTimeout = ClientTimeout(
             total=self._request_conn_timeout + self._request_read_timeout,
             sock_connect=self._request_conn_timeout,
-            sock_read=self._request_read_timeout
+            # TODO: read timeout会有一些问题，一些接口会无缘无故抛出TimeoutError
+            # sock_read=self._request_read_timeout
         )
         self._session = ClientSession(
             loop=loop,
@@ -187,15 +189,54 @@ class WebsocketSdkAbstract(ABC):
         return self.ws_client
 
     async def subscribe(self, *args, **kwargs):
+        if not self.ws_client:
+            await self.setup_ws_client()
         for channel_info in self.register_hub:
             await self.ws_client.send_json(channel_info)
 
     async def connect(self, handler: Callable):
-        await self.setup_ws_client()
         async for msg in self.ws_client:
             handler(msg)
 
+    async def keep_connect(self, handler: Callable):
+        while True:
+            try:
+                await self.connect(handler)
+            except Exception as exc:
+                msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
+                self.logger.error(msg, exc_info=True)
+            finally:
+                self.logger.info('websocket reconnect...')
+                await self.ws_client.close()
+                self.ws_client = None
+                await self.setup_ws_client()
+                await self.subscribe()
+                await asyncio.sleep(self._ws_reconnect_interval)
 
 
+from .bibox import *
+from .binance import *
+from .bitfinex import *
+from .bitflyer import *
+from .bithump import *
+from .bitmex import *
+from .bitstamp import *
+from .bittrex import *
+from .bitZ import *
+from .coinbase_pro import *
+from .cointiger import *
+from .digifinex import *
+from .fcoin import *
+from .gateio import *
+from .hitbtc import *
+from .huobi import *
+from .kraken import *
+from .kucoin import *
+from .lbank import *
+from .okex_future import *
+from .okex_spot import *
+from .poloniex import *
+from .upbit import *
+from .zb import *
 
 

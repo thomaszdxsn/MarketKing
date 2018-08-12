@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from src.sdk.coinbase_pro import *
+from src.sdk import CoinbaseProRest, CoinbaseProWebsocket
 
 symbol = 'BTC-USD'
 
@@ -73,7 +73,19 @@ async def test_ws_sub_depth_channel(ws_sdk):
     ws_sdk.register_ticker(symbol)
     await ws_sdk.setup_ws_client()
     await ws_sdk.subscribe()
-    async for msg in ws_sdk.ws_client:
-        data = json.loads(msg.data)
-        # TODO: 会发生ServerTimeoutError
-        break
+
+    import arrow
+    import pytz
+    from apscheduler.schedulers.asyncio import AsyncIOScheduler
+    scheduler = AsyncIOScheduler(timezone=pytz.utc)
+    scheduler.add_job(ws_sdk.keep_connect,
+                      args=(print,),
+                      trigger='date',
+                      next_run_time=arrow.utcnow().shift(seconds=5).naive)
+    scheduler.start()
+
+    import time
+    import asyncio
+    while 1:
+        print('sleep.....')
+        await asyncio.sleep(5)
