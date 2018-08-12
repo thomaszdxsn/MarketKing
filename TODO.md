@@ -84,10 +84,9 @@
 - [x] bibox
     - [x] REST
 
-- [] quoinex
-- [] bcex
-- [] coinw
-- [] bitstamp
+- [x] bitstamp
+    - [x] REST
+
 - [] topbtc
 - [] bithump
 
