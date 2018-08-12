@@ -21,11 +21,6 @@ from ..utils import (NoSSlVerifyTCPConnector, close_session,
 class RestSdkAbstract(ABC):
     _request_read_timeout: float = settings.as_float('REQUEST_READ_TIMEOUT')
     _request_conn_timeout: float = settings.as_float('REQUEST_CONN_TIMEOUT')
-    _async_timeout: ClientTimeout = ClientTimeout(
-        total=_request_conn_timeout + _request_read_timeout,
-        sock_connect=_request_conn_timeout,
-        sock_read=_request_read_timeout
-    )
     _http_proxy: Union[str, None] = settings['HTTP_PROXY']
     _headers: Union[dict, None] = None
 
@@ -40,6 +35,11 @@ class RestSdkAbstract(ABC):
         }
         if loop:
             self._loop = loop
+            self._async_timeout: ClientTimeout = ClientTimeout(
+                total=self._request_conn_timeout + self._request_read_timeout,
+                sock_connect=self._request_conn_timeout,
+                sock_read=self._request_read_timeout
+            )
             self._async_session = ClientSession(
                 loop=loop,
                 trust_env=True,
@@ -133,11 +133,6 @@ class WebsocketSdkAbstract(ABC):
     """
     _request_read_timeout: float = settings.as_float('REQUEST_READ_TIMEOUT')
     _request_conn_timeout: float = settings.as_float('REQUEST_CONN_TIMEOUT')
-    _async_timeout: ClientTimeout = ClientTimeout(
-        total=_request_conn_timeout + _request_read_timeout,
-        sock_connect=_request_conn_timeout,
-        sock_read=_request_read_timeout
-    )
     _ws_timeout: float = settings.as_float('WS_TIMEOUT')
     _ws_recv_timeout: float = settings.as_float('WS_RECV_TIMEOUT')
     _ws_heartbeat: float = settings.as_float('WS_HEARTBEAT')
@@ -147,6 +142,11 @@ class WebsocketSdkAbstract(ABC):
     def __init__(self, loop: AbstractEventLoop):
         self.logger = logging.getLogger(f"sdk.{self.__class__.__name__}")
         self._loop = loop
+        self._async_timeout: ClientTimeout = ClientTimeout(
+            total=self._request_conn_timeout + self._request_read_timeout,
+            sock_connect=self._request_conn_timeout,
+            sock_read=self._request_read_timeout
+        )
         self._session = ClientSession(
             loop=loop,
             trust_env=True,

@@ -72,7 +72,8 @@
     - [x] REST
 
 - [] coinbase-pro
-
+    - [x] REST
+    - [] Websocket(非标准ws接口，暂不开发)
 
 - [] kraken
 - [] digifinex

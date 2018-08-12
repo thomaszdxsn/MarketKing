@@ -29,8 +29,9 @@ class UpbitRest(RestSdkAbstract):
             params = [('markets', m.upper())
                       for m in markets]
         else:
+            # str
             params = {
-                'markets': markets
+                'markets': markets.upper()
             }
         request_data = {
             'params': params
@@ -48,7 +49,7 @@ class UpbitRest(RestSdkAbstract):
         url = urljoin(self.base_url, self._kline_url.format(unit=unit))
         request_data = {
             'params': {
-                'market': market,
+                'market': market.upper(),
                 'unit': unit,
                 'count': count,
             }
@@ -69,7 +70,7 @@ class UpbitRest(RestSdkAbstract):
         url = urljoin(self.base_url, self._trades_url)
         request_data = {
             'params': {
-                'market': market,
+                'market': market.upper(),
                 'count': count
             }
         }
@@ -90,7 +91,7 @@ class UpbitRest(RestSdkAbstract):
                       for m in markets]
         else:
             params = {
-                'markets': markets
+                'markets': markets.upper()
             }
         request_data = {
             'params': params
