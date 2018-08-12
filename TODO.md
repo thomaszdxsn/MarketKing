@@ -84,11 +84,12 @@
 - [x] bibox
     - [x] REST
 
-- [x] bitstamp
+- [x] bithump
     - [x] REST
 
-- [] topbtc
-- [] bithump
+- [] bitstamp
+    - [X] REST
+    - [] Websocket(非标准ws接口，暂不开发)
 
 ## others
 

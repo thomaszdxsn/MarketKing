@@ -13,6 +13,7 @@ def sdk(loop):
     yield BithumpRest(loop)
 
 
+@pytest.mark.rest
 def test_get_ticker_from_rest(sdk):
     msg = sdk.get_ticker(symbol)
     assert msg.error == 0
@@ -20,6 +21,7 @@ def test_get_ticker_from_rest(sdk):
     assert 'closing_price' in msg.data['data']
 
 
+@pytest.mark.rest
 def test_get_depth_from_rest(sdk):
     msg = sdk.get_depth(symbol)
     assert msg.error == 0
@@ -27,6 +29,7 @@ def test_get_depth_from_rest(sdk):
     assert 'asks' in msg.data['data']
 
 
+@pytest.mark.rest
 def test_get_trades_from_rest(sdk):
     msg = sdk.get_trades(symbol)
     assert msg.error == 0
