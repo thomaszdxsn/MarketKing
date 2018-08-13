@@ -9,6 +9,7 @@ from .._factories import factory_utcnow
 
 __all__ = (
     'OkexSpotTrades',
+    'OkexFutureTrades'
 )
 
 
@@ -28,3 +29,9 @@ class Trades(DataClassAbstract):
 @dataclass
 class OkexSpotTrades(Trades):
     pass
+
+
+@add_slots
+@dataclass
+class OkexFutureTrades(Trades):
+    contract_type: str='this_week'

@@ -43,3 +43,7 @@ def add_slots(cls):
     if qualname is not None:
         cls.__qualname__ = qualname
     return cls
+
+
+def FloatField():
+    pass

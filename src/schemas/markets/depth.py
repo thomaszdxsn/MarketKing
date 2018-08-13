@@ -9,6 +9,7 @@ from .._factories import factory_utcnow
 
 __all__ = (
     'OkexSpotDepth',
+    'OkexFutureDepth'
 )
 
 
@@ -26,3 +27,9 @@ class Depth(DataClassAbstract):
 @dataclass
 class OkexSpotDepth(Depth):
     pass
+
+
+@add_slots
+@dataclass
+class OkexFutureDepth(Depth):
+    contract_type: str='this_week'

@@ -12,7 +12,7 @@ async def test_monitor(scheduler):
     import asyncio
     pairs = settings['EXCHANGES']
     print(pairs)
-    monitor = OkexSpotMonitor(symbols=pairs['okex_spot']['all'],
+    monitor = OkexSpotMonitor(symbols=pairs['okex_spot']['symbols'],
                               scheduler=scheduler)
     await monitor.schedule()
     scheduler.start()

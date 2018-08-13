@@ -9,6 +9,7 @@ from .._factories import factory_utcnow
 
 __all__ = (
     'OkexSpotTicker',
+    'OkexFutureTicker'
 )
 
 
@@ -17,8 +18,6 @@ __all__ = (
 class Ticker(DataClassAbstract):
     high: float
     low: float
-    open: float
-    close: float
     last: float
     vol: float
     bid: float
@@ -31,7 +30,19 @@ class Ticker(DataClassAbstract):
 @add_slots
 @dataclass
 class OkexSpotTicker(Ticker):
-    dayLow: float = 0.0
-    dayHigh: float = 0.0
-    change: float = 0.0
-    created: datetime = field(default_factory=factory_utcnow)
+    day_low: float=0.0
+    day_high: float=0.0
+    change: float=0.0
+    open: float=0.0
+    close: float=0.0
+
+
+@add_slots
+@dataclass
+class OkexFutureTicker(Ticker):
+    contract_type: str='this_week'
+    limit_low: float=0.0
+    limit_high: float=0.0
+    hold_amount: float=0.0
+    unit_amount: float=0.0
+    contract_id: str=''

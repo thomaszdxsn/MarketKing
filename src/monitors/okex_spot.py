@@ -63,8 +63,8 @@ class OkexSpotMonitor(MonitorAbstract):
             bid=float(data_dict['buy']),
             ask=float(data_dict['sell']),
             vol=float(data_dict['vol']),
-            dayHigh=float(data_dict['dayHigh']),
-            dayLow=float(data_dict['dayLow']),
+            day_high=float(data_dict['dayHigh']),
+            day_low=float(data_dict['dayLow']),
             received=datetime.utcfromtimestamp(data_dict['timestamp'] / 1000)
         )
 

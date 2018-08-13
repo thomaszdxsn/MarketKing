@@ -135,6 +135,7 @@ class WebsocketSdkAbstract(ABC):
     _ws_recv_timeout: float = settings.as_float('WS_RECV_TIMEOUT')
     _ws_heartbeat: float = settings.as_float('WS_HEARTBEAT')
     _ws_reconnect_interval: float = settings.as_float('WS_RECONNECT_INTERVAL')
+    _ws_retry: bool = settings['WS_RETRY_ON_CONNECT_LOST']
     _http_proxy: Union[str, None] = settings['HTTP_PROXY']
     ws_url: str
 
@@ -189,10 +190,22 @@ class WebsocketSdkAbstract(ABC):
         return self.ws_client
 
     async def subscribe(self, *args, **kwargs):
-        if not self.ws_client:
-            await self.setup_ws_client()
-        for channel_info in self.register_hub:
-            await self.ws_client.send_json(channel_info)
+        while True:
+            try:
+                if not self.ws_client:
+                    await self.setup_ws_client()
+                for channel_info in self.register_hub:
+                    await self.ws_client.send_json(channel_info)
+            except Exception as exc:
+                msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
+                self.logger.error(msg, exc_info=True)
+                if self._ws_retry:
+                    await asyncio.sleep(self._ws_reconnect_interval)
+                    self.logger.info('websocket reconnect...')
+                else:
+                    raise
+            else:
+                break
 
     async def connect(self, handler: Callable):
         async for msg in self.ws_client:
@@ -205,13 +218,14 @@ class WebsocketSdkAbstract(ABC):
             except Exception as exc:
                 msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
                 self.logger.error(msg, exc_info=True)
-            finally:
+                # reconnect
+                await asyncio.sleep(self._ws_reconnect_interval)
                 self.logger.info('websocket reconnect...')
                 await self.ws_client.close()
                 self.ws_client = None
                 await self.setup_ws_client()
                 await self.subscribe()
-                await asyncio.sleep(self._ws_reconnect_interval)
+
 
 
 from .bibox import *
