@@ -7,6 +7,7 @@ from dynaconf import settings
 from src.monitors.binance import BinanceMonitor
 
 
+@pytest.mark.skip
 async def test_monitor(scheduler):
     import asyncio
     pairs = settings['EXCHANGES']

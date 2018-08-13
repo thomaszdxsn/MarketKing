@@ -32,7 +32,7 @@ def test_get_depth_from_rest(sdk):
 def test_get_kline_from_rest(sdk):
     msg = sdk.get_kline(symbol)
     assert msg.error == 0
-    assert len(msg.data) >= 299
+    assert len(msg.data) >= 290
 
 
 @pytest.mark.rest
