@@ -13,6 +13,10 @@ from ..schemas import regexes
 from ..schemas.markets import (OkexSpotDepth, OkexSpotTicker,
                                OkexSpotTrades, OkexSpotKline)
 
+__all__ = (
+    'OkexSpotMonitor',
+)
+
 
 class OkexSpotMonitor(MonitorAbstract):
     _rest_sdk_class = OkexSpotRest
@@ -25,7 +29,7 @@ class OkexSpotMonitor(MonitorAbstract):
             self.ws_sdk.register_trades(symbol)
             self.ws_sdk.register_kline(symbol)
         await self.ws_sdk.subscribe()
-        self.run_ws_in_background()
+        self.run_ws_in_background(handler=self.dispatch_ws_msg)
 
     def dispatch_ws_msg(self, msg):
         if msg.type != WSMsgType.TEXT:
@@ -101,7 +105,6 @@ class OkexSpotMonitor(MonitorAbstract):
             )
             for item in data['data']
         ]
-        print(klines)
 
     def _handle_depth(self, data: dict, pair: str):
         asks = [

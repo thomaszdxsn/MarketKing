@@ -6,6 +6,14 @@ from urllib.parse import urljoin
 from . import RestSdkAbstract, WebsocketSdkAbstract
 from ..schemas import Params
 
+__all__ = (
+    'OkexFutureRest',
+    'OkexFutureWebsocket',
+    'CONTRACT_TYPES'
+)
+
+CONTRACT_TYPES = ('this_week', 'next_week', 'quarter')
+
 
 class OkexFutureRest(RestSdkAbstract):
     base_url = 'https://www.okex.com/'

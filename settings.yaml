@@ -13,8 +13,9 @@ default:
   EXCHANGES:
     okex_spot:
       all: ['btc_usdt', 'eos_usdt', 'eth_usdt', 'etc_usdt', 'bch_usdt', 'ltc_usdt',
-            'ltc_btc', 'etc_btc', 'eos_btc', 'eth_btc', 'bch_btc', 'okb_usdt',
-            'okb_btc']
+            'ltc_btc', 'etc_btc', 'eos_btc', 'eth_btc', 'bch_btc', 'okb_usdt', 'okb_btc']
+    okex_future:
+      all: ['eos', 'ltc', 'eth', 'etc', 'bch', 'xrp', 'eos', 'btg']
 
 
 development:
