@@ -47,11 +47,12 @@ def test_get_depth_from_resk(sdk):
 
 @pytest.mark.ws
 async def test_get_data_from_websocket(ws_sdk):
-    symbol = 'btcusdt'
-    ws_sdk.register_kline(symbol)
-    ws_sdk.register_depth(symbol)
-    ws_sdk.register_trades(symbol)
-    ws_sdk.register_ticker(symbol)
+    symbols = ['btcusdt', 'ethusdt']
+    for symbol in symbols:
+        ws_sdk.register_kline(symbol)
+        ws_sdk.register_depth(symbol)
+        ws_sdk.register_trades(symbol)
+        ws_sdk.register_ticker(symbol)
     await ws_sdk.setup_ws_client()
     await ws_sdk.subscribe()
     async for msg in ws_sdk.ws_client:

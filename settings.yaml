@@ -7,21 +7,28 @@ default:
   WS_HEARTBEAT: 10
   WS_RECONNECT_INTERVAL: 5        # WS连接中断时候重连的间隔时间
   WS_RETRY_ON_CONNECT_LOST: yes   # 是否在WS连接失败的时候重新连接
-  HTTP_PROXY: null
 
   LOGGING_LEVEL: WARNING
 
+  # monitors related settings
   EXCHANGES:
     okex_spot:
-      symbols: ['btc_usdt', 'eos_usdt', 'eth_usdt', 'etc_usdt', 'bch_usdt', 'ltc_usdt',
-                'ltc_btc', 'etc_btc', 'eos_btc', 'eth_btc', 'bch_btc', 'okb_usdt', 'okb_btc']
+      symbols: ['btc_usdt', 'eos_usdt', 'eth_usdt', 'etc_usdt', 'bch_usdt', 'ltc_usdt', 'okb_usdt',
+                'ltc_btc', 'etc_btc', 'eos_btc', 'eth_btc', 'bch_btc', 'okb_btc',
+                'ltc_eth', 'okb_eth', 'etc_eth', 'bch_eth', 'eos_eth',
+                'eos_okb', 'etc_okb', 'ltc_okb', 'bch_okb']
     okex_future:
       symbols: ['eos', 'ltc', 'eth', 'etc', 'bch', 'xrp', 'eos', 'btg']
 
+    binance:
+      # bcc是bch
+      symbols: ['btcusdt', 'ethusdt', 'eosusdt', 'bccusdt', 'etcusdt', 'ltcusdt', 'bnbusdt',
+                'ethbtc', 'eosbtc', 'bccbtc', 'etcbtc', 'ltcbtc', 'bnbbtc',
+                'eoseth', 'bcceth', 'etceth', 'ltceth', 'bnbeth',
+                'eosbnb', 'bccbnb', 'etcbnb', 'ltcbnb']
+
 
 development:
-  WS_RECV_TIMEOUT: 15 
-  HTTP_PROXY: http://127.0.0.1:1087
   LOGGING_LEVEL: DEBUG
 
 

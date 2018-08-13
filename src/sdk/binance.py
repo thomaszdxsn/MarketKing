@@ -1,7 +1,7 @@
 """
 author: thomaszdxsn
 """
-import atexit
+import asyncio
 from urllib.parse import urljoin
 from typing import Union
 
@@ -9,7 +9,7 @@ from aiohttp.client_ws import ClientWebSocketResponse
 
 from . import WebsocketSdkAbstract, RestSdkAbstract
 from ..schemas import Params
-from ..utils import close_session
+from ..schemas.logs import LogMsgFmt
 
 __all__ = (
     'BinanceRest',
@@ -123,4 +123,17 @@ class BinanceWebsocket(WebsocketSdkAbstract):
         return await super().setup_ws_client()
 
     async def subscribe(self, *args, **kwargs):
-        await self.setup_ws_client()
+        while True:
+            try:
+                if not self.ws_client:
+                    await self.setup_ws_client()
+            except Exception as exc:
+                msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
+                self.logger.error(msg, exc_info=True)
+                if self._ws_retry:
+                    await asyncio.sleep(self._ws_reconnect_interval)
+                    self.logger.info('websocket reconnect...')
+                else:
+                    raise
+            else:
+                break

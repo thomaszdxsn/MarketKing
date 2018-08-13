@@ -4,6 +4,7 @@ author: thomaszdxsn
 import asyncio
 import atexit
 import logging
+import os
 from abc import ABC
 from asyncio import AbstractEventLoop
 from typing import Union, Callable
@@ -22,7 +23,6 @@ from ..utils import (NoSSlVerifyTCPConnector, close_session,
 class RestSdkAbstract(ABC):
     _request_read_timeout: float = settings.as_float('REQUEST_READ_TIMEOUT')
     _request_conn_timeout: float = settings.as_float('REQUEST_CONN_TIMEOUT')
-    _http_proxy: Union[str, None] = settings['HTTP_PROXY']
     _headers: Union[dict, None] = None
 
     def __init__(self, loop: Union[AbstractEventLoop, None]=None):
@@ -136,7 +136,6 @@ class WebsocketSdkAbstract(ABC):
     _ws_heartbeat: float = settings.as_float('WS_HEARTBEAT')
     _ws_reconnect_interval: float = settings.as_float('WS_RECONNECT_INTERVAL')
     _ws_retry: bool = settings['WS_RETRY_ON_CONNECT_LOST']
-    _http_proxy: Union[str, None] = settings['HTTP_PROXY']
     ws_url: str
 
     def __init__(self, loop: Union[AbstractEventLoop, None]=None):
@@ -181,7 +180,7 @@ class WebsocketSdkAbstract(ABC):
         if self.ws_client is None:
             self.ws_client = await self._session.ws_connect(
                 self.ws_url,
-                proxy=self._http_proxy,
+                proxy=os.environ.get('http_proxy', None),
                 timeout=self._ws_timeout,
                 receive_timeout=self._ws_recv_timeout,
                 heartbeat=self._ws_heartbeat

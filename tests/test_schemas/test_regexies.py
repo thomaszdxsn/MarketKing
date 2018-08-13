@@ -40,3 +40,18 @@ def test_okex_spot_ws_channels_re_patterns(raw, result):
 def test_okex_future_ws_channels_re_patterns(raw, result):
     match_result = OKEX_FUTURE_WS_CHANS.match(raw).groupdict()
     assert match_result == result
+
+
+@pytest.mark.parametrize('raw,result', [
+    ('etcusdt@kline_1m',
+     {'symbol': 'etcusdt', 'data_type': 'kline_1m'}),
+    ('bnbbtc@depth20',
+     {'symbol': 'bnbbtc', 'data_type': 'depth20'}),
+    ('eoseth@ticker',
+     {'symbol': 'eoseth', 'data_type': 'ticker'}),
+    ('bccusdt@trade',
+     {'symbol': 'bccusdt', 'data_type': 'trade'})
+])
+def test_binance_ws_channels_re_patterns(raw, result):
+    match_result = BINANCE_WS_CHANS.match(raw).groupdict()
+    assert match_result == result

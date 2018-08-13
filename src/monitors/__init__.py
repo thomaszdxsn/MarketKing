@@ -56,3 +56,8 @@ class MonitorAbstract(ABC):
     @abstractmethod
     async def schedule(self):
         pass
+
+
+from .okex_future import *
+from .okex_spot import *
+from .binance import *

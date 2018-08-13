@@ -17,8 +17,15 @@
 
 ## 所有交易对
 
-官网链接: https://github.com/okcoin-okex/API-docs-OKEx.com/blob/master/币对精度(pairs_increment).csv
-CMC链接: https://coinmarketcap.com/exchanges/okex/
+- 官网链接
+
+    https://github.com/okcoin-okex/API-docs-OKEx.com/blob/master/币对精度(pairs_increment).csv
+
+- CMC链接:
+
+    https://coinmarketcap.com/exchanges/okex/
+
+
 
 
 
