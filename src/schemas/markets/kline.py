@@ -9,7 +9,8 @@ from .._factories import factory_utcnow
 
 __all__ = (
     'OkexSpotKline',
-    'OkexFutureKline'
+    'OkexFutureKline',
+    'BinanceKline'
 )
 
 
@@ -34,14 +35,21 @@ class OkexSpotKline(Kline):
 
 @add_slots
 @dataclass
-class OkexFutureKline(DataClassAbstract):
-    pair: str
-    contract_type: str
-    start_time: datetime
-    open: float
-    close: float
-    high: float
-    low: float
-    sheet_vol: float
-    token_vol: float
-    created: datetime = field(default_factory=factory_utcnow)
+class OkexFutureKline(Kline):
+    contract_type: str='this_week'
+    sheet_vol: float=0.0
+    token_vol: float=0.0
+
+
+
+@add_slots
+@dataclass
+class BinanceKline(Kline):
+    event_time: datetime=None
+    first_trade_id: str=''
+    last_trade_id: str=''
+    total_trades: int=0
+    is_completed: bool=False
+    quote_vol: float=0.0
+    taker_base_vol: float=0.0
+    taker_quote_vol: float=0.0

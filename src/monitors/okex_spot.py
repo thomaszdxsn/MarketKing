@@ -53,6 +53,7 @@ class OkexSpotMonitor(MonitorAbstract):
 
     def _handle_ticker(self, data: dict, pair: str):
         data_dict = data['data']
+        server_created = datetime.utcfromtimestamp(data_dict['timestamp']/1000)
         ticker = OkexSpotTicker(
             pair=pair,
             high=float(data_dict['high']),
@@ -65,7 +66,7 @@ class OkexSpotMonitor(MonitorAbstract):
             vol=float(data_dict['vol']),
             day_high=float(data_dict['dayHigh']),
             day_low=float(data_dict['dayLow']),
-            received=datetime.utcfromtimestamp(data_dict['timestamp'] / 1000)
+            server_created=server_created
         )
 
     def __format_trade_time(self, trade_time: str) -> datetime:
@@ -121,10 +122,12 @@ class OkexSpotMonitor(MonitorAbstract):
             }
             for item in data['data']['bids']
         ]
-        received = datetime.utcfromtimestamp(data['data']['timestamp'] / 1000)
+        server_created = datetime.utcfromtimestamp(
+            data['data']['timestamp']/1000
+        )
         depth = OkexSpotDepth(
             asks=asks,
             bids=bids,
             pair=pair,
-            received=received
+            server_created=server_created
         )

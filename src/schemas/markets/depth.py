@@ -9,7 +9,8 @@ from .._factories import factory_utcnow
 
 __all__ = (
     'OkexSpotDepth',
-    'OkexFutureDepth'
+    'OkexFutureDepth',
+    'BinanceDepth'
 )
 
 
@@ -19,7 +20,7 @@ class Depth(DataClassAbstract):
     bids: list
     asks: list
     pair: str
-    received: datetime=field(default_factory=factory_utcnow)
+    server_created: datetime=None
     created: datetime=field(default_factory=factory_utcnow)
 
 
@@ -33,3 +34,9 @@ class OkexSpotDepth(Depth):
 @dataclass
 class OkexFutureDepth(Depth):
     contract_type: str='this_week'
+
+
+@add_slots
+@dataclass
+class BinanceDepth(Depth):
+    last_update_id: str=''

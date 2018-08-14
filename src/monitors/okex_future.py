@@ -70,12 +70,14 @@ class OkexFutureMonitor(MonitorAbstract):
             self.__handle_depth_item(item)
             for item in data['data']['bids']
         ]
-        received = datetime.utcfromtimestamp(data['data']['timestamp'] / 1000)
+        server_created = datetime.utcfromtimestamp(
+            data['data']['timestamp'] / 1000
+        )
         depth = OkexFutureDepth(
             asks=asks,
             bids=bids,
             pair=symbol,
-            received=received,
+            server_created=server_created,
             contract_type=contract_type
         )
 

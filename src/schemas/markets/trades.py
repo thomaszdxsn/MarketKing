@@ -9,7 +9,8 @@ from .._factories import factory_utcnow
 
 __all__ = (
     'OkexSpotTrades',
-    'OkexFutureTrades'
+    'OkexFutureTrades',
+    'BinanceTrades'
 )
 
 
@@ -35,3 +36,12 @@ class OkexSpotTrades(Trades):
 @dataclass
 class OkexFutureTrades(Trades):
     contract_type: str='this_week'
+
+
+@add_slots
+@dataclass
+class BinanceTrades(Trades):
+    event_time: datetime=None
+    buyer_order_id: str=''
+    seller_order_id: str=''
+    is_buyer_maker: bool=False
