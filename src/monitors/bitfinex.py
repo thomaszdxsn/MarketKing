@@ -4,7 +4,7 @@ author: thomaszdxsn
 import collections
 import json
 from datetime import datetime
-from typing import Callable
+from typing import Callable, Union, Dict
 
 from aiohttp import WSMessage
 
@@ -12,7 +12,15 @@ from . import MonitorAbstract
 from ..sdk.bitfinex import BitfinexWebsocket, BitfinexRest
 from ..schemas.markets import (BitfinexTradeTicker, BitfinexFundingTicker,
                                BitfinexTradeTrades, BitfinexFundingTrades,
-                               BitfinexKline)
+                               BitfinexKline, BitfinexFundingOrderbook,
+                               BitfinexTradeOrderbook)
+
+__all__ = (
+    'BitfinexMonitor',
+)
+
+ORDERBOOK_TYPE = Union[BitfinexTradeOrderbook, BitfinexFundingOrderbook]
+ORDERBOOKS_DICT = Dict[ORDERBOOK_TYPE]
 
 
 class BitfinexMonitor(MonitorAbstract):
@@ -22,6 +30,7 @@ class BitfinexMonitor(MonitorAbstract):
     def __init__(self, *args, **kwargs):
         super(BitfinexMonitor, self).__init__(*args, **kwargs)
         self.channel_hub = collections.defaultdict(dict)
+        self.orderbooks: ORDERBOOKS_DICT=dict()
 
     def _register_callback(self,
                            chan_id: int,
@@ -184,5 +193,18 @@ class BitfinexMonitor(MonitorAbstract):
         )
 
     async def _handle_depth(self, data: list, pair: str):
-        print(data)
+        data_list = data[1]
+        is_snapshot = isinstance(data_list[0], list)
+        if is_snapshot:
+            if pair.startswith('f'):
+                self.orderbooks[pair] = BitfinexFundingOrderbook(data_list)
+            else:
+                self.orderbooks[pair] = BitfinexTradeOrderbook(data_list)
+        else:
+            self.orderbooks[pair].update(data_list)
+        from pprint import pprint
+        for book in self.orderbooks.values():
+            o = book.snapshot()
+            pprint(o.asks)
+            pprint(o.bids)
 

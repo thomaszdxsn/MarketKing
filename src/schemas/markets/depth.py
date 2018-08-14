@@ -14,7 +14,11 @@ __all__ = (
     'OkexSpotDepth',
     'OkexFutureDepth',
     'BinanceDepth',
-    'HuobiDepth'
+    'HuobiDepth',
+    'BitfinexFundingDepth',
+    'BitfinexTradeDepth',
+    'BitfinexFundingOrderbook',
+    'BitfinexTradeOrderbook'
 )
 
 
@@ -113,7 +117,7 @@ class BitfinexTradeOrderbook(Orderbook):
                 'amount': amount,
             }
         else:
-            del book[price]
+            book.pop(price, None)
 
     def snapshot(self) -> BitfinexTradeDepth:
         bids = [
@@ -163,7 +167,7 @@ class BitfinexFundingOrderbook(Orderbook):
                 'period': period
             }
         else:
-            del book[rate]
+            book.pop(rate, None)
 
     def snapshot(self) -> BitfinexFundingDepth:
         bids = [
@@ -174,7 +178,7 @@ class BitfinexFundingOrderbook(Orderbook):
                 'period': info['period']
             }
             for rate, info in
-            sorted(self._bids.items(), key=lambda x, _: -x)
+            sorted(self._bids.items(), key=lambda x: -x[0])
         ]
         asks = [
             {
@@ -184,7 +188,7 @@ class BitfinexFundingOrderbook(Orderbook):
                 'period': info['period']
             }
             for rate, info in
-            sorted(self._asks.items(), key=lambda x, _: x)
+            sorted(self._asks.items(), key=lambda x: x[0])
         ]
         return BitfinexFundingDepth(
             pair=self._pair,
