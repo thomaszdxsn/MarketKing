@@ -30,7 +30,7 @@ class OkexFutureMonitor(MonitorAbstract):
         await self.ws_sdk.subscribe()
         self.run_ws_in_background(handler=self.dispatch_ws_msg)
 
-    def dispatch_ws_msg(self, msg):
+    async def dispatch_ws_msg(self, msg):
         if msg.type != WSMsgType.TEXT:
             return
         data = json.loads(msg.data)[0]

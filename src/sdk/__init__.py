@@ -208,7 +208,10 @@ class WebsocketSdkAbstract(ABC):
 
     async def connect(self, handler: Callable):
         async for msg in self.ws_client:
-            handler(msg)
+            if asyncio.iscoroutinefunction(handler):
+                await handler(msg)
+            else:
+                handler(msg)
 
     async def keep_connect(self, handler: Callable):
         while True:

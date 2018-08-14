@@ -10,7 +10,8 @@ from .._factories import factory_utcnow
 __all__ = (
     'OkexSpotKline',
     'OkexFutureKline',
-    'BinanceKline'
+    'BinanceKline',
+    'HuobiKline'
 )
 
 
@@ -53,3 +54,11 @@ class BinanceKline(Kline):
     quote_vol: float=0.0
     taker_base_vol: float=0.0
     taker_quote_vol: float=0.0
+
+
+@add_slots
+@dataclass
+class HuobiKline(Kline):
+    event_time: datetime=None
+    amount: float=0
+    count: int=0

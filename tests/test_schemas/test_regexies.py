@@ -55,3 +55,18 @@ def test_okex_future_ws_channels_re_patterns(raw, result):
 def test_binance_ws_channels_re_patterns(raw, result):
     match_result = BINANCE_WS_CHANS.match(raw).groupdict()
     assert match_result == result
+
+
+@pytest.mark.parametrize('raw,result', [
+    ('market.btcusdt.detail',
+     {'symbol': 'btcusdt', 'data_type': 'detail'}),
+    ('market.btcusdt.depth.step0',
+     {'symbol': 'btcusdt', 'data_type': 'depth'}),
+    ('market.btcusdt.kline.1min',
+     {'symbol': 'btcusdt', 'data_type': 'kline'}),
+    ('market.btcusdt.trade.detail',
+     {'symbol': 'btcusdt', 'data_type': 'trade'})
+])
+def test_huobi_ws_channels_re_pattners(raw, result):
+    match_result = HUOBI_WS_CHANS.match(raw).groupdict()
+    assert match_result == result

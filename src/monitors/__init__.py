@@ -2,14 +2,17 @@
 author: thomaszdxsn
 """
 import asyncio
+import logging
 from asyncio import AbstractEventLoop
 from abc import ABC, abstractmethod
 from typing import Union, List, Coroutine, Callable
 
 import arrow
+from aiohttp import WSMessage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from ..sdk import RestSdkAbstract, WebsocketSdkAbstract
+from ..schemas.logs import LogMsgFmt
 
 
 class MonitorAbstract(ABC):
@@ -21,6 +24,7 @@ class MonitorAbstract(ABC):
                  symbols: List[str],
                  scheduler: AsyncIOScheduler,
                  loop: Union[AbstractEventLoop, None]=None):
+        self.logger = logging.getLogger(f'monitor.{self.__class__.__name__}')
         if loop is None:
             loop = asyncio.get_event_loop()
         self._loop = loop
@@ -43,7 +47,7 @@ class MonitorAbstract(ABC):
             next_run_time=arrow.utcnow().shift(seconds=sec).naive
         )
 
-    def dispatch_ws_msg(self, msg):
+    def dispatch_ws_msg(self, msg: WSMessage):
         raise NotImplemented
 
     def run_ws_in_background(self, handler: Callable=None, sec: int=5):
@@ -56,6 +60,14 @@ class MonitorAbstract(ABC):
     @abstractmethod
     async def schedule(self):
         pass
+
+    def _log_msg(self, msg):
+        log_msg = LogMsgFmt.WS_RECV_MSG.value.format(msg=msg)
+        self.logger.debug(log_msg)
+
+    def _log_sub_msg(self, msg):
+        log_msg = LogMsgFmt.WS_SUB_MSG.value.format(msg=msg)
+        self.logger.info(log_msg)
 
 
 from .okex_future import *

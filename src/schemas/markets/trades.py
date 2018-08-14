@@ -10,7 +10,8 @@ from .._factories import factory_utcnow
 __all__ = (
     'OkexSpotTrades',
     'OkexFutureTrades',
-    'BinanceTrades'
+    'BinanceTrades',
+    'HuobiTrades'
 )
 
 
@@ -21,7 +22,6 @@ class Trades(DataClassAbstract):
     tid: str
     price: float
     amount: float
-    direction: str
     trade_time: datetime
     created: datetime=field(default_factory=factory_utcnow)
 
@@ -29,12 +29,13 @@ class Trades(DataClassAbstract):
 @add_slots
 @dataclass
 class OkexSpotTrades(Trades):
-    pass
+    direction: str=''
 
 
 @add_slots
 @dataclass
 class OkexFutureTrades(Trades):
+    direction: str=''
     contract_type: str='this_week'
 
 
@@ -45,3 +46,11 @@ class BinanceTrades(Trades):
     buyer_order_id: str=''
     seller_order_id: str=''
     is_buyer_maker: bool=False
+
+
+@add_slots
+@dataclass
+class HuobiTrades(Trades):
+    direction: str = ''
+    event_time: datetime=None
+    id: int=0

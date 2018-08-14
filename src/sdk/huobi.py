@@ -5,7 +5,8 @@ import gzip
 import json
 import random
 from urllib.parse import urljoin
-from typing import Callable
+
+from aiohttp import WSMessage
 
 from . import RestSdkAbstract, WebsocketSdkAbstract
 from ..schemas import Params
@@ -118,14 +119,12 @@ class HuobiWebsocket(WebsocketSdkAbstract):
         }
         self.register_channel(channel_info)
 
-    async def connect(self, handler: Callable):
-         async for msg in self.ws_client:
-             raw_data = gzip.decompress(msg.data)
-             data = json.loads(raw_data, encoding='ascii')
-             ping = data.get('ping')
-             if ping:
-                 await self.ws_client.send_json({
-                     'pong': ping
-                 })
-                 continue
-             handler(data)
+    async def handle_ws_ping(self, msg: WSMessage) -> dict:
+        raw_data = gzip.decompress(msg.data)
+        data = json.loads(raw_data, encoding='ascii')
+        ping = data.get('ping')
+        if ping:
+            await self.ws_client.send_json({
+                'pong': ping
+            })
+        return data

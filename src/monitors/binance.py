@@ -28,7 +28,7 @@ class BinanceMonitor(MonitorAbstract):
         await self.ws_sdk.subscribe()
         self.run_ws_in_background(handler=self.dispatch_ws_msg)
 
-    def dispatch_ws_msg(self, msg):
+    async def dispatch_ws_msg(self, msg):
         data = json.loads(msg.data)
         match_dict = BINANCE_WS_CHANS.match(data['stream']).groupdict()
         pair, data_type = match_dict['symbol'], match_dict['data_type']
@@ -44,14 +44,14 @@ class BinanceMonitor(MonitorAbstract):
     def _handle_ticker(self, data: dict, pair: str):
         data_dict = data['data']
         ticker = BinanceTicker(
-            event_time=datetime.utcfromtimestamp(data_dict['E'] / 1000),
+            server_created=datetime.utcfromtimestamp(data_dict['E'] / 1000),
             price_change=float(data_dict['p']),
             price_change_prec=float(data_dict['P']),
             close_amount=float(data_dict['Q']),
             bid=float(data_dict['b']),
-            bbq=float(data_dict['B']),
+            bid_amount=float(data_dict['B']),
             ask=float(data_dict['a']),
-            baq=float(data_dict['A']),
+            ask_amount=float(data_dict['A']),
             open=float(data_dict['o']),
             high=float(data_dict['h']),
             low=float(data_dict['l']),

@@ -10,7 +10,8 @@ from .._factories import factory_utcnow
 __all__ = (
     'OkexSpotDepth',
     'OkexFutureDepth',
-    'BinanceDepth'
+    'BinanceDepth',
+    'HuobiDepth'
 )
 
 
@@ -20,7 +21,7 @@ class Depth(DataClassAbstract):
     bids: list
     asks: list
     pair: str
-    server_created: datetime=None
+    server_created: datetime=field(default_factory=factory_utcnow)
     created: datetime=field(default_factory=factory_utcnow)
 
 
@@ -40,3 +41,10 @@ class OkexFutureDepth(Depth):
 @dataclass
 class BinanceDepth(Depth):
     last_update_id: str=''
+
+
+@add_slots
+@dataclass
+class HuobiDepth(Depth):
+    event_time: datetime=None
+    version: int=0

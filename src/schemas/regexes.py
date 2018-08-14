@@ -39,3 +39,17 @@ BINANCE_WS_CHANS = re.compile(
     """,
     flags=re.VERBOSE|re.IGNORECASE
 )
+
+##########################
+# huobi ##################
+##########################
+
+HUOBI_WS_CHANS = re.compile(
+    """
+    market\.
+    (?P<symbol>[a-z]+)\.
+    (?P<data_type>[a-z]+)
+    (\.\w+)?
+    """,
+    flags=re.VERBOSE|re.IGNORECASE
+)

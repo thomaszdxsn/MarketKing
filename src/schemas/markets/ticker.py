@@ -10,7 +10,8 @@ from .._factories import factory_utcnow
 __all__ = (
     'OkexSpotTicker',
     'OkexFutureTicker',
-    'BinanceTicker'
+    'BinanceTicker',
+    'HuobiTicker'
 )
 
 
@@ -20,11 +21,9 @@ class Ticker(DataClassAbstract):
     high: float
     low: float
     vol: float
-    bid: float
-    ask: float
     pair: str
     created: datetime=field(default_factory=factory_utcnow)
-    server_created: datetime=None
+    server_created: datetime=field(default_factory=factory_utcnow)
 
 
 @add_slots
@@ -36,6 +35,8 @@ class OkexSpotTicker(Ticker):
     open: float=0.0
     close: float=0.0
     last: float=0.0
+    bid: float=0.0
+    ask: float=0.0
 
 
 @add_slots
@@ -48,12 +49,13 @@ class OkexFutureTicker(Ticker):
     unit_amount: float=0.0
     contract_id: str=''
     last: float=0.0
+    bid: float=0.0
+    ask: float=0.0
 
 
 @add_slots
 @dataclass
 class BinanceTicker(Ticker):
-    event_time: datetime=None
     close: float=0.0
     open: float=0.0
     quote_vol: float=0.0
@@ -61,11 +63,23 @@ class BinanceTicker(Ticker):
     price_change_prec: float=0.0
     weighted_avg_price: float=0.0
     close_amount: float=0.0
-    bbq: float=0.0              # best bid quantity
-    baq: float=0.0              # best ask quantity
+    bid_amount: float=0.0              # best bid quantity
+    ask_amount: float=0.0              # best ask quantity
     open_time: datetime=None
     close_time: datetime=None
     first_trade_id: str=''
     last_trade_id: str=''
     total_trades: int=0
+    bid: float=0.0
+    ask: float=0.0
+
+
+@add_slots
+@dataclass
+class HuobiTicker(Ticker):
+    open: float=0.0
+    close: float=0.0
+    amount: float=0.0
+    id: int=0
+    count: float=0.0
 

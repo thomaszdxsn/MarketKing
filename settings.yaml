@@ -27,9 +27,16 @@ default:
                 'eoseth', 'bcceth', 'etceth', 'ltceth', 'bnbeth',
                 'eosbnb', 'bccbnb', 'etcbnb', 'ltcbnb']
 
+    huobi:
+      symbols: ['btcusdt', 'bchusdt', 'ethusdt', 'etcusdt', 'ltcusdt', 'eosusdt', 'htusdt',
+                'bchbtc', 'ethbtc', 'etcbtc', 'ltcbtc', 'eosbtc', 'htbtc',
+                'hteth',
+                'eosht', 'etcht', 'bchht', 'ltcht']
+
+
 
 development:
-  LOGGING_LEVEL: DEBUG
+  LOGGING_LEVEL: INFO
 
 
 
