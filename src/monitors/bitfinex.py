@@ -197,10 +197,10 @@ class BitfinexMonitor(MonitorAbstract):
         is_snapshot = isinstance(data_list[0], list)
         if is_snapshot:
             if pair.startswith('f'):
-                self.orderbooks[pair] = BitfinexFundingOrderbook(data_list)
+                self.orderbooks[pair] = BitfinexFundingOrderbook(pair)
             else:
-                self.orderbooks[pair] = BitfinexTradeOrderbook(data_list)
+                self.orderbooks[pair] = BitfinexTradeOrderbook(pair)
+            self.orderbooks[pair].initialize(data_list)
         else:
             self.orderbooks[pair].update(data_list)
-
 
