@@ -11,7 +11,9 @@ __all__ = (
     'OkexSpotTrades',
     'OkexFutureTrades',
     'BinanceTrades',
-    'HuobiTrades'
+    'HuobiTrades',
+    'BitfinexFundingTrades',
+    'BitfinexTradeTrades'
 )
 
 
@@ -54,3 +56,22 @@ class HuobiTrades(Trades):
     direction: str = ''
     event_time: datetime=None
     id: int=0
+
+
+@add_slots
+@dataclass
+class BitfinexTradeTrades(Trades):
+    type: str=''        # te|tu
+
+
+@add_slots
+@dataclass
+class BitfinexFundingTrades(DataClassAbstract):
+    pair: str
+    type: str           # fte|ftu
+    tid: str
+    rate: float
+    amount: float
+    period: float
+    trade_time: datetime
+    created: datetime = field(default_factory=factory_utcnow)

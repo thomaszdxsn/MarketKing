@@ -11,7 +11,9 @@ __all__ = (
     'OkexSpotTicker',
     'OkexFutureTicker',
     'BinanceTicker',
-    'HuobiTicker'
+    'HuobiTicker',
+    'BitfinexFundingTicker',
+    'BitfinexTradeTicker'
 )
 
 
@@ -83,3 +85,39 @@ class HuobiTicker(Ticker):
     id: int=0
     count: float=0.0
 
+
+@add_slots
+@dataclass
+class BitfinexTradeTicker(DataClassAbstract):
+    pair: str
+    bid: float
+    bid_size: float
+    ask: float
+    ask_size: float
+    daily_change: float
+    daily_change_prec: float
+    last: float
+    vol: float
+    high: float
+    low: float
+    created: datetime=field(default_factory=factory_utcnow)
+
+
+@add_slots
+@dataclass
+class BitfinexFundingTicker(DataClassAbstract):
+    pair: str
+    frr: float
+    bid: float
+    bid_period: float
+    bid_size: float
+    ask: float
+    ask_period: float
+    ask_size: float
+    daily_change: float
+    daily_change_prec: float
+    last: float
+    vol: float
+    high: float
+    low: float
+    created: datetime=field(default_factory=factory_utcnow)

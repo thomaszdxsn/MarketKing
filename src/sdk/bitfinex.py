@@ -26,7 +26,9 @@ class BitfinexRest(RestSdkAbstract):
     def _ticker_request(self, symbol: str) -> Params:
         url = urljoin(
             self.base_url,
-            self._ticker_url.format(symbol=f't{symbol.upper()}')
+            self._ticker_url.format(
+                symbol=f'{symbol[0].lower()}{symbol[1:].upper()}'
+            )
         )
         return Params(
             args=(url,),
@@ -46,7 +48,7 @@ class BitfinexRest(RestSdkAbstract):
             self.base_url,
             self._kline_url.format(
                 time_frame=time_frame,
-                symbol=f't{symbol.upper()}',
+                symbol=f'{symbol[0].lower()}{symbol[1:].upper()}',
                 section=section
             )
         )
@@ -75,7 +77,7 @@ class BitfinexRest(RestSdkAbstract):
         url = urljoin(
             self.base_url,
             self._trades_url.format(
-                symbol=f't{symbol.upper()}'
+                symbol=f'{symbol[0].lower()}{symbol[1:].upper()}'
             )
         )
         request_data = {
@@ -100,7 +102,7 @@ class BitfinexRest(RestSdkAbstract):
         url = urljoin(
             self.base_url,
             self._depth_url.format(
-                symbol=f't{symbol.upper()}',
+                symbol=f'{symbol[0].lower()}{symbol[1:].upper()}',
                 precision=precision
             )
         )
@@ -122,7 +124,7 @@ class BitfinexWebsocket(WebsocketSdkAbstract):
         channel_info = {
             'event': 'subscribe',
             'channel': 'ticker',
-            'symbol': f't{symbol.upper()}'
+            'symbol': f'{symbol[0].lower()}{symbol[1:].upper()}'
         }
         self.register_channel(channel_info)
 
@@ -130,7 +132,7 @@ class BitfinexWebsocket(WebsocketSdkAbstract):
         channel_info = {
             'event': 'subscribe',
             'channel': 'trades',
-            'symbol': f"t{symbol.upper()}"
+            'symbol': f"{symbol[0].lower()}{symbol[1:].upper()}"
         }
         self.register_channel(channel_info)
 
@@ -138,7 +140,7 @@ class BitfinexWebsocket(WebsocketSdkAbstract):
         channel_info = {
             'event': 'subscribe',
             'channel': 'candles',
-            'key': f'trade:{time_frame}:t{symbol.upper()}'
+            'key': f'trade:{time_frame}:{symbol[0].lower()}{symbol[1:].upper()}'
         }
         self.register_channel(channel_info)
 
@@ -153,7 +155,7 @@ class BitfinexWebsocket(WebsocketSdkAbstract):
         channel_info = {
             'event': 'subscribe',
             'channel': 'book',
-            'symbol': f"t{symbol.upper()}",
+            'symbol': f"{symbol[0].lower()}{symbol[1:].upper()}",
             'precision': precision,
             'frequency': frequency,
             'length': length

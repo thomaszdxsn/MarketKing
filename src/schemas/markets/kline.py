@@ -11,7 +11,8 @@ __all__ = (
     'OkexSpotKline',
     'OkexFutureKline',
     'BinanceKline',
-    'HuobiKline'
+    'HuobiKline',
+    'BitfinexKline'
 )
 
 
@@ -62,3 +63,9 @@ class HuobiKline(Kline):
     event_time: datetime=None
     amount: float=0
     count: int=0
+
+
+@add_slots
+@dataclass
+class BitfinexKline(Kline):
+    pass

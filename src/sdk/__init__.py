@@ -82,7 +82,7 @@ class RestSdkAbstract(ABC):
                                           **params.kwargs)
 
     def _kline_request(self, *args, **kwargs) -> Params:
-        raise NotImplemented
+        raise NotImplementedError()
 
     def get_depth(self, *args, **kwargs) -> ResponseMsg:
         params = self._depth_request(*args, **kwargs)
@@ -95,7 +95,7 @@ class RestSdkAbstract(ABC):
                                           **params.kwargs)
 
     def _depth_request(self, *args, **kwargs) -> Params:
-        raise NotImplemented
+        raise NotImplementedError()
 
     def get_ticker(self, *args, **kwargs) -> ResponseMsg:
         params = self._ticker_request(*args, **kwargs)
@@ -108,7 +108,7 @@ class RestSdkAbstract(ABC):
                                           **params.kwargs)
 
     def _ticker_request(self, *args, **kwargs) -> Params:
-        raise NotImplemented
+        raise NotImplementedError()
 
     def get_trades(self, *args, **kwargs) -> ResponseMsg:
         params = self._trades_request(*args, **kwargs)
@@ -121,7 +121,7 @@ class RestSdkAbstract(ABC):
                                           **params.kwargs)
 
     def _trades_request(self, *args, **kwargs) -> Params:
-        raise NotImplemented
+        raise NotImplementedError()
 
 
 class WebsocketSdkAbstract(ABC):
@@ -163,16 +163,16 @@ class WebsocketSdkAbstract(ABC):
         self.register_hub.append(channel_info)
 
     def register_kline(self, *args, **kwargs):
-        raise NotImplemented
+        raise NotImplementedError()
 
     def register_depth(self, *args, **kwargs):
-        raise NotImplemented
+        raise NotImplementedError()
 
     def register_trades(self, *args, **kwargs):
-        raise NotImplemented
+        raise NotImplementedError()
 
     def register_ticker(self, *args, **kwargs):
-        raise NotImplemented
+        raise NotImplementedError()
 
     async def setup_ws_client(self) -> ClientWebSocketResponse:
         if self.ws_url is None:

@@ -33,6 +33,10 @@ default:
                 'hteth',
                 'eosht', 'etcht', 'bchht', 'ltcht']
 
+    bitfinex:
+      symbols: ['fUSD', 'tBTCUSD']
+#                ['fBTC', 'fEOS', 'fETH', 'fBCH', 'fETC', 'fLTC', 'fEUR', 'fJPY',]
+
 
 
 development:
