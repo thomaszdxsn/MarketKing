@@ -20,7 +20,7 @@ __all__ = (
 )
 
 ORDERBOOK_TYPE = Union[BitfinexTradeOrderbook, BitfinexFundingOrderbook]
-ORDERBOOKS_DICT = Dict[ORDERBOOK_TYPE]
+ORDERBOOKS_DICT = Dict[str, ORDERBOOK_TYPE]
 
 
 class BitfinexMonitor(MonitorAbstract):
@@ -202,9 +202,5 @@ class BitfinexMonitor(MonitorAbstract):
                 self.orderbooks[pair] = BitfinexTradeOrderbook(data_list)
         else:
             self.orderbooks[pair].update(data_list)
-        from pprint import pprint
-        for book in self.orderbooks.values():
-            o = book.snapshot()
-            pprint(o.asks)
-            pprint(o.bids)
+
 

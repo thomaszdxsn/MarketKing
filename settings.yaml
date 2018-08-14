@@ -34,8 +34,13 @@ default:
                 'eosht', 'etcht', 'bchht', 'ltcht']
 
     bitfinex:
-      symbols: ['fUSD']
-#                ['fBTC', 'fEOS', 'fETH', 'fBCH', 'fETC', 'fLTC', 'fEUR', 'fJPY',]
+      symbols: ['fUSD', 'fBTC', 'fEOS', 'fETH', 'fBCH', 'fETC', 'fLTC', 'fEUR', 'fJPY',
+                'tBTCUSD', 'tETHUSD', 'tEOSUSD', 'tBCHUSD', 'tETCUSD', 'tLTCUSD',
+                'tETHBTC', 'tBCHBTC', 'tETCBTC', 'tEOSBTC',
+                'tEOSETH', 'tBCHETH',
+                'tBTCEUR', 'tETHEUR', 'tEOSEUR',
+                'tBTCJPY', 'tETHJPY', 'tEOSJPY',
+                'tBTCGBP', 'tETHGBP', 'tEOSGBP']
 
 
 
