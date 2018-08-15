@@ -88,7 +88,7 @@ class OkexSpotMonitor(MonitorAbstract):
                 price=float(item[1]),
                 amount=float(item[2]),
                 direction=item[4],
-                trade_time=self.__format_trade_time(item[3])
+                trade_time=item[3]
             )
             for item in data['data']
         ]

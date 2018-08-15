@@ -33,6 +33,7 @@ class Trades(DataClassAbstract):
 @dataclass
 class OkexSpotTrades(Trades):
     direction: str=''
+    trade_time: str=''
 
 
 @add_slots
@@ -40,6 +41,7 @@ class OkexSpotTrades(Trades):
 class OkexFutureTrades(Trades):
     direction: str=''
     contract_type: str='this_week'
+    trade_time: str=''
 
 
 @add_slots

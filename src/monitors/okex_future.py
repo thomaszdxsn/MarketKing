@@ -111,7 +111,7 @@ class OkexFutureMonitor(MonitorAbstract):
                 low=float(item[3]),
                 close=float(item[4]),
                 sheet_vol=float(item[5]),
-                token_vol=float(item[6])
+                vol=float(item[6])
             )
             for item in data_lst
         ]
@@ -119,9 +119,10 @@ class OkexFutureMonitor(MonitorAbstract):
     def __format_trade_time(self, trade_time: str) -> datetime:
         """
         '06:58:33' -> utc datetime
+        # TODO: 这个方法不太适用，需要时刻保持时区和okex交易所一致
         """
         hour, minute, second = trade_time.split(':')
-        return arrow.now().replace(
+        return arrow.now().to('Asia/Shanghai').replace(
             hour=int(hour),
             minute=int(minute),
             second=int(second)
@@ -136,7 +137,8 @@ class OkexFutureMonitor(MonitorAbstract):
                 price=float(item[1]),
                 amount=float(item[2]),
                 direction=item[4],
-                trade_time=self.__format_trade_time(item[3])
+                trade_time=item[3]
             )
             for item in data['data']
         ]
+        print(trades)

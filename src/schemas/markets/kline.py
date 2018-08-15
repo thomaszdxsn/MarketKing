@@ -40,8 +40,6 @@ class OkexSpotKline(Kline):
 class OkexFutureKline(Kline):
     contract_type: str='this_week'
     sheet_vol: float=0.0
-    token_vol: float=0.0
-
 
 
 @add_slots

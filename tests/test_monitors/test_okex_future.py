@@ -7,7 +7,7 @@ from dynaconf import settings
 from src.monitors.okex_future import OkexFutureMonitor
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 async def test_monitor(scheduler):
     import asyncio
     pairs = settings['EXCHANGES']
