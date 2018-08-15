@@ -11,6 +11,7 @@ dynaconf = {extras = ["yaml"]}
 arrow = "*"
 apscheduler = "*"
 uvloop = "*"
+black = "*"
 
 [dev-packages]
 

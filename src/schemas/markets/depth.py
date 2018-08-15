@@ -18,7 +18,8 @@ __all__ = (
     'BitfinexFundingDepth',
     'BitfinexTradeDepth',
     'BitfinexFundingOrderbook',
-    'BitfinexTradeOrderbook'
+    'BitfinexTradeOrderbook',
+    'BitflyerDepth'
 )
 
 
@@ -195,3 +196,13 @@ class BitfinexFundingOrderbook(Orderbook):
             asks=asks,
             bids=bids
         )
+
+
+@add_slots
+@dataclass
+class BitflyerDepth(DataClassAbstract):
+    product_code: str
+    asks: list
+    bids: list
+    mid_price: float
+    created: datetime=field(default_factory=factory_utcnow)

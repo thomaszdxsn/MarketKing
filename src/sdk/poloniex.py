@@ -9,7 +9,8 @@ from ..schemas import Params
 
 __all__ = (
     'PoloniexRest',
-    'PoloniexWebsocket'
+    'PoloniexWebsocket',
+    'SYMBOLS_MAP'
 )
 
 

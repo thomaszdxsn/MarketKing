@@ -13,7 +13,8 @@ __all__ = (
     'BinanceTicker',
     'HuobiTicker',
     'BitfinexFundingTicker',
-    'BitfinexTradeTicker'
+    'BitfinexTradeTicker',
+    'BitFlyerTicker'
 )
 
 
@@ -120,4 +121,22 @@ class BitfinexFundingTicker(DataClassAbstract):
     vol: float
     high: float
     low: float
+    created: datetime=field(default_factory=factory_utcnow)
+
+
+@add_slots
+@dataclass
+class BitFlyerTicker(DataClassAbstract):
+    product_code: str
+    tick_id: int
+    best_bid: float
+    best_ask: float
+    best_bid_size: float
+    best_ask_size: float
+    total_bid_depth: float
+    total_ask_depth: float
+    ltp: float
+    volume: float
+    volume_by_product: float
+    server_created: datetime
     created: datetime=field(default_factory=factory_utcnow)

@@ -67,6 +67,22 @@ def test_binance_ws_channels_re_patterns(raw, result):
     ('market.btcusdt.trade.detail',
      {'symbol': 'btcusdt', 'data_type': 'trade'})
 ])
-def test_huobi_ws_channels_re_pattners(raw, result):
+def test_huobi_ws_channels_re_patterns(raw, result):
     match_result = HUOBI_WS_CHANS.match(raw).groupdict()
+    assert match_result == result
+
+
+
+@pytest.mark.parametrize('raw,result', [
+    ('lightning_ticker_FX_BTC_JPY',
+     {'data_type': 'ticker', 'product_code': 'FX_BTC_JPY'}),
+    ('lightning_ticker_BTCJPY28SEP2018',
+     {'data_type': 'ticker', 'product_code': 'BTCJPY28SEP2018'}),
+    ('lightning_executions_FX_BTC_JPY',
+     {'data_type': 'executions', 'product_code': 'FX_BTC_JPY'}),
+    ('lightning_board_snapshot_BTC_JPY',
+     {'data_type': 'board_snapshot', 'product_code': 'BTC_JPY'})
+])
+def test_bitflyer_ws_channels_re_patterns(raw, result):
+    match_result = BITFLYER_WS_CHANS.match(raw).groupdict()
     assert match_result == result

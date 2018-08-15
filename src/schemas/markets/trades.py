@@ -13,7 +13,8 @@ __all__ = (
     'BinanceTrades',
     'HuobiTrades',
     'BitfinexFundingTrades',
-    'BitfinexTradeTrades'
+    'BitfinexTradeTrades',
+    'BitflyerTrades'
 )
 
 
@@ -75,3 +76,17 @@ class BitfinexFundingTrades(DataClassAbstract):
     period: float
     trade_time: datetime
     created: datetime = field(default_factory=factory_utcnow)
+
+
+@add_slots
+@dataclass
+class BitflyerTrades(DataClassAbstract):
+    product_code: str
+    tid: str
+    side: str
+    price: float
+    size: float
+    trade_time: datetime
+    buy_child_order_acceptance_id: str
+    sell_child_order_acceptance_id: str
+

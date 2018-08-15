@@ -42,6 +42,10 @@ default:
                 'tBTCJPY', 'tETHJPY', 'tEOSJPY',
                 'tBTCGBP', 'tETHGBP', 'tEOSGBP']
 
+    bitflyer:
+      symbols: ['BTC_JPY', 'FX_BTC_JPY', 'ETH_BTC', 'BCH_BTC',
+                'BTCJPY28SEP2018', 'BTCJPY17AUG2018', 'BTCJPY24AUG2018']
+
 
 
 development:

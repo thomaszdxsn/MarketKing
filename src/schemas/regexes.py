@@ -53,3 +53,16 @@ HUOBI_WS_CHANS = re.compile(
     """,
     flags=re.VERBOSE|re.IGNORECASE
 )
+
+##########################
+# bitflyer ###############
+##########################
+
+BITFLYER_WS_CHANS = re.compile(
+    """
+    lightning_
+    (?P<data_type>[a-z0-9_]+)_
+    (?P<product_code>[A-Z0-9_]+)
+    """,
+    flags=re.VERBOSE
+)
