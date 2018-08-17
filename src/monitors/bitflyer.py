@@ -33,8 +33,8 @@ class BitflyerMonitor(MonitorAbstract):
             return
         channel = data["params"]["channel"]
         match_dict = BITFLYER_WS_CHANS.match(channel).groupdict()
-        data_type = match_dict["product_code"]
-        pair = match_dict["pair"]
+        data_type = match_dict["data_type"]
+        pair = match_dict["product_code"]
         if data_type == "ticker":
             await self._handle_ticker(data, pair)
         elif data_type == "executions":
@@ -47,6 +47,7 @@ class BitflyerMonitor(MonitorAbstract):
         timestamp = data_dict.pop("timestamp")
         data_dict["server_created"] = arrow.get(timestamp).naive
         data_dict["pair"] = pair
+        del data_dict['product_code']
         ticker = BitFlyerTicker(**data_dict)
         self.transport('ticker', ticker)
 

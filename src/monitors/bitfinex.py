@@ -32,6 +32,11 @@ class BitfinexMonitor(MonitorAbstract):
         super(BitfinexMonitor, self).__init__(*args, **kwargs)
         self.channel_hub = collections.defaultdict(dict)
         self.orderbooks: ORDERBOOKS_DICT=dict()
+        self.scheduler.add_job(
+            self._transport_depth_snapshots,
+            trigger='cron',
+            second='*/1'
+        )
 
     def _register_callback(self,
                            chan_id: int,
@@ -210,5 +215,9 @@ class BitfinexMonitor(MonitorAbstract):
             self.orderbooks[pair].initialize(data_list)
         else:
             self.orderbooks[pair].update(data_list)
-        # TODO:
 
+    async def _transport_depth_snapshots(self):
+        depths = []
+        for val in self.orderbooks.values():
+            depths.append(val.snapshot())
+        [self.transport('depth', d) for d in depths]

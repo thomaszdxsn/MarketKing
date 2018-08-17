@@ -5,6 +5,7 @@ author: thomaszdxsn
 """
 from datetime import datetime
 from dataclasses import field, dataclass
+from typing import Union
 
 from . import MarketItemBase
 from .. import add_slots
@@ -101,3 +102,65 @@ class BitmexSettlement(MarketItemBase):
 
     def get_unique_indexes(self):
         return 'pair', 'start_time'
+
+
+@add_slots
+@dataclass
+class BitmexInstrument(MarketItemBase):
+    pair: str
+    server_created: datetime
+    root_symbol: str
+    state: str
+    typ: str
+    listing: datetime
+    front: datetime
+    expiry: Union[datetime, None]
+    settle: Union[datetime, None]
+    relist_interval: Union[str, None]
+    inverse_leg: str
+    sell_leg: str
+    buy_leg: str
+    option_strike_pcnt: float
+    option_strike_round: float
+    option_multiplier: float
+    position_currency: str
+    underlying: str
+    quote_currency: str
+    underlying_symbol: str
+    reference: str
+    reference_symbol: str
+    calc_interval: Union[str, None]
+    publish_interval: Union[str, None]
+    publish_time: Union[str, None]
+    max_order_qty: int
+    max_price: float
+    lot_size: int
+    tick_size: float
+    multiplier: float
+    settle_currency: str
+    underlying_to_position_multiplier: int
+    quote_to_settle_multiplier: int
+    is_quanto: bool
+    is_inverse: bool
+    init_margin: float
+    maint_margin: float
+    risk_limit: int
+    risk_step: int
+    limit: float
+    capped: bool
+    taxed: bool
+    deleverage: bool
+    maker_fee: float
+    taker_fee: float
+    settlement_fee: float
+    insurance_fee: float
+    funding_base_symbol: str
+    funding_quote_symbol: str
+    funding_premium_symbol: str
+    funding_timestamp: datetime
+    funding_interval: Union[str, None]
+    funding_rate: float
+    indicative_funding_rate: float
+    rebalance_timestamp: datetime
+    rebalance_interval: Union[str, None]
+

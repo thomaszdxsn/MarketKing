@@ -1,6 +1,7 @@
 """
 author: thomaszdxsn
 """
+import collections
 import json
 
 import arrow
@@ -19,12 +20,15 @@ class BitmexMonitor(MonitorAbstract):
     exchange = 'bitmex'
     _ws_sdk_class = BitmexWebsocket
 
+    def __init__(self, *args, **kwargs):
+        super(BitmexMonitor, self).__init__(*args, **kwargs)
+        self._instrument_books = collections.defaultdict(dict)
+
     async def schedule(self):
         for symbol in self.symbols:
             self.ws_sdk.register_trade_bin(symbol)
             self.ws_sdk.register_trades(symbol)
             self.ws_sdk.register_quote_bin(symbol)
-            self.ws_sdk.register_instrument(symbol)
             self.ws_sdk.register_orderbook10(symbol)
         self.ws_sdk.register_settlement()
         await self.ws_sdk.subscribe()
@@ -41,8 +45,6 @@ class BitmexMonitor(MonitorAbstract):
             await self._handle_orderbook10(data)
         elif table == 'trade':
             await self._handle_trade(data)
-        elif table == 'instrument':
-            await self._handle_instrument(data)
         elif table == 'settlement':
             await self._handle_settlement(data)
 
@@ -114,12 +116,6 @@ class BitmexMonitor(MonitorAbstract):
             for item in data['data']
         ]
         [self.transport('trade', i) for i in trades]
-
-    async def _handle_instrument(self, data: dict):
-        """
-        这是类似ticker的数据
-        """
-        pass
 
     async def _handle_settlement(self, data: dict):
         settlements = [

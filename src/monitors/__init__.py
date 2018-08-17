@@ -103,3 +103,13 @@ from .binance import *
 from .bitfinex import *
 from .huobi import *
 from .bitmex import *
+
+MONITOR_MAP = {
+    'okex_future': OkexFutureMonitor,
+    'okex_spot': OkexSpotMonitor,
+    'huobi': HuobiMonitor,
+    'bitfinex': BitfinexMonitor,
+    'binance': BinanceMonitor,
+    'bitflyer': BitflyerMonitor,
+    'bitmex': BitmexMonitor
+}
