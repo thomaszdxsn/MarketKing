@@ -16,6 +16,7 @@ __all__ = (
 
 
 class BinanceMonitor(MonitorAbstract):
+    exchange = 'binance'
     _rest_sdk_class = BinanceRest
     _ws_sdk_class = BinanceWebsocket
 
@@ -33,15 +34,15 @@ class BinanceMonitor(MonitorAbstract):
         match_dict = BINANCE_WS_CHANS.match(data['stream']).groupdict()
         pair, data_type = match_dict['symbol'], match_dict['data_type']
         if 'ticker' in data_type:
-            self._handle_ticker(data, pair)
+            await self._handle_ticker(data, pair)
         elif 'trade' in data_type:
-            self._handle_trade(data, pair)
+            await self._handle_trade(data, pair)
         elif 'depth' in data_type:
-            self._handle_depth(data, pair)
+            await self._handle_depth(data, pair)
         else:
-            self._handle_kline(data, pair)
+            await self._handle_kline(data, pair)
 
-    def _handle_ticker(self, data: dict, pair: str):
+    async def _handle_ticker(self, data: dict, pair: str):
         data_dict = data['data']
         ticker = BinanceTicker(
             server_created=datetime.utcfromtimestamp(data_dict['E'] / 1000),
@@ -64,8 +65,9 @@ class BinanceMonitor(MonitorAbstract):
             total_trades=int(data_dict['n']),
             pair=pair
         )
+        self.transport('ticker', ticker)
  
-    def _handle_trade(self, data: dict, pair: str):
+    async def _handle_trade(self, data: dict, pair: str):
         data_dict = data['data']
         trade = BinanceTrades(
             event_time=datetime.utcfromtimestamp(data_dict['E'] / 1000),
@@ -79,8 +81,9 @@ class BinanceMonitor(MonitorAbstract):
             direction=None,
             pair=pair
         )
+        self.transport('trades', trade)
 
-    def _handle_depth(self, data: dict, pair: str):
+    async def _handle_depth(self, data: dict, pair: str):
         data_dict = data['data']
         asks = [
             {
@@ -102,8 +105,9 @@ class BinanceMonitor(MonitorAbstract):
             last_update_id=data_dict['lastUpdateId'],
             pair=pair
         )
+        self.transport('depth', depth)
 
-    def _handle_kline(self, data: dict, pair: str):
+    async def _handle_kline(self, data: dict, pair: str):
         data_dict = data['data']
         kline_item = data_dict['k']
         kline = BinanceKline(
@@ -123,4 +127,5 @@ class BinanceMonitor(MonitorAbstract):
             taker_quote_vol=float(kline_item['Q']),
             pair=pair
         )
+        self.transport('kline', kline)
 

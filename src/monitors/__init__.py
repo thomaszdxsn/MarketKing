@@ -12,10 +12,14 @@ from aiohttp import WSMessage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from ..sdk import RestSdkAbstract, WebsocketSdkAbstract
+from ..schemas import DataClassAbstract
 from ..schemas.logs import LogMsgFmt
+from ..schemas.items import Item, ExchangeItem
+from ..tunnels import TunnelAbstract
 
 
 class MonitorAbstract(ABC):
+    exchange: str
     _rest_sdk_class: RestSdkAbstract
     _ws_sdk_class: WebsocketSdkAbstract
 
@@ -23,6 +27,7 @@ class MonitorAbstract(ABC):
     def __init__(self,
                  symbols: List[str],
                  scheduler: AsyncIOScheduler,
+                 tunnel: TunnelAbstract,
                  loop: Union[AbstractEventLoop, None]=None):
         self.logger = logging.getLogger(f'monitor.{self.__class__.__name__}')
         if loop is None:
@@ -30,6 +35,7 @@ class MonitorAbstract(ABC):
         self._loop = loop
         self.symbols = symbols
         self.scheduler = scheduler
+        self.tunnel = tunnel
         self.rest_sdk = self._rest_sdk_class(self._loop)
         self.ws_sdk = self._ws_sdk_class(self._loop)
 
@@ -68,6 +74,25 @@ class MonitorAbstract(ABC):
     def _log_sub_msg(self, msg):
         log_msg = LogMsgFmt.WS_SUB_MSG.value.format(msg=msg)
         self.logger.info(log_msg)
+
+    def build_item(self,
+                   data_type:str,
+                   data: DataClassAbstract) -> ExchangeItem:
+        return ExchangeItem(
+            exchange=self.exchange,
+            data_type=data_type,
+            data=data
+        )
+
+    def tunnel_put(self, item: ExchangeItem):
+        self.tunnel.put(item)
+
+    async def tunnel_put_async(self, item: ExchangeItem):
+        await self.tunnel.put(item)
+
+    def transport(self, data_type: str, data: DataClassAbstract):
+        item = self.build_item(data_type, data)
+        self.tunnel_put(item)
 
 
 from .okex_future import *

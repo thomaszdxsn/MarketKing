@@ -13,6 +13,7 @@ from ..schemas.markets import BitFlyerTicker, BitflyerTrades, BitflyerDepth
 
 
 class BitflyerMonitor(MonitorAbstract):
+    exchange = 'bitflyer'
     _ws_sdk_class = BitflyerWebsocket
     _rest_sdk_class = BitflyerRest
 
@@ -45,6 +46,7 @@ class BitflyerMonitor(MonitorAbstract):
         data_dict["server_created"] = arrow.get(timestamp).naive
         data_dict["product_code"] = product_code
         ticker = BitFlyerTicker(**data_dict)
+        self.transport('ticker', ticker)
 
     async def _handle_trades(self, data: dict, product_code: str):
         trades = [
@@ -64,6 +66,8 @@ class BitflyerMonitor(MonitorAbstract):
             )
             for item in data["params"]["message"]
         ]
+        list(map(lambda x: self.transport('trades', x),
+                 trades))
 
     async def _handle_depth(self, data: dict, product_code: str):
         # don't need sorted asks or bids
@@ -71,3 +75,4 @@ class BitflyerMonitor(MonitorAbstract):
             product_code=product_code,
             **data['params']['message']
         )
+        self.transport('depth', depth)

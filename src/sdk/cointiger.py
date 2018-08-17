@@ -1,6 +1,7 @@
 """
 Author: thomaszdxsn
 """
+import asyncio
 import json
 import gzip
 from urllib.parse import urljoin
@@ -136,13 +137,16 @@ class CointigerWebsocket(WebsocketSdkAbstract):
         self.register_channel(channel_info)
 
     async def connect(self, handler: Callable):
-         async for msg in self.ws_client:
-             raw_data = gzip.decompress(msg.data)
-             data = json.loads(raw_data, encoding='ascii')
-             ping = data.get('ping')
-             if ping:
-                 await self.ws_client.send_json({
-                     'pong': ping
-                 })
-                 continue
-             handler(data)
+        async for msg in self.ws_client:
+            raw_data = gzip.decompress(msg.data)
+            data = json.loads(raw_data, encoding='ascii')
+            ping = data.get('ping')
+            if ping:
+                await self.ws_client.send_json({
+                    'pong': ping
+                })
+                continue
+            if asyncio.iscoroutinefunction(handler):
+                await handler(data)
+            else:
+                handler(data)

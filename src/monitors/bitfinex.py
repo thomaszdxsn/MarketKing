@@ -24,6 +24,7 @@ ORDERBOOKS_DICT = Dict[str, ORDERBOOK_TYPE]
 
 
 class BitfinexMonitor(MonitorAbstract):
+    exchange = 'bitfinex'
     _rest_sdk_class = BitfinexRest
     _ws_sdk_class = BitfinexWebsocket
 
@@ -96,6 +97,7 @@ class BitfinexMonitor(MonitorAbstract):
             ticker = self.__gen_trade_ticker(item, pair)
         else:
             ticker = self.__gen_funding_ticker(item, pair)
+        self.transport('ticker', ticker)
 
     def __gen_trade_ticker(self,
                            data: list,
@@ -143,6 +145,7 @@ class BitfinexMonitor(MonitorAbstract):
             trade = self.__gen_trade_trades(type_, item, pair)
         else:
             trade = self.__gen_funding_trades(type_, item, pair)
+        self.transport('trades', trade)
 
     def __gen_trade_trades(self,
                            type_: str,
@@ -180,6 +183,7 @@ class BitfinexMonitor(MonitorAbstract):
             kline = [self.__gen_kline(i, pair) for i in item]
         else:
             kline = self.__gen_kline(item, pair)
+        self.transport('kline', kline)
 
     def __gen_kline(self, data: list, pair: str) -> BitfinexKline:
         return BitfinexKline(
@@ -203,4 +207,5 @@ class BitfinexMonitor(MonitorAbstract):
             self.orderbooks[pair].initialize(data_list)
         else:
             self.orderbooks[pair].update(data_list)
+        # TODO: 每秒定时任务抓取快照并上传
 

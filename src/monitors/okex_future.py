@@ -17,6 +17,7 @@ from ..sdk.okex_future import (OkexFutureRest, OkexFutureWebsocket,
 
 
 class OkexFutureMonitor(MonitorAbstract):
+    exchange = 'okex_future'
     _rest_sdk_class = OkexFutureRest
     _ws_sdk_class = OkexFutureWebsocket
 
@@ -80,6 +81,7 @@ class OkexFutureMonitor(MonitorAbstract):
             server_created=server_created,
             contract_type=contract_type
         )
+        self.transport('depth', depth)
 
     def _handle_ticker(self, data: dict, symbol: str, contract_type: str):
         data_dict = data['data']
@@ -98,6 +100,7 @@ class OkexFutureMonitor(MonitorAbstract):
             unit_amount=float(data_dict['unitAmount']),
             limit_high=float(data_dict['limitHigh'])
         )
+        self.transport('ticker', ticker)
 
     def _handle_kline(self, data: dict, symbol: str, contract_type: str):
         data_lst = data['data']
@@ -115,6 +118,10 @@ class OkexFutureMonitor(MonitorAbstract):
             )
             for item in data_lst
         ]
+        list(map(
+            lambda x: self.transport('kline', x),
+            klines
+        ))
 
     def __format_trade_time(self, trade_time: str) -> datetime:
         """
@@ -141,4 +148,7 @@ class OkexFutureMonitor(MonitorAbstract):
             )
             for item in data['data']
         ]
-        print(trades)
+        list(map(
+            lambda x: self.transport('trades', x),
+            trades
+        ))

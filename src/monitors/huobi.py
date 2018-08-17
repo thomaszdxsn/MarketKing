@@ -17,6 +17,7 @@ __all__ = (
 
 
 class HuobiMonitor(MonitorAbstract):
+    exchange = 'huobi'
     _ws_sdk_class = HuobiWebsocket
     _rest_sdk_class = HuobiRest
 
@@ -71,6 +72,7 @@ class HuobiMonitor(MonitorAbstract):
             bids=bids,
             asks=asks
         )
+        self.transport('depth', depth)
 
     async def _handle_ticker(self, data: dict, pair: str):
         tick = data['tick']
@@ -86,6 +88,7 @@ class HuobiMonitor(MonitorAbstract):
             count=tick['count'],
             vol=tick['vol']
         )
+        self.transport('ticker', ticker)
 
     async def _handle_kline(self, data: dict, pair: str):
         tick = data['tick']
@@ -101,6 +104,7 @@ class HuobiMonitor(MonitorAbstract):
             vol=tick['vol'],
             count=tick['count']
         )
+        self.transport('kline', kline)
 
     async def _handle_trades(self, data: dict, pair: str):
         tick = data['tick']
@@ -117,3 +121,7 @@ class HuobiMonitor(MonitorAbstract):
             )
             for item in tick['data']
         ]
+        list(map(
+            lambda x: self.transport('trade', x),
+            trades
+        ))

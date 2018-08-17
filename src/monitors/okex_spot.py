@@ -68,6 +68,7 @@ class OkexSpotMonitor(MonitorAbstract):
             day_low=float(data_dict['dayLow']),
             server_created=server_created
         )
+        self.transport('ticker', ticker)
 
     def __format_trade_time(self, trade_time: str) -> datetime:
         """
@@ -92,6 +93,10 @@ class OkexSpotMonitor(MonitorAbstract):
             )
             for item in data['data']
         ]
+        list(map(
+            lambda x: self.transport('trades', x),
+            trades
+        ))
 
     def _handle_kline(self, data: dict, pair: str):
         klines = [
@@ -106,6 +111,10 @@ class OkexSpotMonitor(MonitorAbstract):
             )
             for item in data['data']
         ]
+        list(map(
+            lambda x: self.transport('kline', x),
+            klines
+        ))
 
     def _handle_depth(self, data: dict, pair: str):
         asks = [
@@ -131,3 +140,4 @@ class OkexSpotMonitor(MonitorAbstract):
             pair=pair,
             server_created=server_created
         )
+        self.transport('depth', depth)
