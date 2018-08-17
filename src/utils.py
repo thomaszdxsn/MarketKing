@@ -3,8 +3,9 @@ author: thomaszdxsn
 """
 import asyncio
 import logging
+import itertools
 from abc import ABC, abstractmethod
-from typing import Union
+from typing import Union, Iterable
 
 import aiohttp
 import requests
@@ -13,6 +14,11 @@ from aiohttp import ClientSession
 
 from .schemas.sdk import ResponseMsg, HttpErrorEnum
 from .schemas.logs import LogMsgFmt
+
+
+def chunk(it: Iterable, size: int) -> Iterable:
+    it = iter(it)
+    return iter(lambda: tuple(itertools.islice(it, size)), ())
 
 
 def close_session(session: ClientSession):

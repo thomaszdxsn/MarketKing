@@ -4,7 +4,8 @@ author: thomaszdxsn
 from datetime import datetime
 from dataclasses import dataclass, field
 
-from .. import DataClassAbstract, add_slots
+from . import MarketItemBase
+from .. import add_slots
 from .._factories import factory_utcnow
 
 __all__ = (
@@ -20,13 +21,16 @@ __all__ = (
 
 @add_slots
 @dataclass
-class Trades(DataClassAbstract):
+class Trades(MarketItemBase):
     pair: str
     tid: str
     price: float
     amount: float
     trade_time: datetime
     created: datetime=field(default_factory=factory_utcnow)
+
+    def get_unique_indexes(self):
+        return ('tid',)
 
 
 @add_slots
@@ -70,7 +74,7 @@ class BitfinexTradeTrades(Trades):
 
 @add_slots
 @dataclass
-class BitfinexFundingTrades(DataClassAbstract):
+class BitfinexFundingTrades(MarketItemBase):
     pair: str
     type: str           # fte|ftu
     tid: str
@@ -80,11 +84,14 @@ class BitfinexFundingTrades(DataClassAbstract):
     trade_time: datetime
     created: datetime = field(default_factory=factory_utcnow)
 
+    def get_unique_indexes(self):
+        return ('tid',)
+
 
 @add_slots
 @dataclass
-class BitflyerTrades(DataClassAbstract):
-    product_code: str
+class BitflyerTrades(MarketItemBase):
+    pair: str
     tid: str
     side: str
     price: float
@@ -93,4 +100,7 @@ class BitflyerTrades(DataClassAbstract):
     buy_child_order_acceptance_id: str
     sell_child_order_acceptance_id: str
     created: datetime = field(default_factory=factory_utcnow)
+
+    def get_unique_indexes(self):
+        return ('tid',)
 

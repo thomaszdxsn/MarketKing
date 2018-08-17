@@ -33,27 +33,27 @@ class BitflyerMonitor(MonitorAbstract):
             return
         channel = data["params"]["channel"]
         match_dict = BITFLYER_WS_CHANS.match(channel).groupdict()
-        data_type = match_dict["data_type"]
-        product_code = match_dict["product_code"]
+        data_type = match_dict["product_code"]
+        pair = match_dict["pair"]
         if data_type == "ticker":
-            await self._handle_ticker(data, product_code)
+            await self._handle_ticker(data, pair)
         elif data_type == "executions":
-            await self._handle_trades(data, product_code)
+            await self._handle_trades(data, pair)
         else:
-            await self._handle_depth(data, product_code)
+            await self._handle_depth(data, pair)
 
-    async def _handle_ticker(self, data: dict, product_code: str):
+    async def _handle_ticker(self, data: dict, pair: str):
         data_dict = data["params"]["message"]
         timestamp = data_dict.pop("timestamp")
         data_dict["server_created"] = arrow.get(timestamp).naive
-        data_dict["product_code"] = product_code
+        data_dict["pair"] = pair
         ticker = BitFlyerTicker(**data_dict)
         self.transport('ticker', ticker)
 
-    async def _handle_trades(self, data: dict, product_code: str):
+    async def _handle_trades(self, data: dict, pair: str):
         trades = [
             BitflyerTrades(
-                product_code=product_code,
+                pair=pair,
                 tid=str(item["id"]),
                 side=item["side"],
                 price=item["price"],
@@ -71,12 +71,12 @@ class BitflyerMonitor(MonitorAbstract):
         list(map(lambda x: self.transport('trades', x),
                  trades))
 
-    async def _handle_depth(self, data: dict, product_code: str, size:int=20):
+    async def _handle_depth(self, data: dict, pair: str, size:int=20):
         # don't need sorted asks or bids
         asks = data['params']['message']['asks'][:size]
         bids = data['params']['message']['bids'][:size]
         depth = BitflyerDepth(
-            product_code=product_code,
+            pair=pair,
             asks=asks,
             bids=bids,
             mid_price=data['params']['message']['mid_price']

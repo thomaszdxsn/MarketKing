@@ -4,7 +4,8 @@ author: thomaszdxsn
 from datetime import datetime
 from dataclasses import dataclass, field
 
-from .. import DataClassAbstract, add_slots
+from . import MarketItemBase
+from .. import add_slots
 from .._factories import factory_utcnow
 
 __all__ = (
@@ -20,7 +21,7 @@ __all__ = (
 
 @add_slots
 @dataclass
-class Ticker(DataClassAbstract):
+class Ticker(MarketItemBase):
     high: float
     low: float
     vol: float
@@ -89,7 +90,7 @@ class HuobiTicker(Ticker):
 
 @add_slots
 @dataclass
-class BitfinexTradeTicker(DataClassAbstract):
+class BitfinexTradeTicker(MarketItemBase):
     pair: str
     bid: float
     bid_size: float
@@ -106,7 +107,7 @@ class BitfinexTradeTicker(DataClassAbstract):
 
 @add_slots
 @dataclass
-class BitfinexFundingTicker(DataClassAbstract):
+class BitfinexFundingTicker(MarketItemBase):
     pair: str
     frr: float
     bid: float
@@ -126,8 +127,8 @@ class BitfinexFundingTicker(DataClassAbstract):
 
 @add_slots
 @dataclass
-class BitFlyerTicker(DataClassAbstract):
-    product_code: str
+class BitFlyerTicker(MarketItemBase):
+    pair: str
     tick_id: int
     best_bid: float
     best_ask: float

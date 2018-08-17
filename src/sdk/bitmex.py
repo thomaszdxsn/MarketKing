@@ -1,10 +1,10 @@
 """
 Author: thomaszdxsn
 """
-from urllib.parse import urljoin
+import asyncio
 
 from . import WebsocketSdkAbstract
-from ..schemas import Params
+from ..utils import chunk
 
 __all__ = (
     'BitmexWebsocket',
@@ -18,11 +18,16 @@ class BitmexWebsocket(WebsocketSdkAbstract):
     ws_url = 'wss://www.bitmex.com/realtime'
 
     async def subscribe(self, *args, **kwargs):
-        sub_msg = {
-            'op': 'subscribe',
-            'args': self.register_hub
-        }
-        await self.ws_client.send_json(sub_msg)
+        if not self.ws_client:
+            await self.setup_ws_client()
+        # 参数不能过长
+        for args in chunk(self.register_hub, 10):
+            sub_msg = {
+                'op': 'subscribe',
+                'args': args
+            }
+            await self.ws_client.send_json(sub_msg)
+            await asyncio.sleep(1)
 
     def register_trade_bin(self, symbol: str, type_: str='1m'):
         """

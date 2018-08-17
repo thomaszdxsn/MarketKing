@@ -20,9 +20,8 @@ from ..tunnels import TunnelAbstract
 
 class MonitorAbstract(ABC):
     exchange: str
-    _rest_sdk_class: RestSdkAbstract
-    _ws_sdk_class: WebsocketSdkAbstract
-
+    _rest_sdk_class: Union[RestSdkAbstract, None]=None
+    _ws_sdk_class: Union[WebsocketSdkAbstract, None]=None
 
     def __init__(self,
                  symbols: List[str],
@@ -36,8 +35,10 @@ class MonitorAbstract(ABC):
         self.symbols = symbols
         self.scheduler = scheduler
         self.tunnel = tunnel
-        self.rest_sdk = self._rest_sdk_class(self._loop)
-        self.ws_sdk = self._ws_sdk_class(self._loop)
+        self.rest_sdk = self._rest_sdk_class(self._loop) \
+                            if self._rest_sdk_class else None
+        self.ws_sdk = self._ws_sdk_class(self._loop)    \
+                            if self._ws_sdk_class else None
 
     def _run_later(self,
                    coro: Coroutine,
@@ -95,12 +96,10 @@ class MonitorAbstract(ABC):
         self.tunnel_put(item)
 
 
-
-
 from .okex_spot import *
 from .okex_future import *
 from .bitflyer import *
 from .binance import *
 from .bitfinex import *
 from .huobi import *
-
+from .bitmex import *

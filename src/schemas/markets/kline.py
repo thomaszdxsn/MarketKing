@@ -4,7 +4,8 @@ author: thomaszdxsn
 from datetime import datetime
 from dataclasses import dataclass, field
 
-from .. import DataClassAbstract, add_slots
+from . import MarketItemBase
+from .. import add_slots
 from .._factories import factory_utcnow
 
 __all__ = (
@@ -18,7 +19,7 @@ __all__ = (
 
 @add_slots
 @dataclass
-class Kline(DataClassAbstract):
+class Kline(MarketItemBase):
     pair: str
     start_time: datetime
     open: float
@@ -27,6 +28,9 @@ class Kline(DataClassAbstract):
     low: float
     vol: float
     created: datetime=field(default_factory=factory_utcnow)
+
+    def get_unique_indexes(self):
+        return 'pair', 'start_time'
 
 
 @add_slots
@@ -40,6 +44,9 @@ class OkexSpotKline(Kline):
 class OkexFutureKline(Kline):
     contract_type: str='this_week'
     sheet_vol: float=0.0
+
+    def get_unique_indexes(self):
+        return 'pair', 'start_time', 'contract_type'
 
 
 @add_slots

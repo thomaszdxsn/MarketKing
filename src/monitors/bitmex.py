@@ -1,3 +1,140 @@
 """
 author: thomaszdxsn
 """
+import json
+
+import arrow
+from aiohttp import WSMessage
+
+from . import MonitorAbstract
+from ..sdk.bitmex import BitmexWebsocket
+from ..schemas.markets import (BitmexTrade, BitmexTradeBin,
+                               BitmexQuoteBin, BitmexDepth,
+                               BitmexSettlement)
+
+__all__ = ('BitmexMonitor',)
+
+
+class BitmexMonitor(MonitorAbstract):
+    exchange = 'bitmex'
+    _ws_sdk_class = BitmexWebsocket
+
+    async def schedule(self):
+        for symbol in self.symbols:
+            self.ws_sdk.register_trade_bin(symbol)
+            self.ws_sdk.register_trades(symbol)
+            self.ws_sdk.register_quote_bin(symbol)
+            self.ws_sdk.register_instrument(symbol)
+            self.ws_sdk.register_orderbook10(symbol)
+        self.ws_sdk.register_settlement()
+        await self.ws_sdk.subscribe()
+        self.run_ws_in_background(handler=self.dispatch_ws_msg)
+
+    async def dispatch_ws_msg(self, msg: WSMessage):
+        data = json.loads(msg.data)
+        table = data.get('table', '')
+        if 'tradeBin' in table:
+            await self._handle_trade_bin(data)
+        elif 'quoteBin' in table:
+            await self._handle_quote_bin(data)
+        elif 'orderBook' in table:
+            await self._handle_orderbook10(data)
+        elif table == 'trade':
+            await self._handle_trade(data)
+        elif table == 'instrument':
+            await self._handle_instrument(data)
+        elif table == 'settlement':
+            await self._handle_settlement(data)
+
+    async def _handle_trade_bin(self, data: dict):
+        trade_bin_list = [
+            BitmexTradeBin(
+                start_time=arrow.get(item['timestamp']).naive,
+                pair=item['symbol'],
+                open=item['open'],
+                high=item['high'],
+                low=item['low'],
+                close=item['close'],
+                trades=item['trades'],
+                vol=item['volume'],
+                vwap=item['vwap'],
+                last_size=item['lastSize'],
+                turnover=item['turnover'],
+                home_notional=item['homeNotional'],
+                foreign_notional=item['foreignNotional']
+            )
+            for item in data['data']
+        ]
+        [self.transport('trade_bin', i) for i in trade_bin_list]
+
+    async def _handle_quote_bin(self, data: dict):
+        quote_bin_list = [
+            BitmexQuoteBin(
+                pair=item['symbol'],
+                start_time=arrow.get(item['timestamp']).naive,
+                bid_size=item['bidSize'],
+                bid_price=item['bidPrice'],
+                ask_price=item['askPrice'],
+                ask_size=item['askSize']
+            )
+            for item in data['data']
+        ]
+        [self.transport('quote_bin', i) for i in quote_bin_list]
+
+    async def _handle_orderbook10(self, data: dict):
+        item = data['data'][0]
+        depth = BitmexDepth(
+            pair=item['symbol'],
+            asks=[
+                {'price': i[0], 'amount': i[1]}
+                for i in item['asks']
+            ],
+            bids=[
+                {'price': i[0], 'amount': i[1]}
+                for i in item['bids']
+            ],
+            server_created=arrow.get(item['timestamp']).naive
+        )
+        self.transport('depth', depth)
+
+    async def _handle_trade(self, data: dict):
+        trades = [
+            BitmexTrade(
+                pair=item['symbol'],
+                side=item['side'],
+                size=item['size'],
+                price=item['price'],
+                tick_direction=item['tickDirection'],
+                tid=item['trdMatchID'],
+                gross_value=item['grossValue'],
+                home_notional=item['homeNotional'],
+                foreign_notional=item['foreignNotional'],
+                trade_time=arrow.get(item['timestamp']).naive
+            )
+            for item in data['data']
+        ]
+        [self.transport('trade', i) for i in trades]
+
+    async def _handle_instrument(self, data: dict):
+        """
+        这是类似ticker的数据
+        """
+        pass
+
+    async def _handle_settlement(self, data: dict):
+        settlements = [
+            BitmexSettlement(
+                pair=item['symbol'],
+                start_time=arrow.get(item['timestamp']).naive,
+                settlement_type=item['settlementType'],
+                settled_price=item['settledPrice'],
+                option_strike_price=item['optionStrikePrice'],
+                option_underlying_price=item['optionUnderlyingPrice'],
+                bankrupt=item['bankrupt'],
+                tax_base=item['taxBase'],
+                tax_rate=item['taxRate']
+            )
+            for item in data['data']
+        ]
+        [self.transport('settlement', i) for i in settlements]
+

@@ -7,7 +7,8 @@ from datetime import datetime
 from dataclasses import dataclass, field
 from typing import List
 
-from .. import DataClassAbstract, add_slots
+from . import MarketItemBase
+from .. import add_slots
 from .._factories import factory_utcnow
 
 __all__ = (
@@ -25,7 +26,7 @@ __all__ = (
 
 @add_slots
 @dataclass
-class Depth(DataClassAbstract):
+class Depth(MarketItemBase):
     bids: list
     asks: list
     pair: str
@@ -200,8 +201,8 @@ class BitfinexFundingOrderbook(Orderbook):
 
 @add_slots
 @dataclass
-class BitflyerDepth(DataClassAbstract):
-    product_code: str
+class BitflyerDepth(MarketItemBase):
+    pair: str
     asks: list
     bids: list
     mid_price: float
