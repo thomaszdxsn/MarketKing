@@ -180,10 +180,13 @@ class BitfinexMonitor(MonitorAbstract):
             return
         if isinstance(item[0], list):
             # process list
-            kline = [self.__gen_kline(i, pair) for i in item]
+            klines = [self.__gen_kline(i, pair) for i in item]
         else:
-            kline = self.__gen_kline(item, pair)
-        self.transport('kline', kline)
+            klines = [self.__gen_kline(item, pair)]
+        list(map(
+            lambda x: self.transport('kline', x),
+            klines
+        ))
 
     def __gen_kline(self, data: list, pair: str) -> BitfinexKline:
         return BitfinexKline(
@@ -207,5 +210,5 @@ class BitfinexMonitor(MonitorAbstract):
             self.orderbooks[pair].initialize(data_list)
         else:
             self.orderbooks[pair].update(data_list)
-        # TODO: 每秒定时任务抓取快照并上传
+        # TODO:
 

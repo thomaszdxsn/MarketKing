@@ -11,6 +11,8 @@ from ..sdk.bitflyer import BitflyerRest, BitflyerWebsocket
 from ..schemas.regexes import BITFLYER_WS_CHANS
 from ..schemas.markets import BitFlyerTicker, BitflyerTrades, BitflyerDepth
 
+__all__ = ('BitflyerMonitor',)
+
 
 class BitflyerMonitor(MonitorAbstract):
     exchange = 'bitflyer'
@@ -69,10 +71,14 @@ class BitflyerMonitor(MonitorAbstract):
         list(map(lambda x: self.transport('trades', x),
                  trades))
 
-    async def _handle_depth(self, data: dict, product_code: str):
+    async def _handle_depth(self, data: dict, product_code: str, size:int=20):
         # don't need sorted asks or bids
+        asks = data['params']['message']['asks'][:size]
+        bids = data['params']['message']['bids'][:size]
         depth = BitflyerDepth(
             product_code=product_code,
-            **data['params']['message']
+            asks=asks,
+            bids=bids,
+            mid_price=data['params']['message']['mid_price']
         )
         self.transport('depth', depth)

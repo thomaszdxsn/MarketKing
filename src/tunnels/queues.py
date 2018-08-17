@@ -22,6 +22,9 @@ class QueueTunnel(TunnelAbstract):
     def __len__(self):
         return len(self._container)
 
+    def keys(self):
+        return list(self._container.keys())
+
     def get_queue(self, item_id):
         return self._container[item_id]
 

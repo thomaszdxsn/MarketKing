@@ -19,6 +19,7 @@ __all__ = (
 
 
 class OkexSpotMonitor(MonitorAbstract):
+    exchange = 'okex_spot'
     _rest_sdk_class = OkexSpotRest
     _ws_sdk_class = OkexSpotWebsocket
 

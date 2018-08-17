@@ -95,6 +95,12 @@ class MonitorAbstract(ABC):
         self.tunnel_put(item)
 
 
-from .okex_future import *
+
+
 from .okex_spot import *
+from .okex_future import *
+from .bitflyer import *
 from .binance import *
+from .bitfinex import *
+from .huobi import *
+

@@ -48,21 +48,21 @@ class HuobiMonitor(MonitorAbstract):
         else:
             await self._handle_depth(data, pair)
 
-    async def _handle_depth(self, data: dict, pair: str):
+    async def _handle_depth(self, data: dict, pair: str, size: int=20):
         tick = data['tick']
         asks = [
             {
                 'price': item[0],
                 'amount': item[1]
             }
-            for item in tick['asks']
+            for item in tick['asks'][:size]
         ]
         bids = [
             {
                 'price': item[0],
                 'amount': item[1]
             }
-            for item in tick['bids']
+            for item in tick['bids'][:size]
         ]
         depth = HuobiDepth(
             pair=pair,
@@ -78,7 +78,7 @@ class HuobiMonitor(MonitorAbstract):
         tick = data['tick']
         ticker = HuobiTicker(
             pair=pair,
-            server_created=datetime.fromtimestamp(data['ts'] / 1000),
+            server_created=datetime.utcfromtimestamp(data['ts'] / 1000),
             amount=tick['amount'],
             open=tick['open'],
             close=tick['close'],

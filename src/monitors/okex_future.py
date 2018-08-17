@@ -15,6 +15,10 @@ from ..schemas.markets import (OkexFutureDepth, OkexFutureTicker,
 from ..sdk.okex_future import (OkexFutureRest, OkexFutureWebsocket,
                                CONTRACT_TYPES)
 
+__all__ = (
+    'OkexFutureMonitor',
+)
+
 
 class OkexFutureMonitor(MonitorAbstract):
     exchange = 'okex_future'

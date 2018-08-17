@@ -200,7 +200,7 @@ class WebsocketSdkAbstract(ABC):
                 self.logger.error(msg, exc_info=True)
                 if self._ws_retry:
                     await asyncio.sleep(self._ws_reconnect_interval)
-                    self.logger.info('websocket reconnect...')
+                    self.logger.warning('websocket reconnect...')
                 else:
                     raise
             else:
@@ -222,10 +222,9 @@ class WebsocketSdkAbstract(ABC):
                 self.logger.error(msg, exc_info=True)
                 # reconnect
                 await asyncio.sleep(self._ws_reconnect_interval)
-                self.logger.info('websocket reconnect...')
+                self.logger.warning('websocket reconnect...')
                 await self.ws_client.close()
                 self.ws_client = None
-                await self.setup_ws_client()
                 await self.subscribe()
 
 

@@ -26,3 +26,6 @@ class TunnelAbstract(ABC):
     @abstractmethod
     async def get_async(self, *args):
         pass
+
+
+from .queues import QueueTunnel

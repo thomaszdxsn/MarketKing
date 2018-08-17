@@ -127,5 +127,6 @@ class BinanceMonitor(MonitorAbstract):
             taker_quote_vol=float(kline_item['Q']),
             pair=pair
         )
-        self.transport('kline', kline)
+        if kline.is_completed:
+            self.transport('kline', kline)
 

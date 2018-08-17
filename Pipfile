@@ -12,6 +12,7 @@ arrow = "*"
 apscheduler = "*"
 uvloop = "*"
 black = "*"
+motor = "*"
 
 [dev-packages]
 

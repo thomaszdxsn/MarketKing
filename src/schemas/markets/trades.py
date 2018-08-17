@@ -47,6 +47,7 @@ class OkexFutureTrades(Trades):
 @add_slots
 @dataclass
 class BinanceTrades(Trades):
+    direction: str=''
     event_time: datetime=None
     buyer_order_id: str=''
     seller_order_id: str=''
@@ -91,4 +92,5 @@ class BitflyerTrades(DataClassAbstract):
     trade_time: datetime
     buy_child_order_acceptance_id: str
     sell_child_order_acceptance_id: str
+    created: datetime = field(default_factory=factory_utcnow)
 
