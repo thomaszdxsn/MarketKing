@@ -3,7 +3,7 @@ default:
   REQUEST_READ_TIMEOUT: 10
   REQUEST_CONN_TIMEOUT: 10
   WS_TIMEOUT: 10                  # WS连接超时
-  WS_RECV_TIMEOUT: 30             # WS在指定时间(s)内没有接受到数据，则超时错误
+  WS_RECV_TIMEOUT: 10             # WS在指定时间(s)内没有接受到数据，则超时错误
   WS_HEARTBEAT: 10
   WS_RECONNECT_INTERVAL: 5        # WS连接中断时候重连的间隔时间
   WS_RETRY_ON_CONNECT_LOST: yes   # 是否在WS连接失败的时候重新连接

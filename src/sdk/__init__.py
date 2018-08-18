@@ -208,10 +208,7 @@ class WebsocketSdkAbstract(ABC):
 
     async def connect(self, handler: Callable):
         async for msg in self.ws_client:
-            if asyncio.iscoroutinefunction(handler):
-                await handler(msg)
-            else:
-                handler(msg)
+            await handler(msg)
 
     async def keep_connect(self, handler: Callable):
         while True:
@@ -220,12 +217,15 @@ class WebsocketSdkAbstract(ABC):
             except Exception as exc:
                 msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
                 self.logger.error(msg, exc_info=True)
+            finally:
                 # reconnect
+                # 有时候ws链接会正常关闭，必须重连否则收不到新的消息
                 await asyncio.sleep(self._ws_reconnect_interval)
                 self.logger.warning('websocket reconnect...')
                 await self.ws_client.close()
                 self.ws_client = None
                 await self.subscribe()
+
 
 
 
