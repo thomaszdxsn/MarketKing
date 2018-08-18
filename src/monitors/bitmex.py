@@ -22,7 +22,7 @@ class BitmexMonitor(MonitorAbstract):
 
     def __init__(self, *args, **kwargs):
         super(BitmexMonitor, self).__init__(*args, **kwargs)
-        self._instrument_books = collections.defaultdict(dict)
+        self._instrument_books = collections.defaultdict(dict)  # TODO
 
     async def schedule(self):
         for symbol in self.symbols:

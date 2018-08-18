@@ -1,6 +1,7 @@
 """
 author: thomaszdxsn
 """
+import random
 from types import MethodType
 from typing import Union, Callable
 
@@ -23,8 +24,8 @@ def run_later(self,
         func,
         args=args,
         kwargs=kwargs,
-        trigger='date',
-        next_run_time=arrow.utcnow().shift(seconds=sec).naive
+        max_instances=10,
+        misfire_grace_time=15 * 60
     )
 
 

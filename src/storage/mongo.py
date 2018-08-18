@@ -2,7 +2,7 @@
 author: thomaszdxsn
 """
 from dynaconf import settings
-from pymongo import InsertOne, UpdateOne, ReplaceOne
+from pymongo import InsertOne, UpdateOne, ReplaceOne, WriteConcern
 from pymongo.errors import BulkWriteError
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -12,6 +12,7 @@ from ..tunnels import TunnelAbstract
 
 
 class MongoStorage(StorageAbstract):
+    batch_op_size: int = int(settings.get('MONGO_BATCH_OP_SIZE', 30))
 
     def __init__(self):
         super(MongoStorage, self).__init__()
@@ -33,7 +34,9 @@ class MongoStorage(StorageAbstract):
 
     async def bulk_op(self, database: str, collection: str,
                       items: list, ordered: bool=False):
-        coll = self._mongo_client[database][collection]
+        coll = self._mongo_client[database].get_collection(
+            collection, write_concern=WriteConcern(w=0, wtimeout=2)     # not ack
+        )
         requests = []
         for item in items:
             data_item = item.data
@@ -63,14 +66,15 @@ class MongoStorage(StorageAbstract):
 
     async def worker(self,
                      tunnel: TunnelAbstract,
-                     id_: str,
-                     items_num=30):
+                     id_: str):
         database = settings['MONGO_DATABASE']
         exchange, data_type  = id_.split('|')
         collection = f'{exchange}0{data_type}'      # 以0作为交易所和数据类型之间的分隔符
         while True:
             try:
-                items = await self.fetch_n_items(tunnel, id_, items_num)
+                items = await self.fetch_n_items(tunnel,
+                                                 id_,
+                                                 self.batch_op_size)
                 await self.bulk_op(database, collection, items)
             except BulkWriteError as bwe:
                 msg = str(bwe.details)
