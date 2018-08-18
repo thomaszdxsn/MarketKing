@@ -3,6 +3,7 @@ author: thomaszdxsn
 """
 import collections
 import json
+from asyncio.locks import Lock
 
 import arrow
 from aiohttp import WSMessage
@@ -23,6 +24,8 @@ class BitmexMonitor(MonitorAbstract):
     def __init__(self, *args, **kwargs):
         super(BitmexMonitor, self).__init__(*args, **kwargs)
         self._instrument_books = collections.defaultdict(dict)  # TODO
+        self._orderbooks = collections.defaultdict(dict)
+        self._orderbooks_lock = Lock()
 
     async def schedule(self):
         for symbol in self.symbols:
@@ -33,6 +36,9 @@ class BitmexMonitor(MonitorAbstract):
         self.ws_sdk.register_settlement()
         await self.ws_sdk.subscribe()
         self.run_ws_in_background(handler=self.dispatch_ws_msg)
+        self.scheduler.add_job(self._transport_orderbook_snapshot,
+                               trigger='cron',
+                               second='*')
 
     async def dispatch_ws_msg(self, msg: WSMessage):
         data = json.loads(msg.data)
@@ -83,22 +89,6 @@ class BitmexMonitor(MonitorAbstract):
         ]
         [self.transport('quote_bin', i) for i in quote_bin_list]
 
-    async def _handle_orderbook10(self, data: dict):
-        item = data['data'][0]
-        depth = BitmexDepth(
-            pair=item['symbol'],
-            asks=[
-                {'price': i[0], 'amount': i[1]}
-                for i in item['asks']
-            ],
-            bids=[
-                {'price': i[0], 'amount': i[1]}
-                for i in item['bids']
-            ],
-            server_created=arrow.get(item['timestamp']).naive
-        )
-        self.transport('depth', depth)
-
     async def _handle_trade(self, data: dict):
         trades = [
             BitmexTrade(
@@ -134,3 +124,29 @@ class BitmexMonitor(MonitorAbstract):
         ]
         [self.transport('settlement', i) for i in settlements]
 
+    async def _handle_orderbook10(self, data: dict):
+        item = data['data'][0]
+        symbol = item['symbol']
+        async with self._orderbooks_lock:
+            self._orderbooks[symbol].update(item)
+
+    async def _transport_orderbook_snapshot(self):
+        async with self._orderbooks_lock:
+            for item in self._orderbooks.values():
+                depth = self._format_orderbook10(item)
+                self.transport('depth', depth)
+
+    def _format_orderbook10(self, item: dict) -> BitmexDepth:
+        depth = BitmexDepth(
+            pair=item['symbol'],
+            asks=[
+                {'price': i[0], 'amount': i[1]}
+                for i in item['asks']
+            ],
+            bids=[
+                {'price': i[0], 'amount': i[1]}
+                for i in item['bids']
+            ],
+            server_created=arrow.get(item['timestamp']).naive
+        )
+        return depth

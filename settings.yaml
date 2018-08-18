@@ -49,7 +49,7 @@ default:
     bitflyer:
       symbols: ['BTC_JPY', 'FX_BTC_JPY', 'ETH_BTC', 'BCH_BTC',
                 'BTCJPY28SEP2018', 'BTCJPY17AUG2018', 'BTCJPY24AUG2018']
-
+#
     bitmex:
       symbols: ['XBTUSD', 'ADAU18', 'BCHU18', 'EOSU18', 'ETHUSD', 'LTCU18',
                 'TRXU18', 'XRPU18']
@@ -59,6 +59,11 @@ default:
 development:
   LOGGING_LEVEL: WARNING
 
+production:
+  WS_TIMEOUT: 20                  # WS连接超时
+  WS_RECV_TIMEOUT: 20             # WS在指定时间(s)内没有接受到数据，则超时错误
+  WS_HEARTBEAT: 10
+  WS_RECONNECT_INTERVAL: 2        # WS连接中断时候重连的间隔时间
 
 
   

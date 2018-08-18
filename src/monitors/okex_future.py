@@ -3,7 +3,9 @@ author: thomaszdxsn
 """
 import itertools
 import json
+import collections
 from datetime import datetime
+from asyncio.locks import Lock
 
 import arrow
 from aiohttp import WSMsgType
@@ -25,6 +27,12 @@ class OkexFutureMonitor(MonitorAbstract):
     _rest_sdk_class = OkexFutureRest
     _ws_sdk_class = OkexFutureWebsocket
 
+    def __init__(self, *args, **kwargs):
+        super(OkexFutureMonitor, self).__init__(*args, **kwargs)
+        self._orderbooks = collections.defaultdict(dict)
+        self._orderbooks_lock = Lock()
+        self._orderbooks_key_sep = '|'
+
     async def schedule(self):
         combinations = itertools.product(self.symbols, CONTRACT_TYPES)
         for symbol, contract_type in combinations:
@@ -34,6 +42,10 @@ class OkexFutureMonitor(MonitorAbstract):
             self.ws_sdk.register_kline(symbol, contract_type=contract_type)
         await self.ws_sdk.subscribe()
         self.run_ws_in_background(handler=self.dispatch_ws_msg)
+        # 按秒级别进行depth快照
+        self.scheduler.add_job(self._transport_depth_snapshots,
+                               trigger='cron',
+                               second='*')
 
     async def dispatch_ws_msg(self, msg):
         if msg.type != WSMsgType.TEXT:
@@ -67,6 +79,21 @@ class OkexFutureMonitor(MonitorAbstract):
         }
 
     async def _handle_depth(self, data: dict, symbol: str, contract_type: str):
+        async with self._orderbooks_lock:
+            key = f'{symbol}{self._orderbooks_key_sep}{contract_type}'
+            self._orderbooks[key].update(data)
+
+    async def _transport_depth_snapshots(self):
+        async with self._orderbooks_lock:
+            for key, data in self._orderbooks.items():
+                symbol, contract_type = key.split(self._orderbooks_key_sep)
+                depth = self._format_depth(data, symbol, contract_type)
+                self.transport('depth', depth)
+
+    def _format_depth(self,
+                            data: dict,
+                            symbol: str,
+                            contract_type: str) -> OkexFutureDepth:
         asks = [
             self.__handle_depth_item(item)
             for item in reversed(data['data']['asks'])
@@ -85,7 +112,7 @@ class OkexFutureMonitor(MonitorAbstract):
             server_created=server_created,
             contract_type=contract_type
         )
-        self.transport('depth', depth)
+        return depth
 
     async def _handle_ticker(self, data: dict, symbol: str, contract_type: str):
         data_dict = data['data']

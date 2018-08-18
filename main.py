@@ -53,11 +53,11 @@ class Main(object):
         self.scheduler.start()
         self.scheduler.add_job(self.supervisor, trigger='cron', minute='*')
         await self.schedule_monitors()
-        while True:
-            for k, v in self.tunnel._container.items():
-                print(f'{k}: {v.qsize()}')
-            print(f'{len(self.tunnel.keys())} workers: {len(self._worked_tunnel)}, {self._worker_num}')
-            await asyncio.sleep(5)
+        # while True:
+        #     for k, v in self.tunnel._container.items():
+        #         print(f'{k}: {v.qsize()}')
+        #     print(f'{len(self.tunnel.keys())} workers: {len(self._worked_tunnel)}, {self._worker_num}')
+        #     await asyncio.sleep(5)
 
 
 if __name__ == '__main__':

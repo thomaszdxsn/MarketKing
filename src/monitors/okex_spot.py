@@ -2,7 +2,9 @@
 author: thomaszdxsn
 """
 import json
+import collections
 from datetime import datetime
+from asyncio.locks import Lock
 
 import arrow
 from aiohttp import WSMsgType
@@ -23,6 +25,11 @@ class OkexSpotMonitor(MonitorAbstract):
     _rest_sdk_class = OkexSpotRest
     _ws_sdk_class = OkexSpotWebsocket
 
+    def __init__(self, *args, **kwargs):
+        super(OkexSpotMonitor, self).__init__(*args, **kwargs)
+        self._orderbooks = collections.defaultdict(dict)
+        self._orderbooks_lock = Lock()
+
     async def schedule(self):
         for symbol in self.symbols:
             self.ws_sdk.register_ticker(symbol)
@@ -31,6 +38,9 @@ class OkexSpotMonitor(MonitorAbstract):
             self.ws_sdk.register_kline(symbol)
         await self.ws_sdk.subscribe()
         self.run_ws_in_background(handler=self.dispatch_ws_msg)
+        self.scheduler.add_job(self._transport_depth_snapshot,
+                               trigger='cron',
+                               second='*')
 
     async def dispatch_ws_msg(self, msg):
         if msg.type != WSMsgType.TEXT:
@@ -118,6 +128,16 @@ class OkexSpotMonitor(MonitorAbstract):
         ))
 
     async def _handle_depth(self, data: dict, pair: str):
+        async with self._orderbooks_lock:
+            self._orderbooks[pair].update(data)
+
+    async def _transport_depth_snapshot(self):
+        async with self._orderbooks_lock:
+            for pair, orderbook_data in self._orderbooks.items():
+                depth = self._format_depth(orderbook_data, pair)
+                self.transport('depth', depth)
+
+    def _format_depth(self, data: dict, pair: str) -> OkexSpotDepth:
         asks = [
             {
                 'price': float(item[0]),
@@ -141,4 +161,4 @@ class OkexSpotMonitor(MonitorAbstract):
             pair=pair,
             server_created=server_created
         )
-        self.transport('depth', depth)
+        return depth
