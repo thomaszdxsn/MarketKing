@@ -35,7 +35,7 @@ class BitfinexMonitor(MonitorAbstract):
         self.scheduler.add_job(
             self._transport_depth_snapshots,
             trigger='cron',
-            second='*/1'
+            second='*'
         )
 
     def _register_callback(self,

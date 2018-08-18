@@ -18,14 +18,14 @@ class Main(object):
         self.tunnel = QueueTunnel()
         self.storage = MongoStorage()
         self.exchanges_settings: dict = settings['EXCHANGES']
-        self.worked_tunnel = set()
+        self._worked_tunnel = set()
 
 
     async def supervisor(self):
         """定时任务，如果tunnel出现新的key，就为它创建一个worker"""
         for key in self.tunnel.keys():
-            if key not in self.worked_tunnel:
-                self.worked_tunnel.add(key)
+            if key not in self._worked_tunnel:
+                self._worked_tunnel.add(key)
                 self.scheduler.run_later(
                     self.storage.worker,
                     args=(self.tunnel, key)

@@ -49,13 +49,13 @@ class OkexFutureMonitor(MonitorAbstract):
                                             match_dict['contract_type'])
 
         if data_type == 'trade':
-            self._handle_trades(data, symbol, contract_type)
+            await self._handle_trades(data, symbol, contract_type)
         elif data_type == 'kline':
-            self._handle_kline(data, symbol, contract_type)
+            await self._handle_kline(data, symbol, contract_type)
         elif data_type == 'depth':
-            self._handle_depth(data, symbol, contract_type)
+            await self._handle_depth(data, symbol, contract_type)
         else:
-            self._handle_ticker(data, symbol, contract_type)
+            await self._handle_ticker(data, symbol, contract_type)
 
     def __handle_depth_item(self, item: list) -> dict:
         return {
@@ -66,7 +66,7 @@ class OkexFutureMonitor(MonitorAbstract):
             'token_cumulant': float(item[4])
         }
 
-    def _handle_depth(self, data: dict, symbol: str, contract_type: str):
+    async def _handle_depth(self, data: dict, symbol: str, contract_type: str):
         asks = [
             self.__handle_depth_item(item)
             for item in reversed(data['data']['asks'])
@@ -87,7 +87,7 @@ class OkexFutureMonitor(MonitorAbstract):
         )
         self.transport('depth', depth)
 
-    def _handle_ticker(self, data: dict, symbol: str, contract_type: str):
+    async def _handle_ticker(self, data: dict, symbol: str, contract_type: str):
         data_dict = data['data']
         ticker = OkexFutureTicker(
             pair=symbol,
@@ -106,7 +106,7 @@ class OkexFutureMonitor(MonitorAbstract):
         )
         self.transport('ticker', ticker)
 
-    def _handle_kline(self, data: dict, symbol: str, contract_type: str):
+    async def _handle_kline(self, data: dict, symbol: str, contract_type: str):
         data_lst = data['data']
         klines = [
             OkexFutureKline(
@@ -139,7 +139,7 @@ class OkexFutureMonitor(MonitorAbstract):
             second=int(second)
         ).to('UTC').naive
 
-    def _handle_trades(self, data: dict, symbol: str, contract_type: str):
+    async def _handle_trades(self, data: dict, symbol: str, contract_type: str):
         trades = [
             OkexFutureTrades(
                 pair=symbol,

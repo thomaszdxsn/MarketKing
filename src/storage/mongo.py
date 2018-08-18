@@ -3,6 +3,7 @@ author: thomaszdxsn
 """
 from dynaconf import settings
 from pymongo import InsertOne, UpdateOne, ReplaceOne
+from pymongo.errors import BulkWriteError
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from . import StorageAbstract
@@ -35,7 +36,21 @@ class MongoStorage(StorageAbstract):
         coll = self._mongo_client[database][collection]
         requests = []
         for item in items:
-            requests.append(InsertOne(item.data.to_dict()))
+            data_item = item.data
+            data_item_dict = data_item.to_dict()
+            unique_fields = data_item.get_unique_indexes()
+            if not unique_fields:
+                requests.append(InsertOne(data_item_dict))
+            else:
+                upsert_op = ReplaceOne(
+                    {
+                        f: data_item_dict[f]
+                        for f in unique_fields
+                    },
+                    data_item_dict,
+                    upsert=True
+                )
+                requests.append(upsert_op)
         result = await coll.bulk_write(requests, ordered=ordered)
         if result.acknowledged:
             msg = LogMsgFmt.MONGO_OPS.value.format(
@@ -49,13 +64,17 @@ class MongoStorage(StorageAbstract):
     async def worker(self,
                      tunnel: TunnelAbstract,
                      id_: str,
-                     items_num=10):
+                     items_num=30):
         database = settings['MONGO_DATABASE']
         exchange, data_type  = id_.split('|')
-        collection = f'{exchange}0{data_type}'
+        collection = f'{exchange}0{data_type}'      # 以0作为交易所和数据类型之间的分隔符
         while True:
             try:
                 items = await self.fetch_n_items(tunnel, id_, items_num)
                 await self.bulk_op(database, collection, items)
+            except BulkWriteError as bwe:
+                msg = str(bwe.details)
+                self.logger.error(msg)
             except Exception as exc:
-                print(database, collection, exc)
+                msg = LogMsgFmt.EXCEPTION.value.format(exc=exc)
+                self.logger.error(msg)

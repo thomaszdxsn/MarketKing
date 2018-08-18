@@ -44,15 +44,15 @@ class OkexSpotMonitor(MonitorAbstract):
         pair = f"{match_dict['base']}_{match_dict['quote']}"
         data_type = match_dict['data_type']
         if data_type == 'ticker':
-            self._handle_ticker(data, pair)
+            await self._handle_ticker(data, pair)
         elif 'depth' in data_type:
-            self._handle_depth(data, pair)
+            await self._handle_depth(data, pair)
         elif data_type == 'deals':
-            self._handle_trades(data, pair)
+            await self._handle_trades(data, pair)
         else:
-            self._handle_kline(data, pair)
+            await self._handle_kline(data, pair)
 
-    def _handle_ticker(self, data: dict, pair: str):
+    async def _handle_ticker(self, data: dict, pair: str):
         data_dict = data['data']
         server_created = datetime.utcfromtimestamp(data_dict['timestamp']/1000)
         ticker = OkexSpotTicker(
@@ -82,7 +82,7 @@ class OkexSpotMonitor(MonitorAbstract):
             second=int(second)
         ).to('UTC').naive
 
-    def _handle_trades(self, data: dict, pair: str):
+    async def _handle_trades(self, data: dict, pair: str):
         trades = [
             OkexSpotTrades(
                 pair=pair,
@@ -99,7 +99,7 @@ class OkexSpotMonitor(MonitorAbstract):
             trades
         ))
 
-    def _handle_kline(self, data: dict, pair: str):
+    async def _handle_kline(self, data: dict, pair: str):
         klines = [
             OkexSpotKline(
                 pair=pair,
@@ -117,7 +117,7 @@ class OkexSpotMonitor(MonitorAbstract):
             klines
         ))
 
-    def _handle_depth(self, data: dict, pair: str):
+    async def _handle_depth(self, data: dict, pair: str):
         asks = [
             {
                 'price': float(item[0]),
