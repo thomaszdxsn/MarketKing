@@ -3,6 +3,8 @@ author: thomaszdxsn
 """
 from datetime import datetime
 
+from dynaconf import settings
+
 from . import MonitorAbstract
 from ..sdk.cointiger import CointigerRest, CointigerWebsocket
 from ..schemas.regexes import COINTIGER_WS_CHANS
@@ -12,6 +14,8 @@ from ..schemas.markets import (CointigerTicker, CointigerDepth,
 __all__ = (
     'CointigerMonitor',
 )
+
+ORDERBOOK_LEVEL = settings.as_int('ORDERBOOK_LEVEL')
 
 
 class CointigerMonitor(MonitorAbstract):
@@ -52,7 +56,10 @@ class CointigerMonitor(MonitorAbstract):
         )
         self.transport('ticker', ticker)
 
-    async def _handle_depth(self, data: dict, pair: str, size: int=25):
+    async def _handle_depth(self,
+                            data: dict,
+                            pair: str,
+                            size: int=ORDERBOOK_LEVEL):
         asks = [
             {
                 'price': item[0],

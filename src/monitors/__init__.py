@@ -34,6 +34,7 @@ class MonitorAbstract(ABC):
         self._loop = loop
         self.symbols = symbols
         self._depth_interval = 1
+        self._ticker_interval = 1
         self.scheduler = scheduler
         self.tunnel = tunnel
         self.rest_sdk = self._rest_sdk_class(self._loop) \
@@ -108,6 +109,7 @@ from .hitbtc import *
 from .poloniex import *
 from .fcoin import *
 from .cointiger import *
+from .bithumb import *
 
 MONITOR_MAP = {
     'okex_future': OkexFutureMonitor,
@@ -120,5 +122,6 @@ MONITOR_MAP = {
     'hitbtc': HitBTCMonitor,
     'poloniex': PoloniexMonitor,
     'fcoin': FcoinMonitor,
-    'cointiger': CointigerMonitor
+    'cointiger': CointigerMonitor,
+    'bithumb': BithumbMonitor
 }

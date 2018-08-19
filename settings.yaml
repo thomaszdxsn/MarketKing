@@ -76,6 +76,9 @@ default:
                 'tchbtc', 'bchbtc', 'eosbtc', 'ethbtc', 'etcbtc', 'ltcbtc',
                 'eoseth']
 
+    bithumb:
+      symbols: ['BTC', 'ETH', 'LTC', 'ETC', 'BCH', 'EOS']
+
 
 development:
   LOGGING_LEVEL: WARNING

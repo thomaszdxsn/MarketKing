@@ -19,7 +19,8 @@ __all__ = (
     'HitBTCTicker',
     'PoloniexTicker',
     'FcoinTicker',
-    'CointigerTicker'
+    'CointigerTicker',
+    'BithumbTicker'
 )
 
 
@@ -201,3 +202,23 @@ class CointigerTicker(Ticker):
     close: float=0.0
     open: float=0.0
     server_created: datetime=field(default_factory=factory_utcnow)
+    
+    
+@add_slots
+@dataclass
+class BithumbTicker(MarketItemBase):
+    pair: str
+    low: float
+    high: float
+    open: float
+    close: float
+    avg_price: float
+    units_traded: float
+    vol_1day: float
+    vol_7day: float
+    ask: float
+    bid: float
+    change: float
+    change_perc: float
+    server_created: datetime
+    created: datetime = field(default_factory=factory_utcnow)

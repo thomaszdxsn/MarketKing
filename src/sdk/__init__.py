@@ -233,7 +233,7 @@ from .bibox import *
 from .binance import *
 from .bitfinex import *
 from .bitflyer import *
-from .bithump import *
+from .bithumb import *
 from .bitmex import *
 from .bitstamp import *
 from .bittrex import *

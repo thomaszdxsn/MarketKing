@@ -3,14 +3,14 @@ Author: thomaszdxsn
 """
 import pytest
 
-from src.sdk.bithump import BithumpRest
+from src.sdk.bithumb import BithumbRest
 
 symbol = 'BTC'
 
 
 @pytest.fixture
 def sdk(loop):
-    yield BithumpRest(loop)
+    yield BithumbRest(loop)
 
 
 @pytest.mark.rest
