@@ -33,7 +33,7 @@ class MonitorAbstract(ABC):
             loop = asyncio.get_event_loop()
         self._loop = loop
         self.symbols = symbols
-        self._depth_interval = 3
+        self._depth_interval = 1
         self.scheduler = scheduler
         self.tunnel = tunnel
         self.rest_sdk = self._rest_sdk_class(self._loop) \

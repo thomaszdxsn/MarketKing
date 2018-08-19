@@ -49,7 +49,7 @@ default:
     bitflyer:
       symbols: ['BTC_JPY', 'FX_BTC_JPY', 'ETH_BTC', 'BCH_BTC',
                 'BTCJPY28SEP2018', 'BTCJPY17AUG2018', 'BTCJPY24AUG2018']
-#
+
     bitmex:
       symbols: ['XBTUSD', 'ADAU18', 'BCHU18', 'EOSU18', 'ETHUSD', 'LTCU18',
                 'TRXU18', 'XRPU18']

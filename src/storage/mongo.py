@@ -79,7 +79,7 @@ class MongoStorage(StorageAbstract):
                                                  id_,
                                                  self.batch_op_size)
                 await self.bulk_op(database, collection, items)
-                await asyncio.sleep(1)
+                # await asyncio.sleep(1)
             except BulkWriteError as bwe:
                 msg = str(bwe.details)
                 self.logger.error(msg)
