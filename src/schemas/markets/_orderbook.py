@@ -8,13 +8,14 @@ from typing import List
 from dynaconf import settings
 
 from .depth import (Depth, BitfinexTradeDepth, BitfinexFundingDepth,
-                    HitBTCDepth)
+                    HitBTCDepth, PoloniexDepth)
 
 __all__ = (
     'BitfinexTradeOrderbook',
     'BitfinexFundingOrderbook',
     'Orderbook',
-    'HitBTCOrderbook'
+    'HitBTCOrderbook',
+    'PoloniexOrderbook'
 )
 
 ORDERBOOK_LEVEL = settings.as_int('ORDERBOOK_LEVEL')
@@ -202,3 +203,67 @@ class HitBTCOrderbook(Orderbook):
             asks=asks,
             bids=bids
         )
+
+
+class PoloniexOrderbook(Orderbook):
+
+    def initialize(self, data_list:List[dict]):
+        """
+        "orderBook": [
+          {
+            "<lowest ask price>": "<lowest ask size>",
+            "<next ask price>": "<next ask size>",
+            …
+          },
+          {
+            "<highest bid price>": "<highest bid size>",
+            "<next bid price>": "<next bid size>",
+            …
+          }
+        """
+        self._asks = data_list[0]
+        self._bids = data_list[1]
+
+    def update(self, item: list):
+        """
+        ["o", 1, "0.00001823", "5534.6474"]
+        ["o", <1 for buy 0 for sell>, "<price>", "<size>"]
+        """
+        side, price, size = item[1:]
+        book = self._bids if side == 1 else self._asks
+        if float(size) == 0:
+            # remove
+            book.pop(price)
+        else:
+            # update
+            book[price] = size
+
+    def snapshot(self) -> PoloniexDepth:
+        asks = [
+            {
+                'price': float(price),
+                'amount': float(amount)
+            }
+            for price, amount in
+            sorted(
+                self._asks.items(), key=lambda x: float(x[0])
+            )[:ORDERBOOK_LEVEL]
+        ]
+        bids = [
+            {
+                'price': float(price),
+                'amount': float(amount)
+            }
+            for price, amount in
+            sorted(
+                self._bids.items(), key=lambda x: -float(x[0])
+            )[:ORDERBOOK_LEVEL]
+        ]
+        return PoloniexDepth(
+            asks=asks,
+            bids=bids,
+            pair=self._pair
+        )
+
+
+

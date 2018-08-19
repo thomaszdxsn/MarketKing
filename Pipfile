@@ -14,6 +14,7 @@ uvloop = "*"
 black = "*"
 motor = "*"
 aioprocessing = "*"
+tqdm = "*"
 
 [dev-packages]
 

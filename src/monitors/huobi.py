@@ -122,6 +122,6 @@ class HuobiMonitor(MonitorAbstract):
             for item in tick['data']
         ]
         list(map(
-            lambda x: self.transport('trade', x),
+            lambda x: self.transport('trades', x),
             trades
         ))

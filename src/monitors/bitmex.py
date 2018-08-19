@@ -107,7 +107,7 @@ class BitmexMonitor(MonitorAbstract):
             )
             for item in data['data']
         ]
-        [self.transport('trade', i) for i in trades]
+        [self.transport('trades', i) for i in trades]
 
     async def _handle_settlement(self, data: dict):
         settlements = [

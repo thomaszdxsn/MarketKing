@@ -16,7 +16,8 @@ __all__ = (
     'BitfinexFundingTicker',
     'BitfinexTradeTicker',
     'BitFlyerTicker',
-    'HitBTCTicker'
+    'HitBTCTicker',
+    'PoloniexTicker'
 )
 
 
@@ -153,3 +154,20 @@ class HitBTCTicker(Ticker):
     open: float=0.0
     quote_vol: float=0.0
     server_created: datetime=field(default_factory=factory_utcnow)
+
+
+@add_slots
+@dataclass
+class PoloniexTicker(MarketItemBase):
+    last: float
+    change_perc: float
+    high: float
+    low: float
+    pair: str
+    base_vol: float
+    quote_vol: float
+    is_frozen: bool
+    ask: float
+    bid: float
+    created: datetime = field(default_factory=factory_utcnow)
+    server_created: datetime = field(default_factory=factory_utcnow)

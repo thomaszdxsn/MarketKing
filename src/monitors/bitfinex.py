@@ -216,7 +216,6 @@ class BitfinexMonitor(MonitorAbstract):
             await self.orderbooks[pair].update_async(data_list)
 
     async def _transport_depth_snapshots(self):
-        depths = []
         for val in self.orderbooks.values():
-            depths.append(await val.snapshot_async())
-        [self.transport('depth', d) for d in depths]
+            depth = await val.snapshot_async()
+            self.transport('depth', depth)

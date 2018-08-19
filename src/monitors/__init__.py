@@ -105,6 +105,7 @@ from .bitfinex import *
 from .huobi import *
 from .bitmex import *
 from .hitbtc import *
+from .poloniex import *
 
 MONITOR_MAP = {
     'okex_future': OkexFutureMonitor,
@@ -114,5 +115,6 @@ MONITOR_MAP = {
     'binance': BinanceMonitor,
     'bitflyer': BitflyerMonitor,
     'bitmex': BitmexMonitor,
-    'hitbtc': HitBTCMonitor
+    'hitbtc': HitBTCMonitor,
+    'poloniex': PoloniexMonitor
 }

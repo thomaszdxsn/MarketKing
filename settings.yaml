@@ -60,7 +60,10 @@ default:
                 'ETHBTC', 'BCHBTC', 'XRPBTC', 'XMRBTC', 'DASHBTC', 'ZECBTC', 'LTCBTC',
                 'ZRXETH', 'ADXETH', 'DICEETH',
                 'XRPEURS']
-
+    poloniex:
+      symbols: ['USDT_BTC', 'USDT_LTC', 'USDT_ETH', 'USDT_ETC', 'USDT_BCH', 'USDT_EOS',
+                'BTC_LTC', 'BTC_ETH', 'BTC_ETC', 'BTC_BCH', 'BTC_EOS',
+                'ETH_ETC', 'ETH_BCH', 'ETH_EOS']
 
 
 development:

@@ -197,5 +197,10 @@ SYMBOLS_MAP = {
     201: "BTC_EOS",
     202: "ETH_EOS",
     203: "USDT_EOS",
+    204: 'BTC_SNT',
+    205: 'ETH_SNT',
+    206: 'USDT_SNT',
+    207: 'BTC_KNC',
+    208: 'ETH_KNC',
     1002: 'ALL_TICKERS'
 }

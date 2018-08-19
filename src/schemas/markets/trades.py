@@ -16,7 +16,8 @@ __all__ = (
     'BitfinexFundingTrades',
     'BitfinexTradeTrades',
     'BitflyerTrades',
-    'HitBTCTrades'
+    'HitBTCTrades',
+    'PoloniexTrades'
 )
 
 
@@ -109,4 +110,10 @@ class BitflyerTrades(MarketItemBase):
 @add_slots
 @dataclass
 class HitBTCTrades(Trades):
+    direction: str='buy'
+
+
+@add_slots
+@dataclass
+class PoloniexTrades(Trades):
     direction: str='buy'

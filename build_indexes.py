@@ -3,6 +3,7 @@ author: thomaszdxsn
 """
 from motor.motor_asyncio import AsyncIOMotorClient
 from dynaconf import settings
+from tqdm import tqdm
 
 
 unique_map = {
@@ -38,16 +39,19 @@ unique_map = {
     'hitbtc0trades': ('tid',),
     'hitbtc0kline': ('pair', 'start_time'),
     'hitbtc0depth': '',
+    'poloniex0depth': '',
+    'poloniex0ticker': '',
+    'poloniex0trades': ('tid',),
 }
 
-db = AsyncIOMotorClient(settings['MONGO_URI']).exchange_data
+db = AsyncIOMotorClient(settings['MONGO_URI'])[settings['MONGO_DATABASE']]
 ttl_secs = 60 * 60 * 24 * 7
 
 async def create_unique_indexes():
-    for coll, unique_fields in unique_map.items():
+    for coll, unique_fields in tqdm(unique_map.items(),
+                                    desc='build unique indexes'):
         if unique_fields:
             collection = db[coll]
-            print(f'build unique indexes for {coll}({unique_fields})')
             await collection.create_index(
                 [
                     (field, 1)
@@ -58,18 +62,18 @@ async def create_unique_indexes():
 
 
 async def create_ttl_indexes():
-    for coll in unique_map.keys():
+    for coll in tqdm(unique_map.keys(),
+                     desc='build ttl indexes'):
         collection = db[coll]
-        print(f'build ttl index for {coll}')
         await collection.create_index('created',
                                       background=True,
                                       expireAfterSeconds=ttl_secs)
 
 
 async def create_filter_indexes():
-    for coll in unique_map.keys():
+    for coll in tqdm(unique_map.keys(),
+                     desc='build filter indexes'):
         collection = db[coll]
-        print(f'build filter index for {coll}')
         await collection.create_index([('created', 1), ('pair', 1)],
                                       background=True)
 

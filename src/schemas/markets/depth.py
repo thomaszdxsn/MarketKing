@@ -16,7 +16,8 @@ __all__ = (
     'BitfinexFundingDepth',
     'BitfinexTradeDepth',
     'BitflyerDepth',
-    'HitBTCDepth'
+    'HitBTCDepth',
+    'PoloniexDepth'
 )
 
 
@@ -81,4 +82,10 @@ class BitflyerDepth(MarketItemBase):
 @add_slots
 @dataclass
 class HitBTCDepth(Depth):
+    pass
+
+
+@add_slots
+@dataclass
+class PoloniexDepth(Depth):
     pass
