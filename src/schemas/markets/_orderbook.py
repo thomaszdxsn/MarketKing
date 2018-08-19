@@ -5,6 +5,8 @@ from abc import ABC, abstractmethod
 from asyncio import locks
 from typing import List
 
+from dynaconf import settings
+
 from .depth import (Depth, BitfinexTradeDepth, BitfinexFundingDepth,
                     HitBTCDepth)
 
@@ -14,6 +16,8 @@ __all__ = (
     'Orderbook',
     'HitBTCOrderbook'
 )
+
+ORDERBOOK_LEVEL = settings.as_int('ORDERBOOK_LEVEL')
 
 
 class Orderbook(ABC):
@@ -73,7 +77,7 @@ class BitfinexTradeOrderbook(Orderbook):
                 'amount': info['amount']
             }
             for price, info in
-            sorted(self._bids.items(), key=lambda x: -x[0])
+            sorted(self._bids.items(), key=lambda x: -x[0])[:ORDERBOOK_LEVEL]
         ]
         asks = [
             {
@@ -82,7 +86,7 @@ class BitfinexTradeOrderbook(Orderbook):
                 'amount': info['amount']
             }
             for price, info in
-            sorted(self._asks.items(), key=lambda x: x[0])
+            sorted(self._asks.items(), key=lambda x: x[0])[:ORDERBOOK_LEVEL]
         ]
         return BitfinexTradeDepth(
             pair=self._pair,
@@ -124,7 +128,7 @@ class BitfinexFundingOrderbook(Orderbook):
                 'period': info['period']
             }
             for rate, info in
-            sorted(self._bids.items(), key=lambda x: -x[0])
+            sorted(self._bids.items(), key=lambda x: -x[0])[:ORDERBOOK_LEVEL]
         ]
         asks = [
             {
@@ -134,7 +138,7 @@ class BitfinexFundingOrderbook(Orderbook):
                 'period': info['period']
             }
             for rate, info in
-            sorted(self._asks.items(), key=lambda x: x[0])
+            sorted(self._asks.items(), key=lambda x: x[0])[:ORDERBOOK_LEVEL]
         ]
         return BitfinexFundingDepth(
             pair=self._pair,
@@ -178,16 +182,20 @@ class HitBTCOrderbook(Orderbook):
                 'price': float(price),
                 'amount': float(amount)
             }
-            for price, amount in sorted(self._asks.items(),
-                                        key=lambda x: float(x[0]))
+            for price, amount in sorted(
+                self._asks.items(),
+                key=lambda x: float(x[0])
+            )[:ORDERBOOK_LEVEL]
         ]
         bids = [
             {
                 'price': float(price),
                 'amount': float(amount)
             }
-            for price, amount in sorted(self._bids.items(),
-                                        key=lambda x: -float(x[0]))
+            for price, amount in sorted(
+                self._bids.items(),
+                key=lambda x: -float(x[0])
+            )[:ORDERBOOK_LEVEL]
         ]
         return HitBTCDepth(
             pair=self._pair,

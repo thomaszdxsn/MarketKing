@@ -22,8 +22,6 @@ class Main(object):
         self.storage = MongoStorage()
         self.exchanges_settings: dict = exchange_info
         self._worked_tunnel = set()
-        self._worker_num = 0
-
 
     async def supervisor(self):
         """定时任务，如果tunnel出现新的key，就为它apawn一个worker"""
@@ -40,7 +38,6 @@ class Main(object):
                         self.storage.worker,
                         args=(self.tunnel, key)
                     )
-                    self._worker_num += 1
 
     async def schedule_monitors(self):
         for exchange, info in self.exchanges_settings:
@@ -57,7 +54,7 @@ class Main(object):
         while True:
             for k, v in self.tunnel._container.items():
                 print(f'{k}: {v.qsize()}')
-            print(f'{len(self.tunnel.keys())} workers: {len(self._worked_tunnel)}, {self._worker_num}')
+            print(f'{len(self.tunnel.keys())} workers: {len(self._worked_tunnel)}')
             await asyncio.sleep(5)
 
 

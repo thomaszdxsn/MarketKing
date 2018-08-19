@@ -9,6 +9,7 @@ default:
   WS_RETRY_ON_CONNECT_LOST: yes   # 是否在WS连接失败的时候重新连接
 
   LOGGING_LEVEL: WARNING
+  ORDERBOOK_LEVEL: 25
 
   MONGO_DATABASE: 'exchange_data'
   MONGO_POOL_SIZE: 100
