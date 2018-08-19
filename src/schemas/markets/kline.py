@@ -13,7 +13,8 @@ __all__ = (
     'OkexFutureKline',
     'BinanceKline',
     'HuobiKline',
-    'BitfinexKline'
+    'BitfinexKline',
+    'HitBTCKline'
 )
 
 
@@ -74,3 +75,9 @@ class HuobiKline(Kline):
 @dataclass
 class BitfinexKline(Kline):
     pass
+
+
+@add_slots
+@dataclass
+class HitBTCKline(Kline):
+    quote_vol: float=0.0

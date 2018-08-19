@@ -1,6 +1,8 @@
 """
 author: thomaszdxsn
 """
+import asyncio
+
 from dynaconf import settings
 from pymongo import InsertOne, UpdateOne, ReplaceOne, WriteConcern
 from pymongo.errors import BulkWriteError
@@ -42,7 +44,7 @@ class MongoStorage(StorageAbstract):
             data_item = item.data
             data_item_dict = data_item.to_dict()
             unique_fields = data_item.get_unique_indexes()
-            if not unique_fields or not collection.endswith('kline'):   # dont upsert trades
+            if not unique_fields or not collection.endswith('kline'):   # don't upsert trades
                 requests.append(InsertOne(data_item_dict))
             else:                                                       # upsert is too expensive, only do it for kline
                 upsert_op = ReplaceOne(
@@ -77,6 +79,7 @@ class MongoStorage(StorageAbstract):
                                                  id_,
                                                  self.batch_op_size)
                 await self.bulk_op(database, collection, items)
+                await asyncio.sleep(1)
             except BulkWriteError as bwe:
                 msg = str(bwe.details)
                 self.logger.error(msg)

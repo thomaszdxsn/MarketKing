@@ -33,6 +33,7 @@ class MonitorAbstract(ABC):
             loop = asyncio.get_event_loop()
         self._loop = loop
         self.symbols = symbols
+        self._depth_interval = 3
         self.scheduler = scheduler
         self.tunnel = tunnel
         self.rest_sdk = self._rest_sdk_class(self._loop) \
@@ -103,6 +104,7 @@ from .binance import *
 from .bitfinex import *
 from .huobi import *
 from .bitmex import *
+from .hitbtc import *
 
 MONITOR_MAP = {
     'okex_future': OkexFutureMonitor,
@@ -111,5 +113,6 @@ MONITOR_MAP = {
     'bitfinex': BitfinexMonitor,
     'binance': BinanceMonitor,
     'bitflyer': BitflyerMonitor,
-    'bitmex': BitmexMonitor
+    'bitmex': BitmexMonitor,
+    'hitbtc': HitBTCMonitor
 }

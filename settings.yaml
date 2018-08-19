@@ -54,6 +54,12 @@ default:
       symbols: ['XBTUSD', 'ADAU18', 'BCHU18', 'EOSU18', 'ETHUSD', 'LTCU18',
                 'TRXU18', 'XRPU18']
 
+    hitbtc:
+      symbols: ['BTCUSD', 'ETHUSD', 'BCHUSD', 'LTCUSD',
+                'ETHBTC', 'BCHBTC', 'XRPBTC', 'XMRBTC', 'DASHBTC', 'ZECBTC', 'LTCBTC',
+                'ZRXETH', 'ADXETH', 'DICEETH',
+                'XRPEURS']
+
 
 
 development:

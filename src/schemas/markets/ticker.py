@@ -15,7 +15,8 @@ __all__ = (
     'HuobiTicker',
     'BitfinexFundingTicker',
     'BitfinexTradeTicker',
-    'BitFlyerTicker'
+    'BitFlyerTicker',
+    'HitBTCTicker'
 )
 
 
@@ -141,3 +142,14 @@ class BitFlyerTicker(MarketItemBase):
     volume_by_product: float
     server_created: datetime
     created: datetime=field(default_factory=factory_utcnow)
+
+
+@add_slots
+@dataclass
+class HitBTCTicker(Ticker):
+    ask: float=0.0
+    bid: float=0.0
+    last: float=0.0
+    open: float=0.0
+    quote_vol: float=0.0
+    server_created: datetime=field(default_factory=factory_utcnow)

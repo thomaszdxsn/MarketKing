@@ -13,14 +13,13 @@ from ..sdk.bitfinex import BitfinexWebsocket, BitfinexRest
 from ..schemas.markets import (BitfinexTradeTicker, BitfinexFundingTicker,
                                BitfinexTradeTrades, BitfinexFundingTrades,
                                BitfinexKline, BitfinexFundingOrderbook,
-                               BitfinexTradeOrderbook)
+                               BitfinexTradeOrderbook, Orderbook)
 
 __all__ = (
     'BitfinexMonitor',
 )
 
-ORDERBOOK_TYPE = Union[BitfinexTradeOrderbook, BitfinexFundingOrderbook]
-ORDERBOOKS_DICT = Dict[str, ORDERBOOK_TYPE]
+ORDERBOOKS_DICT = Dict[str, Orderbook]
 
 
 class BitfinexMonitor(MonitorAbstract):
@@ -35,7 +34,7 @@ class BitfinexMonitor(MonitorAbstract):
         self.scheduler.add_job(
             self._transport_depth_snapshots,
             trigger='cron',
-            second='*'
+            second=f'*/{self._depth_interval}'
         )
 
     def _register_callback(self,
@@ -214,10 +213,10 @@ class BitfinexMonitor(MonitorAbstract):
                 self.orderbooks[pair] = BitfinexTradeOrderbook(pair)
             self.orderbooks[pair].initialize(data_list)
         else:
-            self.orderbooks[pair].update(data_list)
+            await self.orderbooks[pair].update_async(data_list)
 
     async def _transport_depth_snapshots(self):
         depths = []
         for val in self.orderbooks.values():
-            depths.append(val.snapshot())
+            depths.append(await val.snapshot_async())
         [self.transport('depth', d) for d in depths]

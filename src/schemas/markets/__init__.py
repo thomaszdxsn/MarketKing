@@ -17,3 +17,4 @@ from .ticker import *
 from .trades import *
 from .kline import *
 from ._bitmex import *
+from ._orderbook import *

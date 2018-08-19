@@ -33,7 +33,11 @@ unique_map = {
     'okex_spot0depth': '',
     'okex_spot0ticker': '',
     'okex_spot0kline': ('pair', 'start_time'),
-    'okex_spot0trades': ('tid',)
+    'okex_spot0trades': ('tid',),
+    'hitbtc0ticker': '',
+    'hitbtc0trades': ('tid',),
+    'hitbtc0kline': ('pair', 'start_time'),
+    'hitbtc0depth': '',
 }
 
 db = AsyncIOMotorClient(settings['MONGO_URI']).exchange_data

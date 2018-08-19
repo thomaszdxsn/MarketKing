@@ -30,9 +30,9 @@ class Main(object):
             if key not in self._worked_tunnel:
                 self._worked_tunnel.add(key)
                 if key.endswith('depth'):
-                    worker_num = 4
+                    worker_num = 6
                 else:
-                    worker_num = 2
+                    worker_num = 3
                 for i in range(worker_num):
                     # 开启两个worker
                     self.scheduler.run_later(

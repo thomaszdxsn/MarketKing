@@ -15,7 +15,8 @@ __all__ = (
     'HuobiTrades',
     'BitfinexFundingTrades',
     'BitfinexTradeTrades',
-    'BitflyerTrades'
+    'BitflyerTrades',
+    'HitBTCTrades'
 )
 
 
@@ -104,3 +105,8 @@ class BitflyerTrades(MarketItemBase):
     def get_unique_indexes(self):
         return ('tid',)
 
+
+@add_slots
+@dataclass
+class HitBTCTrades(Trades):
+    direction: str='buy'
