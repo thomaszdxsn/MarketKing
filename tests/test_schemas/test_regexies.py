@@ -86,3 +86,18 @@ def test_huobi_ws_channels_re_patterns(raw, result):
 def test_bitflyer_ws_channels_re_patterns(raw, result):
     match_result = BITFLYER_WS_CHANS.match(raw).groupdict()
     assert match_result == result
+
+
+@pytest.mark.parametrize('raw,result', [
+    ('ticker.ltcusdt',
+     {'data_type': 'ticker', 'symbol': 'ltcusdt'}),
+    ('depth.L20.btcusdt',
+     {'data_type': 'depth', 'symbol': 'btcusdt'}),
+    ('candle.M1.ethusdt',
+     {'data_type': 'candle', 'symbol': 'ethusdt'}),
+    ('trade.btcusdt',
+     {'data_type': 'trade', 'symbol': 'btcusdt'})
+])
+def test_fcoin_ws_channels_re_patterns(raw, result):
+    match_result = FCOIN_WS_CHANS.match(raw).groupdict()
+    assert match_result == result

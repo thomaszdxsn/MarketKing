@@ -65,6 +65,11 @@ default:
                 'BTC_LTC', 'BTC_ETH', 'BTC_ETC', 'BTC_BCH', 'BTC_EOS',
                 'ETH_ETC', 'ETH_BCH', 'ETH_EOS']
 
+    fcoin:
+      symbols: ['btcusdt', 'ethusdt', 'bchusdt', 'ltcusdt', 'etcusdt', 'eosusdt', 'ftusdt',
+                'ethbtc', 'bchbtc', 'ltcbtc', 'etcbtc', 'eosbtc', 'ftbtc',
+                'etceth', 'ltceth', 'eoseth', 'fteth']
+
 
 development:
   LOGGING_LEVEL: WARNING

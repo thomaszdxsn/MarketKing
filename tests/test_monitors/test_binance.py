@@ -17,9 +17,9 @@ from src.storage.mongo import MongoStorage
 # @pytest.mark.skip
 async def test_monitor(scheduler):
     import asyncio
-    pairs = settings['EXCHANGES']['poloniex']['symbols']
+    pairs = settings['EXCHANGES']['fcoin']['symbols']
     tunnel = QueueTunnel()
-    monitor = PoloniexMonitor(symbols=pairs,
+    monitor = FcoinMonitor(symbols=pairs,
                             scheduler=scheduler,
                             tunnel=tunnel)
     await monitor.schedule()

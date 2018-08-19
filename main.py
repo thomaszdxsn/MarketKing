@@ -2,6 +2,7 @@
 author: thomaszdxsn
 """
 import asyncio
+import math
 
 import uvloop
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -74,7 +75,7 @@ if __name__ == '__main__':
     import os
     import aioprocessing
     processes = []
-    chunk_num = len(settings['EXCHANGES'].keys()) //  os.cpu_count()
+    chunk_num = len(settings['EXCHANGES']) //  os.cpu_count()
     for exchange_info in chunk(settings['EXCHANGES'].items(), chunk_num):
         p = aioprocessing.AioProcess(target=main, args=(exchange_info,))
         processes.append(p)

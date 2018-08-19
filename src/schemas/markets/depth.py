@@ -17,7 +17,8 @@ __all__ = (
     'BitfinexTradeDepth',
     'BitflyerDepth',
     'HitBTCDepth',
-    'PoloniexDepth'
+    'PoloniexDepth',
+    'FcoinDepth'
 )
 
 
@@ -89,3 +90,9 @@ class HitBTCDepth(Depth):
 @dataclass
 class PoloniexDepth(Depth):
     pass
+
+
+@add_slots
+@dataclass
+class FcoinDepth(Depth):
+    server_created: datetime=field(default_factory=factory_utcnow)

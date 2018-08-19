@@ -66,3 +66,16 @@ BITFLYER_WS_CHANS = re.compile(
     """,
     flags=re.VERBOSE
 )
+
+##########################
+# fcoin ##################
+##########################
+
+FCOIN_WS_CHANS = re.compile(
+    """
+    (?P<data_type>[a-z]+)\.
+    (\w+\.)?
+    (?P<symbol>[a-z]+)
+    """,
+    flags=re.VERBOSE|re.IGNORECASE
+)

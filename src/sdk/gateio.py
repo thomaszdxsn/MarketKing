@@ -92,7 +92,7 @@ class GateIOWebsocket(WebsocketSdkAbstract):
         i = 1
         chan_nums = len(self.register_hub) + 1
         async for msg in self.ws_client:
-            handler(msg)
+            await handler(msg)
             if i % chan_nums == 0:
                 await asyncio.sleep(1)  # TODO: need configify
                 i = 0

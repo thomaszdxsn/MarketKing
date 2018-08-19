@@ -42,6 +42,10 @@ unique_map = {
     'poloniex0depth': '',
     'poloniex0ticker': '',
     'poloniex0trades': ('tid',),
+    'fcoin0depth': '',
+    'fcoin0ticker': '',
+    'fcoin0trades': ('tid',),
+    'fcoin0kline': ('pair', 'start_time'),
 }
 
 db = AsyncIOMotorClient(settings['MONGO_URI'])[settings['MONGO_DATABASE']]
