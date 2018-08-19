@@ -42,7 +42,7 @@ class MongoStorage(StorageAbstract):
             data_item = item.data
             data_item_dict = data_item.to_dict()
             unique_fields = data_item.get_unique_indexes()
-            if not unique_fields:
+            if not unique_fields or not collection.endswith('kline'):   # dont upsert trades
                 requests.append(InsertOne(data_item_dict))
             else:
                 upsert_op = ReplaceOne(
