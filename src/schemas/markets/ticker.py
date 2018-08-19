@@ -18,7 +18,8 @@ __all__ = (
     'BitFlyerTicker',
     'HitBTCTicker',
     'PoloniexTicker',
-    'FcoinTicker'
+    'FcoinTicker',
+    'CointigerTicker'
 )
 
 
@@ -190,3 +191,13 @@ class FcoinTicker(MarketItemBase):
     base_vol: float
     quote_vol: float
     created: datetime=field(default_factory=factory_utcnow)
+
+
+@add_slots
+@dataclass
+class CointigerTicker(Ticker):
+    amount: float=0.0
+    rose: float=0.0
+    close: float=0.0
+    open: float=0.0
+    server_created: datetime=field(default_factory=factory_utcnow)

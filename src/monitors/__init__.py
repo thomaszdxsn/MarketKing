@@ -107,6 +107,7 @@ from .bitmex import *
 from .hitbtc import *
 from .poloniex import *
 from .fcoin import *
+from .cointiger import *
 
 MONITOR_MAP = {
     'okex_future': OkexFutureMonitor,
@@ -118,5 +119,6 @@ MONITOR_MAP = {
     'bitmex': BitmexMonitor,
     'hitbtc': HitBTCMonitor,
     'poloniex': PoloniexMonitor,
-    'fcoin': FcoinMonitor
+    'fcoin': FcoinMonitor,
+    'cointiger': CointigerMonitor
 }

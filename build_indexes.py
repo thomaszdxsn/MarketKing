@@ -30,7 +30,7 @@ unique_map = {
     'okex_future0depth': '',
     'okex_future0kline': ('pair', 'start_time', 'contract_type'),
     'okex_future0ticker': '',
-    'okex_future@trades': ('tid',),
+    'okex_future0trades': ('tid',),
     'okex_spot0depth': '',
     'okex_spot0ticker': '',
     'okex_spot0kline': ('pair', 'start_time'),
@@ -46,6 +46,10 @@ unique_map = {
     'fcoin0ticker': '',
     'fcoin0trades': ('tid',),
     'fcoin0kline': ('pair', 'start_time'),
+    'cointiger0depth': '',
+    'cointiger0ticker': '',
+    'cointiger0trades': ('tid',),
+    'cointiger0kline': ('pair', 'start_time')
 }
 
 db = AsyncIOMotorClient(settings['MONGO_URI'])[settings['MONGO_DATABASE']]

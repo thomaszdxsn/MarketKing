@@ -79,3 +79,18 @@ FCOIN_WS_CHANS = re.compile(
     """,
     flags=re.VERBOSE|re.IGNORECASE
 )
+
+
+##########################
+# cointiger ##################
+##########################
+
+COINTIGER_WS_CHANS = re.compile(
+    """
+    market_
+    (?P<symbol>[a-z]+)_
+    (?P<data_type>[a-z]+)
+    (_\w+)?
+    """,
+    flags=re.VERBOSE|re.IGNORECASE
+)

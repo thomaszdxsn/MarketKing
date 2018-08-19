@@ -18,7 +18,8 @@ __all__ = (
     'BitflyerTrades',
     'HitBTCTrades',
     'PoloniexTrades',
-    'FcoinTrades'
+    'FcoinTrades',
+    'CointigerTrades'
 )
 
 
@@ -124,3 +125,10 @@ class PoloniexTrades(Trades):
 @dataclass
 class FcoinTrades(Trades):
     direction: str='buy'
+
+
+@add_slots
+@dataclass
+class CointigerTrades(Trades):
+    direction: str=''
+    vol: float=0.0

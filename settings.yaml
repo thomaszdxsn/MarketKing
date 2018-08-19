@@ -70,6 +70,12 @@ default:
                 'ethbtc', 'bchbtc', 'ltcbtc', 'etcbtc', 'eosbtc', 'ftbtc',
                 'etceth', 'ltceth', 'eoseth', 'fteth']
 
+    cointiger:
+      symbols: ['tchbitcny', 'btcbitcny', 'ethbitcny',
+                'btcusdt', 'ethusdt', 'ltcusdt', 'etcusdt',
+                'tchbtc', 'bchbtc', 'eosbtc', 'ethbtc', 'etcbtc', 'ltcbtc',
+                'eoseth']
+
 
 development:
   LOGGING_LEVEL: WARNING
