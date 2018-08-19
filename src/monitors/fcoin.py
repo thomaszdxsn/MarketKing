@@ -99,7 +99,7 @@ class FcoinMonitor(MonitorAbstract):
             high=data['high'],
             quote_vol=data['quote_vol'],
             start_time=datetime.utcfromtimestamp(data['id']),
-            count=data['id'],
+            count=data['count'],
             low=data['low'],
             vol=data['base_vol']
         )
