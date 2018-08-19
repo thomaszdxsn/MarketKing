@@ -54,6 +54,7 @@ class MongoStorage(StorageAbstract):
                     upsert=True
                 )
                 requests.append(upsert_op)
+        ordered = ordered if not collection.endswith('kline') else True
         result = await coll.bulk_write(requests, ordered=ordered)
         if result.acknowledged:
             msg = LogMsgFmt.MONGO_OPS.value.format(
