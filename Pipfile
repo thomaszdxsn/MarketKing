@@ -13,6 +13,7 @@ apscheduler = "*"
 uvloop = "*"
 black = "*"
 motor = "*"
+aioprocessing = "*"
 
 [dev-packages]
 

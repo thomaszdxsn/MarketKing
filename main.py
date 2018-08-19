@@ -11,15 +11,16 @@ from src import MONITOR_MAP
 from src.scheduler import create_scheduler
 from src.tunnels import QueueTunnel
 from src.storage import MongoStorage
+from src.utils import chunk
 
 
 class Main(object):
 
-    def __init__(self):
+    def __init__(self, exchange_info):
         self.scheduler = create_scheduler()
         self.tunnel = QueueTunnel()
         self.storage = MongoStorage()
-        self.exchanges_settings: dict = settings['EXCHANGES']
+        self.exchanges_settings: dict = exchange_info
         self._worked_tunnel = set()
         self._worker_num = 0
 
@@ -42,7 +43,7 @@ class Main(object):
                     self._worker_num += 1
 
     async def schedule_monitors(self):
-        for exchange, info in self.exchanges_settings.items():
+        for exchange, info in self.exchanges_settings:
             monitor_class = MONITOR_MAP[exchange]
             monitor = monitor_class(symbols=info['symbols'],
                                     scheduler=self.scheduler,
@@ -53,17 +54,32 @@ class Main(object):
         self.scheduler.start()
         self.scheduler.add_job(self.supervisor, trigger='cron', minute='*')
         await self.schedule_monitors()
-        # while True:
-        #     for k, v in self.tunnel._container.items():
-        #         print(f'{k}: {v.qsize()}')
-        #     print(f'{len(self.tunnel.keys())} workers: {len(self._worked_tunnel)}, {self._worker_num}')
-        #     await asyncio.sleep(5)
+        while True:
+            for k, v in self.tunnel._container.items():
+                print(f'{k}: {v.qsize()}')
+            print(f'{len(self.tunnel.keys())} workers: {len(self._worked_tunnel)}, {self._worker_num}')
+            await asyncio.sleep(5)
+
+
+def main(exchange_info):
+    try:
+        import logging
+        logging.basicConfig(level=logging.WARNING)
+        loop = asyncio.get_event_loop()
+        m = Main(exchange_info)
+        loop.run_until_complete(m.main())
+        loop.run_forever()
+    except KeyboardInterrupt:
+        return
 
 
 if __name__ == '__main__':
-    import logging
-    logging.basicConfig(level=logging.WARNING)
-    loop = asyncio.get_event_loop()
-    m = Main()
-    loop.run_until_complete(m.main())
-    loop.run_forever()
+    import os
+    import aioprocessing
+    processes = []
+    chunk_num = len(settings['EXCHANGES'].keys()) //  os.cpu_count()
+    for exchange_info in chunk(settings['EXCHANGES'].items(), chunk_num):
+        p = aioprocessing.AioProcess(target=main, args=(exchange_info,))
+        processes.append(p)
+    [p.start() for p in processes]
+
