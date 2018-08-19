@@ -44,7 +44,7 @@ class MongoStorage(StorageAbstract):
             unique_fields = data_item.get_unique_indexes()
             if not unique_fields or not collection.endswith('kline'):   # dont upsert trades
                 requests.append(InsertOne(data_item_dict))
-            else:
+            else:                                                       # upsert is too expensive, only do it for kline
                 upsert_op = ReplaceOne(
                     {
                         f: data_item_dict[f]

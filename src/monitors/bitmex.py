@@ -26,6 +26,7 @@ class BitmexMonitor(MonitorAbstract):
         self._instrument_books = collections.defaultdict(dict)  # TODO
         self._orderbooks = collections.defaultdict(dict)
         self._orderbooks_lock = Lock()
+        self._orderbooks_use_snapshots = False
 
     async def schedule(self):
         for symbol in self.symbols:
@@ -36,9 +37,10 @@ class BitmexMonitor(MonitorAbstract):
         self.ws_sdk.register_settlement()
         await self.ws_sdk.subscribe()
         self.run_ws_in_background(handler=self.dispatch_ws_msg)
-        self.scheduler.add_job(self._transport_orderbook_snapshot,
-                               trigger='cron',
-                               second='*')
+        if self._orderbooks_use_snapshots:
+            self.scheduler.add_job(self._transport_orderbook_snapshot,
+                                   trigger='cron',
+                                   second='*')
 
     async def dispatch_ws_msg(self, msg: WSMessage):
         data = json.loads(msg.data)
@@ -127,8 +129,12 @@ class BitmexMonitor(MonitorAbstract):
     async def _handle_orderbook10(self, data: dict):
         item = data['data'][0]
         symbol = item['symbol']
-        async with self._orderbooks_lock:
-            self._orderbooks[symbol].update(item)
+        if self._orderbooks_use_snapshots:
+            async with self._orderbooks_lock:
+                self._orderbooks[symbol].update(item)
+        else:
+            depth = self._format_orderbook10(item)
+            self.transport('depth', depth)
 
     async def _transport_orderbook_snapshot(self):
         async with self._orderbooks_lock:

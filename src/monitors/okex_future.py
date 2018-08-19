@@ -32,6 +32,7 @@ class OkexFutureMonitor(MonitorAbstract):
         self._orderbooks = collections.defaultdict(dict)
         self._orderbooks_lock = Lock()
         self._orderbooks_key_sep = '|'
+        self._orderbooks_use_snapshots = False
 
     async def schedule(self):
         combinations = itertools.product(self.symbols, CONTRACT_TYPES)
@@ -42,10 +43,11 @@ class OkexFutureMonitor(MonitorAbstract):
             self.ws_sdk.register_kline(symbol, contract_type=contract_type)
         await self.ws_sdk.subscribe()
         self.run_ws_in_background(handler=self.dispatch_ws_msg)
-        # 按秒级别进行depth快照
-        self.scheduler.add_job(self._transport_depth_snapshots,
-                               trigger='cron',
-                               second='*')
+        if self._orderbooks_use_snapshots:
+            # 按秒级别进行depth快照
+            self.scheduler.add_job(self._transport_depth_snapshots,
+                                   trigger='cron',
+                                   second='*')
 
     async def dispatch_ws_msg(self, msg):
         if msg.type != WSMsgType.TEXT:
@@ -79,9 +81,13 @@ class OkexFutureMonitor(MonitorAbstract):
         }
 
     async def _handle_depth(self, data: dict, symbol: str, contract_type: str):
-        async with self._orderbooks_lock:
-            key = f'{symbol}{self._orderbooks_key_sep}{contract_type}'
-            self._orderbooks[key].update(data)
+        if self._orderbooks_use_snapshots:
+            async with self._orderbooks_lock:
+                key = f'{symbol}{self._orderbooks_key_sep}{contract_type}'
+                self._orderbooks[key].update(data)
+        else:
+            depth = self._format_depth(data, symbol, contract_type)
+            self.transport('depth', depth)
 
     async def _transport_depth_snapshots(self):
         async with self._orderbooks_lock:

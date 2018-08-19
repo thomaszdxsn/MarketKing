@@ -29,6 +29,7 @@ class OkexSpotMonitor(MonitorAbstract):
         super(OkexSpotMonitor, self).__init__(*args, **kwargs)
         self._orderbooks = collections.defaultdict(dict)
         self._orderbooks_lock = Lock()
+        self._orderbooks_use_snapshots = False
 
     async def schedule(self):
         for symbol in self.symbols:
@@ -38,9 +39,10 @@ class OkexSpotMonitor(MonitorAbstract):
             self.ws_sdk.register_kline(symbol)
         await self.ws_sdk.subscribe()
         self.run_ws_in_background(handler=self.dispatch_ws_msg)
-        self.scheduler.add_job(self._transport_depth_snapshot,
-                               trigger='cron',
-                               second='*')
+        if self._orderbooks_use_snapshots:
+            self.scheduler.add_job(self._transport_depth_snapshot,
+                                   trigger='cron',
+                                   second='*')
 
     async def dispatch_ws_msg(self, msg):
         if msg.type != WSMsgType.TEXT:
@@ -128,8 +130,12 @@ class OkexSpotMonitor(MonitorAbstract):
         ))
 
     async def _handle_depth(self, data: dict, pair: str):
-        async with self._orderbooks_lock:
-            self._orderbooks[pair].update(data)
+        if self._orderbooks_use_snapshots:
+            async with self._orderbooks_lock:
+                self._orderbooks[pair].update(data)
+        else:
+            depth = self._format_depth(data, pair)
+            self.transport('depth', depth)
 
     async def _transport_depth_snapshot(self):
         async with self._orderbooks_lock:
