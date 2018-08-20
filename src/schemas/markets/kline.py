@@ -16,7 +16,8 @@ __all__ = (
     'BitfinexKline',
     'HitBTCKline',
     'FcoinKline',
-    'CointigerKline'
+    'CointigerKline',
+    'ZBKline'
 )
 
 
@@ -96,3 +97,9 @@ class FcoinKline(Kline):
 @dataclass
 class CointigerKline(Kline):
     amount: float=0.0
+
+
+@add_slots
+@dataclass
+class ZBKline(Kline):
+    pass

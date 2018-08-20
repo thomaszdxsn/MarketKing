@@ -20,7 +20,8 @@ __all__ = (
     'PoloniexTicker',
     'FcoinTicker',
     'CointigerTicker',
-    'BithumbTicker'
+    'BithumbTicker',
+    'ZBTicker',
 )
 
 
@@ -222,3 +223,11 @@ class BithumbTicker(MarketItemBase):
     change_perc: float
     server_created: datetime
     created: datetime = field(default_factory=factory_utcnow)
+
+
+@add_slots
+@dataclass
+class ZBTicker(Ticker):
+    ask: float=0.0
+    bid: float=0.0
+    last: float=0.0

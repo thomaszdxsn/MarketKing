@@ -20,7 +20,8 @@ __all__ = (
     'PoloniexDepth',
     'FcoinDepth',
     'CointigerDepth',
-    'BithumbDepth'
+    'BithumbDepth',
+    'ZBDepth'
 )
 
 
@@ -110,3 +111,9 @@ class CointigerDepth(Depth):
 @dataclass
 class BithumbDepth(Depth):
     server_created: datetime=field(default_factory=factory_utcnow)
+
+
+@add_slots
+@dataclass
+class ZBDepth(Depth):
+    server_created: datetime = field(default_factory=factory_utcnow)

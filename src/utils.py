@@ -6,6 +6,7 @@ import logging
 import itertools
 from abc import ABC, abstractmethod
 from typing import Union, Iterable
+from functools import partial
 
 import aiohttp
 import requests
@@ -68,6 +69,8 @@ class AsyncSessionWrapper(SessionWrapperAbstract):
         try:
             async with method(*args, **kwargs) as resp:
                 resp_handler = getattr(resp, resp_method)
+                if resp_method == 'json':
+                    resp_handler = partial(resp_handler, content_type=None)
                 result = await (resp_handler() if callable(
                                 resp_handler) else resp_handler)
 

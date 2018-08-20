@@ -79,6 +79,12 @@ default:
     bithumb:
       symbols: ['BTC', 'ETH', 'LTC', 'ETC', 'BCH', 'EOS']
 
+    zb:
+      symbols: ['zbqc', 'btcqc', 'bccqc', 'ltcqc', 'ethqc', 'etcqc', 'eosqc',
+                'bcczb', 'ltczb', 'ethzb', 'etczb', 'eoszb',
+                'zbusdt', 'btcusdt', 'bccusdt', 'ltcusdt', 'ethusdt', 'etcusdt', 'eosusdt',
+                'zbbtc', 'bccbtc', 'ltcbtc', 'ethbtc', 'etcbtc', 'eosbtc']
+
 
 development:
   LOGGING_LEVEL: WARNING

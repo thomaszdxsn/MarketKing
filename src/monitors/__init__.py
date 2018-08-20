@@ -110,6 +110,7 @@ from .poloniex import *
 from .fcoin import *
 from .cointiger import *
 from .bithumb import *
+from .zb import *
 
 MONITOR_MAP = {
     'okex_future': OkexFutureMonitor,
@@ -123,5 +124,6 @@ MONITOR_MAP = {
     'poloniex': PoloniexMonitor,
     'fcoin': FcoinMonitor,
     'cointiger': CointigerMonitor,
-    'bithumb': BithumbMonitor
+    'bithumb': BithumbMonitor,
+    'zb': ZBMonitor,
 }

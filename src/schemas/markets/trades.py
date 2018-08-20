@@ -20,7 +20,8 @@ __all__ = (
     'PoloniexTrades',
     'FcoinTrades',
     'CointigerTrades',
-    'BithumbTrades'
+    'BithumbTrades',
+    'ZBTrades'
 )
 
 
@@ -140,3 +141,9 @@ class CointigerTrades(Trades):
 class BithumbTrades(Trades):
     direction: str='ask'
     units_traded: float=0.0
+
+
+@add_slots
+@dataclass
+class ZBTrades(Trades):
+    direction: str='buy'

@@ -52,7 +52,11 @@ unique_map = {
     'cointiger0kline': ('pair', 'start_time'),
     'bithumb0ticker': '',
     'bithumb0depth': '',
-    'bithubm0trades': ('tid',)
+    'bithumb0trades': ('tid',),
+    'zb0ticker': '',
+    'zb0depth': '',
+    'zb0trades': ('tid',),
+    'zb0kline': ('pair', 'start_time'),
 }
 
 db = AsyncIOMotorClient(settings['MONGO_URI'])[settings['MONGO_DATABASE']]
