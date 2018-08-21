@@ -84,8 +84,8 @@ class PoloniexMonitor(MonitorAbstract):
             pair=pair,
             tid=item[1],
             direction='buy' if item[2] == 1 else 'sell',
-            amount=float(item[3]),
-            price=float(item[4]),
+            amount=float(item[4]),
+            price=float(item[3]),
             trade_time=arrow.get(item[5]).naive
         )
         self.transport('trades', trade)
