@@ -78,6 +78,8 @@ class GateIOWebsocket(WebsocketSdkAbstract):
     ws_url = 'wss://ws.gateio.io/v3/'
 
     async def subscribe(self, *args, **kwargs):
+        if not self.ws_client:
+            await self.setup_ws_client()
         # subscribe server time
         server_time_chann = {
             'id': self._servertime_id,
@@ -93,7 +95,7 @@ class GateIOWebsocket(WebsocketSdkAbstract):
         chan_nums = len(self.register_hub) + 1
         async for msg in self.ws_client:
             await handler(msg)
-            if i % chan_nums == 0:
+            if i % chan_nums == 0:      # TODO: 需要为每个数据类型配置不同的sleep时间
                 await asyncio.sleep(1)  # TODO: need configify
                 i = 0
                 await self.subscribe()

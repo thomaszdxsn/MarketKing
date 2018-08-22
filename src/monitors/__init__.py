@@ -111,6 +111,8 @@ from .fcoin import *
 from .cointiger import *
 from .bithumb import *
 from .zb import *
+from .gateio import *
+from .lbank import *
 
 MONITOR_MAP = {
     'okex_future': OkexFutureMonitor,
@@ -126,4 +128,6 @@ MONITOR_MAP = {
     'cointiger': CointigerMonitor,
     'bithumb': BithumbMonitor,
     'zb': ZBMonitor,
+    'gateio': GateIOMonitor,
+    'lbank': LBankMonitor
 }

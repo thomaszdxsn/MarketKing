@@ -85,6 +85,19 @@ default:
                 'zbusdt', 'btcusdt', 'bccusdt', 'ltcusdt', 'ethusdt', 'etcusdt', 'eosusdt',
                 'zbbtc', 'bccbtc', 'ltcbtc', 'ethbtc', 'etcbtc', 'eosbtc']
 
+    # lbank的接口会报400错误
+#    lbank:
+#      symbols: ['btc_usdt', 'eth_usdt', 'bch_usdt', 'ht_usdt', 'ten_usdt', 'bnb_usdt',
+#                'eth_btc', 'bch_btc', 'ltc_btc', 'etc_btc',
+#                'bch_eth', 'eos_eth',
+#                'usdt_bu', 'eth_bu', 'btc_bu']
+
+    # gateio的ws接口有一些问题，不是标准协议
+#    gateio:
+#      symbols: ['eos_usdt', 'eth_usdt', 'btc_usdt', 'etc_usdt', 'bch_usdt', 'ltc_usdt', 'qtum_usdt',
+#                'eth_btc', 'eos_btc', 'bch_btc', 'etc_btc', 'ltc_btc', 'qtum_btc',
+#                'eos_eth', 'etc_eth', 'qtum_btc']
+
 
 development:
   LOGGING_LEVEL: WARNING

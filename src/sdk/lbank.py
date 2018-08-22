@@ -136,6 +136,8 @@ class LBankWebsocket(WebsocketSdkAbstract):
         self.register_channel(channel_info)
 
     async def subscribe(self, *args, **kwargs):
+        if not self.ws_client:
+            await self.setup_ws_client()
         for channel_info in self.register_hub:
             await self.ws_client.send_json(channel_info)
             await asyncio.sleep(.2)
