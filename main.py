@@ -20,7 +20,8 @@ class Main(object):
     def __init__(self, exchange_info):
         self.scheduler = create_scheduler()
         self.tunnel = QueueTunnel()
-        self.storage = MongoStorage()
+        self.storage = MongoStorage(settings.MONGO_URI,
+                                    settings.as_int('MONGO_POOL_SIZE'))
         self.exchanges_settings: dict = exchange_info
         self._worked_tunnel = set()
 

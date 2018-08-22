@@ -15,6 +15,7 @@ black = "*"
 motor = "*"
 aioprocessing = "*"
 tqdm = "*"
+aiobotocore = "*"
 
 [dev-packages]
 

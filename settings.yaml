@@ -85,6 +85,13 @@ default:
                 'zbusdt', 'btcusdt', 'bccusdt', 'ltcusdt', 'ethusdt', 'etcusdt', 'eosusdt',
                 'zbbtc', 'bccbtc', 'ltcbtc', 'ethbtc', 'etcbtc', 'eosbtc']
 
+#    kraken:
+#      symbols: ['BCHXBT', 'EOSXBT', 'ETCXBT', 'ETHXBT', 'LTCXBT',
+#                'XBTEUR', 'BCHEUR', 'EOSEUR', 'ETCEUR', 'LTCEUR', 'ETHEUR',
+#                'XBTJPY', 'ETHJPY',
+#                'XBTUSD', 'BCHUSD', 'EOSUSD', 'ETCUSD', 'LTCUSD', 'USDTUSD', 'ETHUSD',
+#                'EOSETH', 'ETCETH']
+
     # lbank的接口会报400错误
 #    lbank:
 #      symbols: ['btc_usdt', 'eth_usdt', 'bch_usdt', 'ht_usdt', 'ten_usdt', 'bnb_usdt',

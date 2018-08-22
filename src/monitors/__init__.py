@@ -113,6 +113,7 @@ from .bithumb import *
 from .zb import *
 from .gateio import *
 from .lbank import *
+from .kraken import *
 
 MONITOR_MAP = {
     'okex_future': OkexFutureMonitor,
@@ -129,5 +130,6 @@ MONITOR_MAP = {
     'bithumb': BithumbMonitor,
     'zb': ZBMonitor,
     'gateio': GateIOMonitor,
-    'lbank': LBankMonitor
+    'lbank': LBankMonitor,
+    'kraken': KrakenMonitor
 }

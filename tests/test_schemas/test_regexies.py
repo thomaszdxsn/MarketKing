@@ -6,6 +6,22 @@ import pytest
 from src.schemas.regexes import *
 
 
+@pytest.mark.parametrize('raw,result',[
+    ('mongodb://localhost:27017',
+     {'host': 'localhost', 'port': '27017', 'password': None, 'username': None}),
+    ('mongodb://admin:6c99lxsdIuKSvJtwzcGy%2BB0L82FuQcalTLNqEPpTPI%3D@18.179.200.234:27017',
+     {
+         'username': 'admin',
+         'password': '6c99lxsdIuKSvJtwzcGy%2BB0L82FuQcalTLNqEPpTPI%3D',
+         'host': '18.179.200.234',
+         'port': '27017'
+     })
+])
+def test_mongo_uri_unpack_patterns(raw, result):
+    match_result = MONGO_URI_UNPACK.match(raw).groupdict()
+    assert match_result == result
+
+
 @pytest.mark.parametrize('raw,result', [
     ('ok_sub_spot_ltc_btc_ticker',
      {'base': 'ltc', 'quote': 'btc', 'data_type': 'ticker'}),

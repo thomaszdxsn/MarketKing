@@ -3,6 +3,20 @@ Author: thomaszdxsn
 """
 import re
 
+
+MONGO_URI_UNPACK = re.compile(
+    """
+    ^mongodb://
+    (
+    (?P<username>\w+):
+    (?P<password>[^\s]+)@
+    )?
+    (?P<host>[\w.]+):
+    (?P<port>\d+)$
+    """,
+    flags=re.VERBOSE|re.IGNORECASE
+)
+
 ##########################
 # okex ###################
 ##########################
