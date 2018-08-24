@@ -14,12 +14,12 @@ from src.storage.mongo import MongoStorage
 
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 async def test_monitor(scheduler):
     import asyncio
-    pairs = settings['EXCHANGES']['kraken']['symbols']
+    pairs = settings['EXCHANGES']['bitflyer']['symbols']
     tunnel = QueueTunnel()
-    monitor = KrakenMonitor(symbols=pairs,
+    monitor = BitflyerMonitor(symbols=pairs,
                             scheduler=scheduler,
                             tunnel=tunnel)
     await monitor.schedule()
