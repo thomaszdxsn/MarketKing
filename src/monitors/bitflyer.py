@@ -74,8 +74,22 @@ class BitflyerMonitor(MonitorAbstract):
 
     async def _handle_depth(self, data: dict, pair: str, size:int=20):
         # don't need sorted asks or bids
-        asks = data['params']['message']['asks'][:size]
-        bids = list(reversed(data['params']['message']['bids']))[:size]
+        asks = [
+            {
+                'price': item['price'],
+                'amount': item['size']
+            }
+            for item in
+            data['params']['message']['asks'][:size]
+        ]
+        bids = [
+            {
+                'price': item['price'],
+                'amount': item['size']
+            }
+            for item in
+            list(reversed(data['params']['message']['bids']))[:size]
+        ]
         if not asks and not bids:
             return
         depth = BitflyerDepth(
