@@ -23,7 +23,8 @@ class S3Backup(BackupAbstract):
             aws_access_key_id=self._access_key_id
         )
 
-    async def upload(self, bucket: str, key: str, body: bytes) -> bool:
+    async def upload(self, bucket: str,
+                     key: str, body) -> bool:
         async with self.create_client() as client:
             try:
                 await client.put_object(
@@ -39,6 +40,24 @@ class S3Backup(BackupAbstract):
                 self.logger.error(msg, exc_info=True)
                 return False
             return True
+
+    async def gen_presigned_url(self, bucket: str,
+                                s3_key: str, expire: int) -> str:
+        params = {
+            'Bucket': bucket,
+            'Key': s3_key,
+            'ResponseContentDisposition': 'attachment;filename="{}"'.format(
+                s3_key.replace('/', '+')
+            )
+        }
+        async with self.create_client() as client:
+            url = client.generate_presigned_url(
+                'get_object',
+                Params=params,
+                ExpiresIn=expire
+            )
+            return url
+
 
 
 

@@ -20,5 +20,3 @@ async def test_upload_object_to_s3(s3_backup):
     key = 'tests/dummy.bin'
     body = b'\x01' * 1024
     assert await s3_backup.upload(bucket, key, body) == True
-
-

@@ -2,8 +2,14 @@
 author: thomaszdxsn
 """
 import asyncio
-import logging
 import itertools
+import logging
+import os
+import json
+import gzip
+import shutil
+from datetime import datetime
+from pathlib import Path
 from abc import ABC, abstractmethod
 from typing import Union, Iterable
 from functools import partial
@@ -17,6 +23,15 @@ from .schemas.sdk import ResponseMsg, HttpErrorEnum
 from .schemas.logs import LogMsgFmt
 
 
+def compress_file(input_file: Union[str, Path],
+                  output_file: Union[str, Path],
+                  remove_orig: bool=True) -> None:
+    with open(input_file, 'rb') as f1, gzip.open(output_file, 'wb') as f2:
+        shutil.copyfileobj(f1, f2)
+    if remove_orig:
+        os.remove(input_file)
+
+
 def chunk(it: Iterable, size: int) -> Iterable:
     it = iter(it)
     return iter(lambda: tuple(itertools.islice(it, size)), ())
@@ -25,6 +40,12 @@ def chunk(it: Iterable, size: int) -> Iterable:
 def close_session(session: ClientSession):
     """handler for atexit"""
     asyncio.run(session.close())
+
+
+class DatetimeEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime):
+            return o.isoformat()
 
 
 class NoSSlVerifyTCPConnector(aiohttp.TCPConnector):
@@ -149,3 +170,5 @@ class SessionWrapper(SessionWrapperAbstract):
                 error=error_no,
                 data=''
             )
+
+

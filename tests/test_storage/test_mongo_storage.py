@@ -19,6 +19,8 @@ def mongo_storage(loop):
 async def test_list_collections(mongo_storage):
     collections = await mongo_storage.list_collections()
     for collection_name in collections:
+        if collection_name.startswith('system'):
+            continue
         assert '0' in collection_name
 
 
@@ -37,3 +39,15 @@ async def test_get_pairs(mongo_storage):
                                                      start,
                                                      end)
     assert any(['btc' in pair.lower() for pair in pairs])
+
+
+async def test_build_mongo_export_cmd(mongo_storage):
+    query = {'pair': 'btcusdt'}
+    fields = ['created', 'pair']
+    cmd = mongo_storage.build_mongoexport_cmd(
+        coll_name='bitflyer0depth',
+        query=query,
+        fields=fields,
+        out='out.csv'
+    )
+    assert '\n' not in cmd

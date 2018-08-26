@@ -1,16 +1,21 @@
 """
 author: thomaszdxsn
 """
+import inspect
+import json
 from datetime import datetime
-from typing import List
+from urllib.parse import unquote
+from typing import List, Union
 
 from dynaconf import settings
-from pymongo import InsertOne, UpdateOne, ReplaceOne, WriteConcern
+from pymongo import InsertOne, ReplaceOne, WriteConcern
 from pymongo.errors import BulkWriteError
 from motor.motor_asyncio import AsyncIOMotorClient
+from bson import json_util as bson_json_utils
 
 from . import StorageAbstract
 from ..schemas.logs import LogMsgFmt
+from ..schemas.regexes import MONGO_URI_UNPACK
 from ..tunnels import TunnelAbstract
 
 __all__ = (
@@ -27,7 +32,9 @@ class MongoStorage(StorageAbstract):
             uri,
             maxPoolSize=pool_size
         )
-        self._data_db = self._mongo_client[settings['MONGO_DATABASE']]
+        self.__uri = uri
+        self.__db = settings['MONGO_DATABASE']
+        self._data_db = self._mongo_client[self.__db]
         self._separator = '0'
 
     async def fetch_n_items(self,
@@ -112,6 +119,30 @@ class MongoStorage(StorageAbstract):
         }
         return await coll.distinct('pair', filter_)
 
+    def build_mongoexport_cmd(self,
+                              coll_name: str,
+                              query: dict,
+                              fields: List[str],
+                              out: str,
+                              type_: str='csv',
+                              sort: Union[dict, None]=None,
+                              auth_db: str='admin',
+                              auth_mechanism: str='SCRAM-SHA-1') -> str:
+        if sort is None:
+            sort = {'created': 1}
+        mongo_conf = MONGO_URI_UNPACK.match(self.__uri).groupdict()
+        sort = bson_json_utils.dumps(sort)
+        query = bson_json_utils.dumps(query)
+        fields = ','.join(fields)
+        cmd = f"""
+        mongoexport --host={mongo_conf['host']} --port={mongo_conf['port']}
+         --username={mongo_conf['username']} 
+         --password={unquote(mongo_conf['password'])}
+         --db={self.__db} --collection={coll_name} --query={query!r}
+         --fields={fields} --out={out} --type={type_} --sort={sort!r}
+         --authenticationDatabase={auth_db}
+         --authenticationMechanism={auth_mechanism}
+        """
+        return inspect.cleandoc(cmd).replace('\n', '')
 
-def mongoexport_cmd():
-    pass
+

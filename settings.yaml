@@ -12,8 +12,13 @@ default:
   ORDERBOOK_LEVEL: 25
 
   MONGO_DATABASE: 'exchange_data'
+  MONGO_REPORT_DATABASE: 'report'
+  MONGO_S3_SYNC_COLLECTION: 'new_s3_sync'
   MONGO_POOL_SIZE: 100
   MONGO_BATCH_OP_SIZE: 15
+
+  S3_BUCKET: 'dquant2'
+  S3_PRESIGN_URL_EXPIRE: 15552000     # 过期时间为半年
 
   # monitors related settings
   EXCHANGES:

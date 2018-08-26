@@ -112,3 +112,4 @@ __pycache__/
 
 .pytest_cache
 .secrets.*
+scripts/export_files/*
