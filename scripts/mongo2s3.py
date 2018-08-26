@@ -69,7 +69,7 @@ class Mongo2S3Command(object):
         s3_record = S3Record(
             collection=coll,
             pair=pair,
-            date=self.start_date,
+            date=arrow.get(self.start_date).naive,
         )
         out_csv = EXPORT_FILES_DIR / f"{out}.csv"
         out_csv_gzip = EXPORT_FILES_DIR / f"{out}.csv.gz"
