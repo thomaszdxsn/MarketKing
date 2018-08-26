@@ -13,6 +13,10 @@ from . import StorageAbstract
 from ..schemas.logs import LogMsgFmt
 from ..tunnels import TunnelAbstract
 
+__all__ = (
+    'MongoStorage',
+)
+
 
 class MongoStorage(StorageAbstract):
     batch_op_size: int = int(settings.get('MONGO_BATCH_OP_SIZE', 30))
@@ -107,3 +111,7 @@ class MongoStorage(StorageAbstract):
             }
         }
         return await coll.distinct('pair', filter_)
+
+
+def mongoexport_cmd():
+    pass

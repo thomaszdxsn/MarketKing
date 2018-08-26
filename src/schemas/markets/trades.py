@@ -99,9 +99,9 @@ class BitfinexFundingTrades(MarketItemBase):
 class BitflyerTrades(MarketItemBase):
     pair: str
     tid: str
-    side: str
+    direction: str
     price: float
-    size: float
+    amount: float
     trade_time: datetime
     buy_child_order_acceptance_id: str
     sell_child_order_acceptance_id: str

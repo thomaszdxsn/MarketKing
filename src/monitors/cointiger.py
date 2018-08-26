@@ -62,15 +62,15 @@ class CointigerMonitor(MonitorAbstract):
                             size: int=ORDERBOOK_LEVEL):
         asks = [
             {
-                'price': item[0],
-                'amount': item[1]
+                'price': float(item[0]),
+                'amount': float(item[1])
             }
             for item in data['tick']['asks'][:size]
         ]
         bids = [
             {
-                'price': item[0],
-                'amount': item[1]
+                'price': float(item[0]),
+                'amount': float(item[1])
             }
             for item in data['tick']['buys'][:size]
         ]

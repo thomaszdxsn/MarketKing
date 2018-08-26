@@ -56,9 +56,9 @@ class BitflyerMonitor(MonitorAbstract):
             BitflyerTrades(
                 pair=pair,
                 tid=str(item["id"]),
-                side=item["side"],
+                direction=item["side"],
                 price=item["price"],
-                size=item["size"],
+                amount=item["size"],
                 trade_time=arrow.get(item["exec_date"]).naive,
                 buy_child_order_acceptance_id=item[
                     "buy_child_order_acceptance_id"
