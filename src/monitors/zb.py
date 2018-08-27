@@ -55,7 +55,7 @@ class ZBMonitor(MonitorAbstract):
                 price=float(item['price']),
                 direction=item['type'],
                 tid=item['tid'],
-                trade_time=datetime.utcfromtimestamp(item['date'] / 1000)
+                trade_time=datetime.utcfromtimestamp(item['date'])
             )
             for item in data['data']
         ]
@@ -94,7 +94,7 @@ class ZBMonitor(MonitorAbstract):
             asks=asks,
             bids=bids,
             pair=pair,
-            server_created=datetime.utcfromtimestamp(data['timestamp'] / 1000)
+            server_created=datetime.utcfromtimestamp(data['timestamp'])
         )
         self.transport('depth', depth)
 
