@@ -28,7 +28,7 @@ default:
                 'ltc_eth', 'okb_eth', 'etc_eth', 'bch_eth', 'eos_eth',
                 'eos_okb', 'etc_okb', 'ltc_okb', 'bch_okb']
     okex_future:
-      symbols: ['eos', 'ltc', 'eth', 'etc', 'bch', 'xrp', 'eos', 'btg']
+      symbols: ['eos', 'ltc', 'eth', 'etc', 'bch', 'xrp', 'eos', 'btg', 'btc']
 
     binance:
       # bcc是bch

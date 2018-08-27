@@ -60,7 +60,7 @@ class Mongo2S3Command(object):
             {
                 'collection': coll,
                 'pair': pair,
-                'date': self.start_date
+                'date': arrow.get(self.start_date).naive
             }
         )) is not None
 
