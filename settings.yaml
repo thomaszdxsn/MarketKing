@@ -23,10 +23,10 @@ default:
   # monitors related settings
   EXCHANGES:
     okex_spot:
-      symbols: ['btc_usdt', 'eos_usdt', 'eth_usdt', 'etc_usdt', 'bch_usdt', 'ltc_usdt', 'okb_usdt',
-                'ltc_btc', 'etc_btc', 'eos_btc', 'eth_btc', 'bch_btc', 'okb_btc',
-                'ltc_eth', 'okb_eth', 'etc_eth', 'bch_eth', 'eos_eth',
-                'eos_okb', 'etc_okb', 'ltc_okb', 'bch_okb']
+      symbols: ['btc_usdt', 'eos_usdt', 'eth_usdt', 'etc_usdt', 'bch_usdt', 'ltc_usdt', 'okb_usdt', 'xrp_usdt',
+                'ltc_btc', 'etc_btc', 'eos_btc', 'eth_btc', 'bch_btc', 'okb_btc', 'xrp_btc',
+                'ltc_eth', 'okb_eth', 'etc_eth', 'bch_eth', 'eos_eth', 'xrp_eth',
+                'eos_okb', 'etc_okb', 'ltc_okb', 'bch_okb', 'xrp_okb']
     okex_future:
       symbols: ['eos', 'ltc', 'eth', 'etc', 'bch', 'xrp', 'eos', 'btg', 'btc']
 
