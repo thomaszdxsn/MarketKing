@@ -8,6 +8,7 @@ import os
 from datetime import datetime, timedelta
 
 import arrow
+from arrow import Arrow
 from dynaconf import settings
 from tqdm import tqdm
 
@@ -173,7 +174,7 @@ class Mongo2S3Command(object):
             await self.iter_pairs(coll)
 
 
-async def main(start: datetime, end: datetime):
+async def main(start: Arrow, end: Arrow):
     for day_start, day_end in arrow.Arrow.span_range('day', start, end):
         cmd = Mongo2S3Command(day_start.naive, day_end.naive)
         await cmd.main()
