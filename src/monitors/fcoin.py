@@ -34,6 +34,8 @@ class FcoinMonitor(MonitorAbstract):
 
     async def dispatch_ws_msg(self, msg: WSMessage):
         data = json.loads(msg.data)
+        if 'type'  not in data:
+            return
         type_field = data['type']
         if type_field in ('hello', 'topics'):
             return

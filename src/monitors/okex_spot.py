@@ -10,6 +10,7 @@ import arrow
 from aiohttp import WSMsgType
 
 from . import MonitorAbstract
+from ..utils import decompress_okex_data
 from ..sdk.okex_spot import OkexSpotRest, OkexSpotWebsocket
 from ..schemas import regexes
 from ..schemas.markets import (OkexSpotDepth, OkexSpotTicker,
@@ -45,9 +46,8 @@ class OkexSpotMonitor(MonitorAbstract):
                                    second='*')
 
     async def dispatch_ws_msg(self, msg):
-        if msg.type != WSMsgType.TEXT:
-            return
-        data = json.loads(msg.data)[0]
+        json_data = decompress_okex_data(msg.data)
+        data = json.loads(json_data)[0]
         channel = data['channel']
         if channel == 'addChannel':
             return

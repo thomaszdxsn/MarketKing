@@ -11,6 +11,7 @@ import arrow
 from aiohttp import WSMsgType
 
 from . import MonitorAbstract
+from ..utils import decompress_okex_data
 from ..schemas.regexes import OKEX_FUTURE_WS_CHANS
 from ..schemas.markets import (OkexFutureDepth, OkexFutureTicker,
                                OkexFutureKline, OkexFutureTrades)
@@ -50,9 +51,8 @@ class OkexFutureMonitor(MonitorAbstract):
                                    second='*')
 
     async def dispatch_ws_msg(self, msg):
-        if msg.type != WSMsgType.TEXT:
-            return
-        data = json.loads(msg.data)[0]
+        json_data = decompress_okex_data(msg.data)
+        data = json.loads(json_data)[0]
         channel = data['channel']
         if channel == 'addChannel':
             return

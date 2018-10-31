@@ -8,6 +8,7 @@ import os
 import json
 import gzip
 import shutil
+import zlib
 from datetime import datetime
 from pathlib import Path
 from abc import ABC, abstractmethod
@@ -21,6 +22,13 @@ from aiohttp import ClientSession
 
 from .schemas.sdk import ResponseMsg, HttpErrorEnum
 from .schemas.logs import LogMsgFmt
+
+
+def decompress_okex_data(raw_data: bytes) -> str:
+    decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
+    inflated = decompressor.decompress(raw_data)
+    inflated += decompressor.flush()
+    return inflated.decode()
 
 
 def compress_file(input_file: Union[str, Path],
