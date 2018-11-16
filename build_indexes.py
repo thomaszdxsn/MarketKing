@@ -89,8 +89,10 @@ async def create_filter_indexes():
     for coll in tqdm(unique_map.keys(),
                      desc='build filter indexes'):
         collection = db[coll]
-        await collection.create_index([('created', 1), ('pair', 1)],
-                                      background=True)
+        indexes = [('created', 1), ('pair', 1)]
+        if coll.startswith('okex_future'):
+            indexes.append(('contract_type', 1))
+        await collection.create_index(indexes, background=True)
 
 
 async def main():
@@ -101,6 +103,5 @@ async def main():
 
 if __name__ == '__main__':
     import asyncio
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    asyncio.get_event_loop().run_until_complete(main())
 

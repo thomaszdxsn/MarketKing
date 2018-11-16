@@ -11,5 +11,5 @@ class BackupAbstract(ABC):
         self.logger = logging.getLogger(f'backup.{self.__class__.__name__}')
 
     @abstractmethod
-    def upload(self, *args):
+    async def upload(self, *args):
         pass
