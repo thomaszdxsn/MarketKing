@@ -41,4 +41,4 @@ class OssBackup(BackupAbstract):
         return self._bucket.sign_url('GET', key, expire_delta)
 
     async def gen_presigned_url(self, key: str, expire_delta: int) -> str:
-        return await self._loop.run_in_executor(self._thread_executor, self._gen_presign_url, key, expire_delta)
+        return await self._loop.run_in_executor(self._thread_executor, self._gen_presigned_url, key, expire_delta)
