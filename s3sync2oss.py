@@ -40,11 +40,7 @@ async def main():
     keys = []
     async for item in iterate_bucket_items('dquant1'):
         key = item['Key']
-        keys.append(key)
-        if len(keys) >= 10:
-            asyncio.gather(*[copy_obj(k) for k in keys])
-            keys.clear()
-
+        await copy_obj(key)
 
 
 
