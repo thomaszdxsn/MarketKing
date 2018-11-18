@@ -7,6 +7,7 @@ from asyncio import AbstractEventLoop
 from typing import Optional
 
 import oss2
+from dynaconf import settings
 
 from . import BackupAbstract
 from ..schemas.logs import LogMsgFmt
@@ -42,3 +43,12 @@ class OssBackup(BackupAbstract):
 
     async def gen_presigned_url(self, key: str, expire_delta: int) -> str:
         return await self._loop.run_in_executor(self._thread_executor, self._gen_presigned_url, key, expire_delta)
+
+
+def oss_backup_factory():
+    return OssBackup(
+        access_key_id=settings['OSS_ACCESS_KEY_ID'],
+        access_key_secret=settings['OSS_ACCESS_KEY_SECRET'],
+        endpoint=settings['OSS_ENDPOINT'],
+        bucket_name=settings['OSS_BUCKET']
+    )

@@ -4,6 +4,7 @@ author: thomaszdxsn
 import functools
 
 import aiobotocore
+from dynaconf import settings
 
 from . import BackupAbstract
 from ..schemas.logs import LogMsgFmt
@@ -57,3 +58,10 @@ class S3Backup(BackupAbstract):
                 ExpiresIn=expire
             )
             return url
+
+
+def s3_backup_factory():
+    return S3Backup(
+        access_key_id=settings['AWS_ACCESS_KEY_ID'],
+        secret_access_key=settings['AWS_SECRET_ACCESS_KEY']
+    )
