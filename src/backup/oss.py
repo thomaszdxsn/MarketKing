@@ -22,7 +22,7 @@ class OssBackup(BackupAbstract):
         self._bucket = oss2.Bucket(self._auth, endpoint, bucket_name)
         self._loop = loop if loop else asyncio.get_event_loop()
 
-    def _upload(self, key: str, body: IOBase, bucket_name: Optional[str]=None, endpoint: Optional[str]=None) -> bool:
+    def _upload(self, key: str, body, bucket_name: Optional[str]=None, endpoint: Optional[str]=None) -> bool:
         # sync way
         bucket = oss2.Bucket(self._auth, endpoint, bucket_name) if bucket_name else self._bucket
         try:
