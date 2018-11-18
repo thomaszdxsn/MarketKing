@@ -16,6 +16,7 @@ motor = "*"
 aioprocessing = "*"
 tqdm = "*"
 aiobotocore = "*"
+"oss2" = "*"
 
 [dev-packages]
 

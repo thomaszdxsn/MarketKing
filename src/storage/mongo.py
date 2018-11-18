@@ -51,7 +51,7 @@ class MongoStorage(StorageAbstract):
     async def bulk_op(self, collection: str,
                       items: list, ordered: bool=False):
         coll = self._data_db.get_collection(
-            collection, write_concern=WriteConcern(w=0, wtimeout=2)     # not ack
+            collection, write_concern=WriteConcern(w=0, wtimeout=2)     # dont ack
         )
         requests = []
         for item in items:

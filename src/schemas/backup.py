@@ -8,6 +8,7 @@ from . import DataClassAbstract
 
 __all__ = (
     'S3Record',
+    'OssRecord'
 )
 
 
@@ -21,4 +22,17 @@ class S3Record(DataClassAbstract):
     size: int=None
     local_file: str=None
     s3_key: str=None
+    presign_url: str=None
+
+
+@dataclass
+class OssRecord(DataClassAbstract):
+    collection: str
+    pair: str
+    date: datetime
+    is_export: bool=False
+    is_upload: bool=False
+    size: int=None
+    local_file: str=None
+    oss_key: str=None
     presign_url: str=None
