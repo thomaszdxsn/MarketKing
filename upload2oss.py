@@ -15,11 +15,12 @@ logging.basicConfig(level=logging.INFO)
 
 async def task():
     start, end = arrow.utcnow().shift(weeks=-1), arrow.utcnow().shift(days=-1)
+    start = start if start > arrow.get('2018-11-17') else arrow.get('2018-11-17')
     await main(start, end)
 
 
-# scheduler = AsyncIOScheduler(timezone=pytz.UTC)
-# scheduler.add_job(task, trigger='cron', hour=0, minute=15)
-# print('starting scheduler')
-# scheduler.start()
-asyncio.get_event_loop().run_until_complete(task())
+scheduler = AsyncIOScheduler(timezone=pytz.UTC)
+scheduler.add_job(task, trigger='cron', hour=0, minute=15)
+print('starting scheduler')
+scheduler.start()
+asyncio.get_event_loop().run_forever()
