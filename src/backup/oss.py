@@ -44,6 +44,9 @@ class OssBackup(BackupAbstract):
     async def gen_presigned_url(self, key: str, expire_delta: int) -> str:
         return await self._loop.run_in_executor(self._thread_executor, self._gen_presigned_url, key, expire_delta)
 
+    async def exists(self, key: str) -> bool:
+        return await self._loop.run_in_executor(self._thread_executor, self._bucket.object_exists, key)
+
 
 def oss_backup_factory():
     return OssBackup(

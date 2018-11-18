@@ -24,6 +24,10 @@ async def iterate_bucket_items(bucket):
 
 
 async def copy_obj(key):
+    # 判断oss是否存在key
+    if await oss_backup.exists(key):
+        print('exists')
+        return
     async with s3_bakcup.create_client() as client:
         response = await client.get_object(Bucket='dquant1', Key=key)
         async with response['Body'] as stream:
@@ -33,12 +37,14 @@ async def copy_obj(key):
 
 
 async def main():
+    keys = []
     async for item in iterate_bucket_items('dquant1'):
         key = item['Key']
-        try:
-            await copy_obj(key)
-        except:
-            pass
+        keys.append(key)
+        if len(keys) >= 10:
+            asyncio.gather(*[copy_obj(k) for k in keys])
+            keys.clear()
+
 
 
 
