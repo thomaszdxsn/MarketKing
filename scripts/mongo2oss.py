@@ -111,7 +111,7 @@ class Mongo2OssCommand(object):
         else:
             os.remove(oss_record.local_file)
             oss_record.oss_key = oss_key
-            oss_record.presign_url = (await self.build_presigned_url(oss_key))
+            oss_record.presign_url = (await self.build_presigned_url(oss_key)).replace('-internal', '')
         oss_record.is_upload = is_upload
         await self.save_record(oss_record)
 
