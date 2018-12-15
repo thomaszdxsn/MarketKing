@@ -51,6 +51,9 @@ class OkexSpotMonitor(MonitorAbstract):
         channel = data['channel']
         if channel == 'addChannel':
             return
+        # bch_eth 403?
+        if isinstance(data['data'], dict) and data['data'].get('result', None) is False:
+            return
 
         match_dict = regexes.OKEX_SPOT_WS_CHANS.match(channel).groupdict()
         pair = f"{match_dict['base']}_{match_dict['quote']}"
