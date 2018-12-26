@@ -47,7 +47,10 @@ class Main(object):
             monitor = monitor_class(symbols=info['symbols'],
                                     scheduler=self.scheduler,
                                     tunnel=self.tunnel)
-            await monitor.schedule()
+            try:
+                await monitor.schedule()
+            except:
+                await asyncio.sleep(5)
 
     async def main(self):
         self.scheduler.start()

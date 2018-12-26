@@ -38,6 +38,8 @@ class ZBMonitor(MonitorAbstract):
 
     async def dispatch_ws_msg(self, msg: WSMessage):
         data = json.loads(msg.data)
+        if data.get('success', None) is False:
+            return
         data_type = data['dataType']
         pair = data['channel'].split('_')[0]
         if data_type == 'depth':
