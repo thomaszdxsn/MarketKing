@@ -100,14 +100,20 @@ class OkexFutureMonitor(MonitorAbstract):
                             data: dict,
                             symbol: str,
                             contract_type: str) -> OkexFutureDepth:
-        asks = [
-            self.__handle_depth_item(item)
-            for item in reversed(data['data']['asks'])
-        ]
-        bids = [
-            self.__handle_depth_item(item)
-            for item in data['data']['bids']
-        ]
+        if data['data'].get('asks'):
+            asks = [
+                self.__handle_depth_item(item)
+                for item in reversed(data['data']['asks'])
+            ]
+        else:
+            asks = []
+        if data['data'].get('bids'):
+            bids = [
+                self.__handle_depth_item(item)
+                for item in data['data']['bids']
+            ]
+        else:
+            bids = []
         server_created = datetime.utcfromtimestamp(
             data['data']['timestamp'] / 1000
         )
