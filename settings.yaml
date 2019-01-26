@@ -77,11 +77,11 @@ default:
                 'ethbtc', 'bchbtc', 'ltcbtc', 'etcbtc', 'eosbtc', 'ftbtc',
                 'etceth', 'ltceth', 'eoseth', 'fteth']
 
-    cointiger:
-      symbols: ['tchbitcny', 'btcbitcny', 'ethbitcny',
-                'btcusdt', 'ethusdt', 'ltcusdt', 'etcusdt',
-                'tchbtc', 'bchbtc', 'eosbtc', 'ethbtc', 'etcbtc', 'ltcbtc',
-                'eoseth']
+#    cointiger:
+#      symbols: ['tchbitcny', 'btcbitcny', 'ethbitcny',
+#                'btcusdt', 'ethusdt', 'ltcusdt', 'etcusdt',
+#                'tchbtc', 'bchbtc', 'eosbtc', 'ethbtc', 'etcbtc', 'ltcbtc',
+#                'eoseth']
 
     bithumb:
       symbols: ['BTC', 'ETH', 'LTC', 'ETC', 'BCH', 'EOS']
