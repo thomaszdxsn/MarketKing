@@ -35,6 +35,7 @@ class CointigerMonitor(MonitorAbstract):
     async def dispatch_ws_msg(self, msg: dict):
         if msg.get('event_rep', '') == 'subed':
             return
+        print(msg)
         channel = msg['channel']
         match_dict = COINTIGER_WS_CHANS.match(channel).groupdict()
         data_type = match_dict['data_type']
